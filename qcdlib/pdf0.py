@@ -12,11 +12,14 @@ class PDF(CORE):
     upol PDF for proton. Use SU2 symetry to get for n
     """
 
-    def __init__(self):
+    def __init__(self,hadron='p'):
         self.aux = conf['aux']
         self.set_default_params()
         self.setup()
-        conf['cpdf']=INTERPOLATOR('CJ15lo_0000')
+        if hadron=='p':    table='CJ15lo_0000'
+        if hadron=='pi-':  table='JAM18PionPDFnlo_0000'
+
+        conf['cpdf']=INTERPOLATOR(table)
 
     def set_default_params(self):
 
@@ -58,7 +61,7 @@ if __name__ == '__main__':
     from qcdlib.aux import AUX
 
     conf['aux']  = AUX()
-    conf['pdf']  = PDF()
+    conf['pdf']  = PDF('pi-')
 
     x = 0.15
     Q2 = 2.4
