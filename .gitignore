@@ -1,0 +1,11 @@
+*.so 
+*.o 
+*.a 
+*.dSYM
+*~ 
+*.xml
+*.pyc
+*-checkpoint*
+*.dat
+analyzes/*
+.DS_Store

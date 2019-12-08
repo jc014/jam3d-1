@@ -1,0 +1,294 @@
+Physics
+=======
+
+
+\newcommand{\wpdf}{0.57}
+\newcommand{\wff}{0.12}
+\newcommand{\wppdf}{0.19}
+\newcommand{\wtransversity}{0.25}
+\newcommand{\wsivers}{0.143}
+\newcommand{\wboermulders}{0.085}
+\newcommand{\wpretzelosity}{0.137}
+\newcommand{\wcollins}{0.11}
+\newcommand{\wgww}{0.19}
+\newcommand{\whww}{0.25}
+
+
+
+
+
+ 
+
+\newpage
+\section{SIA setup}
+
+{\color{red} TODO: add table of SIA structure functions}
+
+\newpage
+\section{Tutorial}
+{\color{red} TODO: Add more details }
+
+Here is a general workflow
+
+\begin{itemize}
+\item Identify which parameters are needed to be fitted for a given set of TMDs
+\item Identify available observables to extract the TMDs 
+\item Create xlsx files for each data sets (see the database repo)
+\item Create and input file (see i.e. fitlab/inputs/upol.py). Here you will specify 
+      which data sets are going to be used
+\item Test in a single fit (fitter.py) that a reasonable $\chi^2$ is obtained 
+\item Once the test fit is ready, proceed to run a multinest which is an nested sampling algorithm 
+      to map out the likelihood function. In the input file you must specify the output.
+      Look for the line "output dir " in the input file. It is recommended to store the results in the 
+      repo analysis. 
+\item Once the multinest finishes it produces a nestout file at the path that was specified. 
+      Use one of the jupyter templates to proceed to analyze the output. You need to place the notebook 
+      at the root of analysis. Otherwise the paths wont match.  
+\end{itemize}
+
+If you want to run the codes but you want to modify things here and there, 
+create a new workspace via pacman/gen-fitpack, and cd to fitpack. The latter 
+has an exact copy of all the repos, and you can do with that whatever you want. 
+Once you see that some of your modifications should be placed in the actual
+repositories, proceed to do it.
+
+\newpage
+\section{Unpolarized TMDS}
+
+\begin{itemize}
+\item {\color{red} TODO: table of data sets with the following columns: exp, observable, num points, chi2 }
+\item {\color{red} TODO: what TMDS are going to be fitted? what is the parametrization}
+\item {\color{red} TODO: distribution of the parameters}
+\item {\color{red} TODO: chi2 distributions for each data sets}
+\item {\color{red} TODO: plot the x or z dependece}
+\item {\color{red} TODO: plot the $k_{\perp}$ or $P_{\perp}$ dependece}
+\end{itemize}
+
+\newpage
+\section{Sivers}
+
+\begin{itemize}
+\item {\color{red} TODO: table of data sets with the following columns: exp, observable, num points, chi2 }
+\item {\color{red} TODO: what TMDS are going to be fitted? what is the parametrization}
+\item {\color{red} TODO: distribution of the parameters}
+\item {\color{red} TODO: chi2 distributions for each data sets}
+\item {\color{red} TODO: plot the x or z dependece}
+\item {\color{red} TODO: plot the $k_{\perp}$ or $P_{\perp}$ dependece}
+\end{itemize}
+
+\newpage
+\section{Collins function from $e^+e^-$}
+
+\begin{itemize}
+\item {\color{red} TODO: table of data sets with the following columns: exp, observable, num points, chi2 }
+\item {\color{red} TODO: what TMDS are going to be fitted? what is the parametrization}
+\item {\color{red} TODO: distribution of the parameters}
+\item {\color{red} TODO: chi2 distributions for each data sets}
+\item {\color{red} TODO: plot the x or z dependece}
+\item {\color{red} TODO: plot the $k_{\perp}$ or $P_{\perp}$ dependece}
+\end{itemize}
+
+\newpage
+\section{transversity}
+
+\begin{itemize}
+\item {\color{red} TODO: table of data sets with the following columns: exp, observable, num points, chi2 }
+\item {\color{red} TODO: what TMDS are going to be fitted? what is the parametrization}
+\item {\color{red} TODO: distribution of the parameters}
+\item {\color{red} TODO: chi2 distributions for each data sets}
+\item {\color{red} TODO: plot the x or z dependece}
+\item {\color{red} TODO: plot the $k_{\perp}$ or $P_{\perp}$ dependece}
+\end{itemize}
+
+\newpage
+\section{Boer-Mulders}
+
+\begin{itemize}
+\item {\color{red} TODO: table of data sets with the following columns: exp, observable, num points, chi2 }
+\item {\color{red} TODO: what TMDS are going to be fitted? what is the parametrization}
+\item {\color{red} TODO: distribution of the parameters}
+\item {\color{red} TODO: chi2 distributions for each data sets}
+\item {\color{red} TODO: plot the x or z dependece}
+\item {\color{red} TODO: plot the $k_{\perp}$ or $P_{\perp}$ dependece}
+\end{itemize}
+
+\newpage
+\section{pretzelosity}
+
+\begin{itemize}
+\item {\color{red} TODO: table of data sets with the following columns: exp, observable, num points, chi2 }
+\item {\color{red} TODO: what TMDS are going to be fitted? what is the parametrization}
+\item {\color{red} TODO: distribution of the parameters}
+\item {\color{red} TODO: chi2 distributions for each data sets}
+\item {\color{red} TODO: plot the x or z dependece}
+\item {\color{red} TODO: plot the $k_{\perp}$ or $P_{\perp}$ dependece}
+\end{itemize}
+
+\newpage
+\section{worm-gear}
+
+\begin{itemize}
+\item {\color{red} TODO: table of data sets with the following columns: exp, observable, num points, chi2 }
+\item {\color{red} TODO: what TMDS are going to be fitted? what is the parametrization}
+\item {\color{red} TODO: distribution of the parameters}
+\item {\color{red} TODO: chi2 distributions for each data sets}
+\item {\color{red} TODO: plot the x or z dependece}
+\item {\color{red} TODO: plot the $k_{\perp}$ or $P_{\perp}$ dependece}
+\end{itemize}
+
+
+
+\newpage
+\section{Monte Carlo Event Generator (MCEG)}
+
+In this section we present details of how to construct an MCEG using
+the analytic expression for the SIDIS cross sections given in
+\eref{xsec}. The goal is to generate events for the reaction 
+$$l+P\to l'+P_h+P_X$$
+in the laboratory frame where $l$ and $l'$ are the momenta of the
+incoming and outgoing leptons respectively, $P$ is the target
+momentum, $P_h$ is the momentum of the observed hadron and $P_X$ is
+unobserved system. In this frame, the initial momenta are given by  
+%
+\begin{align}
+l&=(E,0,0,E)\notag\\
+P&=(M,0,0,0)
+\; ,
+\end{align}
+%
+where $E$ is the incoming electron beam energy and $M$ is the target
+nucleon mass. 
+
+The SIDIS cross section in \eref{xsec} is defined in terms of
+$x,y,z,\phi_h,\phi_S,P_h^T$. In order to generate the final state 
+momenta, one needs to generate samples of  $x,y,z,\phi_h,\phi_S,P_h^T$
+that are distributed according to \eref{xsec} and covert each sample
+into the final state momenta $l',P_h$. Notice that $P_X$ is fixed by
+momentum conservation. 
+
+$\phi_h,\phi_S$ and $P_h^T$ in \eref{xsec} are defined in the Breit frame. To
+transform the vectors into such frame we need to perform a rotation
+$R$ followed by a Lorentz boost $B$. The rotation can be done by using the
+Euler–Rodrigues formula by rotating $\vec{q}$  around the vector 
+$\vec{u}=\vec{q}\times(-\hat{e}_z)$ 
+by an angle $\alpha=\arccos(\vec{q}\cdot \hat{e}_z|\vec{q}|))$ with 
+$\hat{e}_z=(0,0,1)$. The rotation of a any vector $\vec{x}$ is given by 
+$$
+R(\vec{x})=\vec{x}+2a(\vec{w}\times\vec{x})+2(\vec{w}\times(\vec{w}\times\vec{x}))
+$$
+where $a=\cos(\alpha/2)$ and $\vec{w}=\sin(\alpha/2)\vec{u}/|\vec{u}|$. The
+boost $B$ is along the $z$-axis such that $B(R(q))=(0,0,0,-Q)$ and it
+given by 
+%
+\begin{align}
+B=\frac{1}{Q}
+\begin{pmatrix} 
+-q_R^3 & q_R^0 \\
+q_R^0 & -q_R^3 
+\end{pmatrix}
+\end{align}
+%
+where $q_R=R(q)$.
+
+We shall proceed to define a ``flat'' generator of the
+phase space needed to be used in a given generic sampling algorithm.  
+The generation of a phase space point proceeds with following 
+steps:
+
+\begin{enumerate}
+\item Generate $x\in[1/(2ME),1]$, $Q2\in[1,2xME]$ and 
+$\psi \in [0,2\pi]$ using uniform distributions and compute 
+outgoing lepton momentum
+%
+\begin{align}
+l'=E'\left(1,\sin(\theta)\cos(\phi),\sin(\theta)\sin(\phi),\cos(\theta)\right)
+\, .
+\end{align}
+%
+where $E'=E-Q^2/(2xM)$ and $\cos(\theta)=1-Q^2/(2 E E')$.
+In addition compute $q=l-l'$.
+\item Generate $z\in[M_h/q^0,1]$ using uniform distribution 
+and compute the energy of the outgoing hadron $P_h^0=zq^0$
+and the norm of outgoing hadron's 3-vector
+$|\vec{P}_h|=\sqrt{P_h^0-M_h^2}$.
+\item Generate $P_{h}^T\in[0,|\vec{P}_h|]$ and $\phi\in[0,2\pi]$
+using uniform distributions and a random ${\rm sign} \in\{1,-1\}$
+in order to generate outgoing hadron's momentum
+%
+\begin{align}
+P_h=\left(P_h^0,
+     P_{h}^T\cos(\phi),
+     P_{h}^T\sin(\phi),
+     {\rm sign}~\sqrt{|\vec{P}_h|^2-(P_h^T)^2}\right)
+\end{align}
+\item Rotate and boost all the 4-vectors $l,P,l',P_h,S$ as explained above
+and proceed to compute the phase space parameters that enters in \eref{xsec}
+\begin{align}
+x&=\frac{Q^2}{2P\cdot q}\\
+y&=\frac{P\cdot q}{P\cdot l}\\
+z&=\frac{P\cdot P_h}{P\cdot q}\\
+\phi_h&=\pi-\arccos((\vec{l}\times\vec{l'})\cdot (\vec{P_h}\times\vec{q}))\\
+\phi_S&=\frac{\pi}{2}-\arccos((\vec{l}\times\vec{l'})\cdot S)\\
+P_h^T &=\sqrt{(P_h^x)^2+(P_h^z)^2}
+\end{align}
+\end{enumerate}
+
+The flat sampler outlined above can generate events for arbitrary
+small $x,Q^2,z$ values. However, the analytic expressions for the 
+SIDIS cross section in \eref{xsec} are only valid for $Q^2>1{~\rm GeV^2}$
+to stay in the deep inelastic regime, $z>0.2$ to generate events 
+in the current fragmentation region. The range of $x$ probed by the 
+generator will depend on the beam energy $E$ and for fixed target 
+experiments such as the Jefferson Lab 12 GeV the smallest value 
+at $Q^2=1{~\rm GeV^2}$ is still in the domain of applicability 
+of \eref{xsec}. The sampler can be embedded within a simple while loop 
+that generate events and exit whenever the phase space parameters 
+are within the desired range. 
+
+{\color{red} 
+Issues:
+
+$\bullet$ The flat sampler does not produce flat $\phi_h$ and $\phi_S$ 
+
+$\bullet$ Maybe we can to do uniform sampling on $\phi_h$ and $\phi_S$
+and constrain azymuthal angles for $l'$ and $p_h$
+
+}
+ 
+%Having defined the flat sampler, we proceed to discuss the sampling 
+%algorithms. 
+%
+%\subsection{Rejection Sampling}
+%This is the simplest of the sampling algorithms. First compute the
+%larges attainable value of the cross section within the phase space
+%which occurs at  $Q^2_0=1{~\rm GeV^2}$, $x=Q^2_0/(2ME)$, $z=0.2$ and
+%$P_h^T=0$. Let's denote a given phase space point as 
+%$\Omega_i=(x_i,Q_i^2,z_i,(\phi_{h})_i,(P_{h}^T)_i)$. The rejection
+%sampling proceed as 
+%
+%\begin{algorithm}
+%  \caption{Rejection sampling}\label{rejection-sampling}
+%  \begin{algorithmic}[1]
+%%    \Procedure{Euclid}{$a,b$}\Comment{The g.c.d. of a and b}
+%      \State EVENTS = empty list
+%      \While{$r\not=0$}\Comment{We have the answer if r is 0}
+%        \State $a\gets b$
+%        \State $b\gets r$
+%        \State $r\gets a\bmod b$
+%      \EndWhile\label{euclidendwhile}
+%      \For{\texttt{<some condition>}}
+%        \State \texttt{<do stuff>}
+%      \EndFor
+%      \State \textbf{return} $b$\Comment{The gcd is b}
+%%    \EndProcedure
+%  \end{algorithmic}
+%\end{algorithm}
+
+
+
+\end{document}
+
+
+
+
+

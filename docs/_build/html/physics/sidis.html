@@ -1,0 +1,628 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>SIDIS &mdash; JAM3D 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="e+e-" href="e+e-.html" />
+    <link rel="prev" title="Physics" href="physics.html" /> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> JAM3D
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">JAM3D</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../extraction/index.html">TMD extraction tool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../simulation.html">Simulator</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="physics.html">Physics</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">SIDIS</a></li>
+<li class="toctree-l2"><a class="reference internal" href="e+e-.html">e+e-</a></li>
+<li class="toctree-l2"><a class="reference internal" href="A_N.html">A_N</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../publications.html">Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../api.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">JAM3D</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="physics.html">Physics</a> &raquo;</li>
+        
+      <li>SIDIS</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../_sources/physics/sidis.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="sidis">
+<h1>SIDIS<a class="headerlink" href="#sidis" title="Permalink to this headline">¶</a></h1>
+<p>The differential cross section is given by</p>
+<div class="math">
+\[\begin{align}
+\frac{d\sigma}{dx ~ dy ~ d\phi_S ~ dz ~ d\phi_h ~ dP_{\rm T}^2} =
+\frac{\alpha^2}{xyQ^2}\frac{y^2}{2(1-\varepsilon)}\left(1+\frac{\gamma^2}{2x} \right)
+\sum_{i=1}^{18} F_i(x,z,Q^2,P_{\rm T}) \beta_i
+\end{align}\]</div>
+<p>where</p>
+<table border="1" class="colwidths-given docutils" id="id1">
+<caption><span class="caption-text">SIDIS structure functions</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="33%" />
+<col width="33%" />
+<col width="33%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head"><span class="math">\(F_i\)</span></th>
+<th class="head">Standard Label</th>
+<th class="head"><span class="math">\(\beta_i\)</span></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><span class="math">\(F_1\)</span></td>
+<td><span class="math">\(F_{UU,T}\)</span></td>
+<td><span class="math">\(1\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\(F_2\)</span></td>
+<td><span class="math">\(F_{UU,L}\)</span></td>
+<td><span class="math">\(\varepsilon\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\(F_3\)</span></td>
+<td><span class="math">\(F_{LL}\)</span></td>
+<td><span class="math">\(S_{||}\lambda_e\sqrt{1-\varepsilon^2}\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\(F_4\)</span></td>
+<td><span class="math">\(F_{UT}^{\sin(\phi_h+\phi_S)}\)</span></td>
+<td><span class="math">\(|\vec{S}_\perp|\varepsilon\sin(\phi_h+\phi_S)\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\(F_5\)</span></td>
+<td><span class="math">\(F_{UT,T}^{\sin(\phi_h-\phi_S)}\)</span></td>
+<td><span class="math">\(|\vec{S}_\perp|\sin(\phi_h-\phi_S)\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\(F_6\)</span></td>
+<td><span class="math">\(F_{UT,L}^{\sin(\phi_h-\phi_S)}\)</span></td>
+<td><span class="math">\(|\vec{S}_\perp|\varepsilon\sin(\phi_h-\phi_S)\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\(F_7\)</span></td>
+<td><span class="math">\(F_{UU}^{\cos2\phi_h}\)</span></td>
+<td><span class="math">\(\varepsilon~\cos(2\phi_h)\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\(F_8\)</span></td>
+<td><span class="math">\(F_{UT}^{\sin(3\phi_h-\phi_S)}\)</span></td>
+<td><span class="math">\(|\vec{S}_\perp|\varepsilon\sin(3\phi_h-\phi_S)\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\(F_9\)</span></td>
+<td><span class="math">\(F_{LT}^{\cos(\phi_h-\phi_S)}\)</span></td>
+<td><span class="math">\(|\vec{S}_\perp|\lambda_e\sqrt{1-\varepsilon^2}\cos(\phi_h-\phi_S)\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\(F_{10}\)</span></td>
+<td><span class="math">\(F_{UL}^{\sin~2\phi_h}\)</span></td>
+<td><span class="math">\(S_{||}\varepsilon\sin(2\phi_h)\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\(F_{11}\)</span></td>
+<td><span class="math">\(F_{LT}^{\cos\phi_S}\)</span></td>
+<td><span class="math">\(|\vec{S}_\perp|\lambda_e\sqrt{2\varepsilon(1-\varepsilon)}\cos\phi_S\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\(F_{12}\)</span></td>
+<td><span class="math">\(F_{LL}^{\cos\phi_h}\)</span></td>
+<td><span class="math">\(S_{||}\lambda_e\sqrt{2\varepsilon(1-\varepsilon)}\cos\phi_h\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\(F_{13}\)</span></td>
+<td><span class="math">\(F_{LT}^{\cos(2\phi_h-\phi_S)}\)</span></td>
+<td><span class="math">\(|\vec{S}_\perp|\lambda_e\sqrt{2\varepsilon(1-\varepsilon)}\cos(2\phi_h-\phi_S)\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\(F_{14}\)</span></td>
+<td><span class="math">\(F_{UL}^{\sin\phi_h}\)</span></td>
+<td><span class="math">\(S_{||}\sqrt{2\varepsilon(1+\varepsilon)}\sin\phi_h\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\(F_{15}\)</span></td>
+<td><span class="math">\(F_{LU}^{\sin\phi_h}\)</span></td>
+<td><span class="math">\(\lambda_e\sqrt{2\varepsilon(1-\varepsilon)}\sin\phi_h\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\(F_{16}\)</span></td>
+<td><span class="math">\(F_{UU}^{\cos\phi_h}\)</span></td>
+<td><span class="math">\(\sqrt{2\varepsilon(1+\varepsilon)}~\cos\phi_h\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\(F_{17}\)</span></td>
+<td><span class="math">\(F_{UT}^{\sin\phi_S}\)</span></td>
+<td><span class="math">\(|\vec{S}_\perp|\sqrt{2\varepsilon(1+\varepsilon)}\sin\phi_S\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\(F_{18}\)</span></td>
+<td><span class="math">\(F_{UT}^{\sin(2\phi_h-\phi_S)}\)</span></td>
+<td><span class="math">\(|\vec{S}_\perp|\sqrt{2\varepsilon(1+\varepsilon)}\sin(2\phi_h-\phi_S)\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>were</p>
+<div class="math">
+\[\begin{split}\begin{align}
+\varepsilon &amp;= \frac{1-y-\frac{1}{4}\gamma^2 y^2}{1-y+\frac{1}{2} y^2 + \frac{1}{4}\gamma^2 y^2}\, , \\
+\gamma &amp;=  \frac{2 M x}{Q} \, ,
+\end{align}\end{split}\]</div>
+<p>and in the nucleon rest frame the polarization vector is given by <span class="math">\(S=(0,\vec{S}_\perp,S_L)\)</span> with <span class="math">\(\vec{S}_\perp^2+S_L^2=1\)</span>.</p>
+<p>The 18 structure function in SIDIS at leading-order will be expressed
+in the context of WW-type approximation in terms of a minimal
+TMD basis using the gaussian ansatz:</p>
+<div class="math">
+\[\begin{split}\begin{align}
+{\cal F}_q(\xi,p_{\perp})&amp;={\cal K}_q ~ {\cal C}_q(\xi) \frac{\exp\left(-k_{\perp}^2/\omega_q\right)}{\pi \omega_q}\\
+{\cal D}_q(\xi,p_{\perp})&amp;={\cal K}_q ~ {\cal C}_q(\xi) \frac{\exp\left(-P_{\perp}^2/\omega_q\right)}{\pi \omega_q}.
+\end{align}\end{split}\]</div>
+<p>We denote the transverse momentum of the quark inside a fast moving
+proton by <span class="math">\(k\)</span>. We use the notation <span class="math">\(p_{\perp}\)</span> for the
+transverse momentum of the quark relative to the fragmenting parton
+motion. The structure functions are expressed as</p>
+<div class="math">
+\[\begin{split}\begin{align}
+F&amp;=\sum_q e_q^2 ~ {\cal K}_q ~ {\cal F}_q(x) ~{\cal D}_q(z) \frac{\exp\left(-P_{\perp}^2/\Omega_q\right)}{\pi \Omega_q}\\
+\Omega_q&amp;=z^2\left&lt;k\right&gt; + \left&lt;p_{\perp}\right&gt;
+\end{align}\end{split}\]</div>
+<table border="1" class="docutils" id="id2">
+<caption><span class="caption-text">Nucleon distributions and fragmentation functions</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+<col width="25%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">type</th>
+<th class="head">Name</th>
+<th class="head"><span class="math">\({\cal K}_q\)</span></th>
+<th class="head"><span class="math">\({\cal C}_q\)</span></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><span class="math">\({\cal F}_q\)</span></td>
+<td>upol.PDF</td>
+<td><span class="math">\(1\)</span></td>
+<td><span class="math">\(f_1\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\({\cal F}_q\)</span></td>
+<td>pol.PDF</td>
+<td><span class="math">\(1\)</span></td>
+<td><span class="math">\(g_1^q\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\({\cal F}_q\)</span></td>
+<td>Transversity</td>
+<td><span class="math">\(1\)</span></td>
+<td><span class="math">\({h_1^q}\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\({\cal F}_q\)</span></td>
+<td>Sivers</td>
+<td><span class="math">\(\frac{2M^2}{\omega_q}\)</span></td>
+<td><span class="math">\({{f^{\perp(1)q}_{1T}}}\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\({\cal F}_q\)</span></td>
+<td>Boer-Mulders</td>
+<td><span class="math">\(\frac{2M^2}{\omega_q}\)</span></td>
+<td><span class="math">\({{h^{\perp(1)q}_1 }}\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\({\cal F}_q\)</span></td>
+<td>Pretzelosity</td>
+<td><span class="math">\(\frac{2M^4}{\omega_q^2}\)</span></td>
+<td><span class="math">\({{h^{\perp(2)q}_{1T} }}\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\({\cal F}_q\)</span></td>
+<td>WormGear</td>
+<td><span class="math">\(\frac{2M^2}{\omega_q}\)</span></td>
+<td><span class="math">\({{g^{\perp (1) q}_{1T}}}\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\({\cal F}_q\)</span></td>
+<td>WormGear</td>
+<td><span class="math">\(\frac{2M^2}{\omega_q}\)</span></td>
+<td><span class="math">\({{h^{\perp (1) q}_{1L}}}\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\({\cal F}_q\)</span></td>
+<td>twist-3</td>
+<td><span class="math">\(1\)</span></td>
+<td><span class="math">\({{g^{q}_{T}}}\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\({\cal F}_q\)</span></td>
+<td>twist-3</td>
+<td><span class="math">\(\frac{2M^4}{\omega_q^2}\)</span></td>
+<td><span class="math">\({ {g^{\perp(2)q}_{T} }}\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\({\cal F}_q\)</span></td>
+<td>twist-3</td>
+<td><span class="math">\(\frac{2M^2}{\omega_q}\)</span></td>
+<td><span class="math">\({{f^{\perp (1) q}}}\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\({\cal F}_q\)</span></td>
+<td>twist-3</td>
+<td><span class="math">\(\frac{2M^2}{\omega_q}\)</span></td>
+<td><span class="math">\({{h^{\perp (1) q}_T}}\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\({\cal F}_q\)</span></td>
+<td>twist-3</td>
+<td><span class="math">\(\frac{2M^2}{\omega_q}\)</span></td>
+<td><span class="math">\({{h^{(1) q}_T}}\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\({\cal F}_q\)</span></td>
+<td>twist-3</td>
+<td><span class="math">\(\frac{2M^4}{\omega_q^2}\)</span></td>
+<td><span class="math">\({{f^{\perp(2)q}_{T} }}\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\({\cal C}_q\)</span></td>
+<td>FF</td>
+<td><span class="math">\(1\)</span></td>
+<td><span class="math">\({{d_1^{q}}}\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\({\cal C}_q\)</span></td>
+<td>Collins</td>
+<td><span class="math">\(\frac{2z^2m_h^2}{\omega_q}\)</span></td>
+<td><span class="math">\({{H^{\perp(1)q}_{1} }}\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>twist-3 functions can be related to twist-2 functions using the following formulas:</p>
+<div class="math">
+\[\begin{split}\begin{align}
+g^{q}_{T}(x) = \int_x^1\frac{ d y}{y}\,g_1^q(y) \\
+\end{align}\end{split}\]</div>
+<div class="math">
+\[\begin{split}\begin{align}
+xg^{\perp(2)q}_{T}(x)  = \frac{\left&lt;k_{\perp}^2\right&gt;_{g^{\perp (1) q}_{1T}}}{M^2}\; g^{\perp (1) q}_{1T}(x)\\
+\end{align}\end{split}\]</div>
+<div class="math">
+\[\begin{split}\begin{align}
+x\,f^{\perp (1) q}(x) = \frac{\left&lt;k_{\perp}^2\right&gt;_{f_1}}{2M^2}\,f_1(x)\\
+\end{align}\end{split}\]</div>
+<div class="math">
+\[\begin{align}
+-\frac{1}{2}x(h^{\perp (1) q}_T(x)-h^{(1) q}_T(x)) = \frac{\left&lt;k_{\perp}^2\right&gt;_{h_1^q}}{2M^2}\;h_1^q(x)
+\end{align}\]</div>
+<div class="math">
+\[\begin{equation}
+ -\frac{1}{2}x(h^{\perp (1) q}_T(x)+h^{(1) q}_T(x)) = h^{\perp(2)q}_{1T}(x)
+\end{equation}\]</div>
+<table border="1" class="docutils" id="id3">
+<caption><span class="caption-text">Structure functions in terms of partonic d.o.f</span><a class="headerlink" href="#id3" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+<col width="20%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head"><span class="math">\(F_i\)</span></th>
+<th class="head">standard notation</th>
+<th class="head"><span class="math">\({\cal K}_q\)</span></th>
+<th class="head"><span class="math">\({\cal F}_q(x)\)</span></th>
+<th class="head"><span class="math">\({\cal D}_q(z)\)</span></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><span class="math">\(F_1\)</span></td>
+<td><span class="math">\(F_{UU,T}\)</span></td>
+<td><span class="math">\(x\)</span></td>
+<td><span class="math">\(f_1\)</span></td>
+<td><span class="math">\(d_1\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\(F_2\)</span></td>
+<td><span class="math">\(F_{UU,L}\)</span></td>
+<td><span class="math">\(0\)</span></td>
+<td><span class="math">\(0\)</span></td>
+<td><span class="math">\(0\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\(F_3\)</span></td>
+<td><span class="math">\(F_{LL}\)</span></td>
+<td><span class="math">\(x\)</span></td>
+<td><span class="math">\({g_1^q}\)</span></td>
+<td><span class="math">\({d_1^q}\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\(F_4\)</span></td>
+<td><span class="math">\(F_{UT}^{\sin(\phi_h+\phi_S)}\)</span></td>
+<td><span class="math">\(\frac{2xz{P^h_{\perp}} m_h}{w_q}\)</span></td>
+<td><span class="math">\({h_1^q}\)</span></td>
+<td><span class="math">\({H^{\perp(1)q}_{1}}\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\(F_5\)</span></td>
+<td><span class="math">\(F_{UT,T}^{\sin(\phi_h-\phi_S)}\)</span></td>
+<td><span class="math">\(-\frac{2xzM{P^h_{\perp}}}{w_q}\)</span></td>
+<td><span class="math">\({f^{\perp(1)q}_{1T}}\)</span></td>
+<td><span class="math">\({d_1^q}\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\(F_6\)</span></td>
+<td><span class="math">\(F_{UT,L}^{\sin(\phi_h-\phi_S)}\)</span></td>
+<td><span class="math">\(0\)</span></td>
+<td><span class="math">\(0\)</span></td>
+<td><span class="math">\(0\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\(F_7\)</span></td>
+<td><span class="math">\(F_{UU}^{\cos(2\phi_h)}\)</span></td>
+<td><span class="math">\(\frac{4xz^2M{P^h_{\perp}}^2m_h}{w_q^2}\)</span></td>
+<td><span class="math">\({h^{\perp(1)q}_1}\)</span></td>
+<td><span class="math">\({H^{\perp(1)q}_{1}}\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\(F_8\)</span></td>
+<td><span class="math">\(F_{UT}^{\sin(3\phi_h-\phi_S)}\)</span></td>
+<td><span class="math">\(\frac{2xz^3{P^h_{\perp}}^3m_hM^2}{w_q^3}\)</span></td>
+<td><span class="math">\({h^{\perp(2)q}_{1T}}\)</span></td>
+<td><span class="math">\({H^{\perp(1)q}_{1}}\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\(F_9\)</span></td>
+<td><span class="math">\(F_{LT}^{\cos(\phi_h-\phi_S)}\)</span></td>
+<td><span class="math">\(\frac{2xzM{P^h_{\perp}}}{w_q}\)</span></td>
+<td><span class="math">\({g^{\perp (1) q}_{1T}}\)</span></td>
+<td><span class="math">\({d_1^q}\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\(F_{10}\)</span></td>
+<td><span class="math">\(F_{UL}^{\sin(2\phi_h)}\)</span></td>
+<td><span class="math">\(\frac{4xz^2M{P^h_{\perp}}^2m_h}{w_q^2}\)</span></td>
+<td><span class="math">\({h^{\perp (1) q}_{1L}}\)</span></td>
+<td><span class="math">\({H^{\perp(1)q}_{1}}\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\(F_{11}\)</span></td>
+<td><span class="math">\(F_{LT}^{\cos\phi_S}\)</span></td>
+<td><span class="math">\(-\frac{2M}{Q}x\)</span></td>
+<td><span class="math">\({g^{q}_{T}}\)</span></td>
+<td><span class="math">\({d_1^q}\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\(F_{12}\)</span></td>
+<td><span class="math">\(F_{LL}^{\cos\phi_h}\)</span></td>
+<td><span class="math">\(-\frac{2xz{P^h_{\perp}}}{Q}\frac{{\left&lt;p_{\perp}\right&gt;}}{w_q}\)</span></td>
+<td><span class="math">\({g_1^q}\)</span></td>
+<td><span class="math">\({d_1^q}\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\(F_{13}\)</span></td>
+<td><span class="math">\(F_{LT}^{\cos(2\phi_h-\phi_S)}\)</span></td>
+<td><span class="math">\(-\frac{2xz^2M^3{P^h_{\perp}}^2}{Q}\frac{1}{w_q^2}\)</span></td>
+<td><span class="math">\(x{g^{q}_{T}}_{\perp}\)</span></td>
+<td><span class="math">\({d_1^q}\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\(F_{14}\)</span></td>
+<td><span class="math">\(F_{UL}^{\sin\phi_h}\)</span></td>
+<td><span class="math">\(\frac{4Mm_h}{Q}\frac{{P^h_{\perp}}z}{w_q}\)</span></td>
+<td><span class="math">\({h^{\perp (1) q}_{1L}}\)</span></td>
+<td><span class="math">\({H^{\perp(1)q}_{1}}\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\(F_{15}\)</span></td>
+<td><span class="math">\(F_{LU}^{\sin\phi_h}\)</span></td>
+<td><span class="math">\(0\)</span></td>
+<td><span class="math">\(0\)</span></td>
+<td><span class="math">\(0\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\(F_{16}\)</span></td>
+<td><span class="math">\(F_{UU}^{\cos\phi_h}(i)\)</span></td>
+<td><span class="math">\(0\)</span></td>
+<td><span class="math">\({h^{\perp(1)q}_1 }\)</span></td>
+<td><span class="math">\({H^{\perp(1)q}_{1}}\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\(F_{16}\)</span></td>
+<td><span class="math">\(F_{UU}^{\cos\phi_h}(ii)\)</span></td>
+<td><span class="math">\(-\frac{2M}{Q}\frac{2xz{P^h_{\perp}}M}{w_q}\)</span></td>
+<td><span class="math">\(xf^{\perp (1) q}\)</span></td>
+<td><span class="math">\({d_1^q}\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\(F_{17}\)</span></td>
+<td><span class="math">\(F_{UT}^{\sin\phi_S}(i)\)</span></td>
+<td><span class="math">\(0\)</span></td>
+<td><span class="math">\({f^{\perp(1)q}_{1T}}\)</span></td>
+<td><span class="math">\({d_1^q}\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\(F_{17}\)</span></td>
+<td><span class="math">\(F_{UT}^{\sin\phi_S}(ii)\)</span></td>
+<td><span class="math">\(\frac{2M}{Q}\frac{4xz^2m_hM}{w_q}(1-\frac{{P^h_{\perp}}^2}{w_q})\)</span></td>
+<td><span class="math">\(-\frac{1}{2}x({h^{\perp (1) q}_T}-{f^{\perp(2)q}_{T} })\)</span></td>
+<td><span class="math">\({H^{\perp(1)q}_{1}}\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\(F_{18}\)</span></td>
+<td><span class="math">\(F_{UT}^{\sin(2\phi_h-\phi_S)}(i)\)</span></td>
+<td><span class="math">\(\frac{2M}{Q}x\frac{M^2z^2{P^h_{\perp}}^2}{w_q^2}\)</span></td>
+<td><span class="math">\(x{f^{\perp (1) q}}\)</span></td>
+<td><span class="math">\({d_1^q}\)</span></td>
+</tr>
+<tr class="row-even"><td><span class="math">\(F_{18}\)</span></td>
+<td><span class="math">\(F_{UT}^{\sin(2\phi_h-\phi_S)}(ii)\)</span></td>
+<td><span class="math">\(-\frac{2M^2}{Q}x\frac{4z^2{P^h_{\perp}}^2Mm_h}{w_q^2}\)</span></td>
+<td><span class="math">\(-\frac{1}{2}x({h^{\perp (1) q}_T}+{f^{\perp(2)q}_{T} })\)</span></td>
+<td><span class="math">\({H^{\perp(1)q}_{1}}\)</span></td>
+</tr>
+<tr class="row-odd"><td><span class="math">\(F_{19}\)</span></td>
+<td><span class="math">\(F_{\rm CAHN}^{\cos(2\phi_h)}\)</span></td>
+<td><span class="math">\(\frac{1}{Q^2}\frac{2xz^2{P^h_{\perp}}^2{\left&lt;p_{\perp}\right&gt;}^2}{w_q^2}\)</span></td>
+<td><span class="math">\({f_1^q}\)</span></td>
+<td><span class="math">\({d_1^q}\)</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="e+e-.html" class="btn btn-neutral float-right" title="e+e-" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="physics.html" class="btn btn-neutral" title="Physics" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, N. Sato.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'1.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

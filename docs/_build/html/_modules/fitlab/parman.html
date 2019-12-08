@@ -1,0 +1,451 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>fitlab.parman &mdash; JAM3D 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> JAM3D
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">JAM3D</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../extraction/index.html">TMD extraction tool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../simulation.html">Simulator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../physics/physics.html">Physics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../publications.html">Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">JAM3D</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>fitlab.parman</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for fitlab.parman</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numpy.random</span> <span class="k">import</span> <span class="n">choice</span><span class="p">,</span> <span class="n">randn</span><span class="p">,</span> <span class="n">uniform</span>
+<span class="kn">from</span> <span class="nn">tools.config</span> <span class="k">import</span> <span class="n">conf</span><span class="p">,</span> <span class="n">load_config</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<div class="viewcode-block" id="PARMAN"><a class="viewcode-back" href="../../fitlab_parman.html#fitlab.parman.PARMAN">[docs]</a><span class="k">class</span> <span class="nc">PARMAN</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">get_ordered_free_params</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_new_params</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PARMAN.get_ordered_free_params"><a class="viewcode-back" href="../../fitlab_parman.html#fitlab.parman.PARMAN.get_ordered_free_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_ordered_free_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">par</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">order</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">kk</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;fixed&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+                    <span class="c1"># p=uniform(conf[&#39;params&#39;][k][kk][&#39;min&#39;],conf[&#39;params&#39;][k][kk][&#39;max&#39;],1)[0]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">kk</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="s1">&#39;datasets&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">kk</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;norm&#39;</span><span class="p">]:</span>
+                    <span class="k">if</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;norm&#39;</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;fixed&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">par</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">]</span>
+                                        <span class="p">[</span><span class="s1">&#39;norm&#39;</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">kk</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="PARMAN.set_new_params"><a class="viewcode-back" href="../../fitlab_parman.html#fitlab.parman.PARMAN.set_new_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_new_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parnew</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shifts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">semaphore</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="p">)):</span>
+            <span class="n">ii</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">kk</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">ii</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">semaphore</span><span class="p">:</span>
+                    <span class="n">semaphore</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">if</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">parnew</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                    <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parnew</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">semaphore</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">shifts</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">elif</span> <span class="n">ii</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;norm&#39;</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">parnew</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                    <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;norm&#39;</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">parnew</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">shifts</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="n">initial</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span>
+                <span class="n">semaphore</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">propagate_params</span><span class="p">(</span><span class="n">semaphore</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PARMAN.gen_report"><a class="viewcode-back" href="../../fitlab_parman.html#fitlab.parman.PARMAN.gen_report">[docs]</a>    <span class="k">def</span> <span class="nf">gen_report</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get a report.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            A list of the lines of the report.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">kk</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">]):</span>
+                <span class="k">if</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;fixed&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">L</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%-10s</span><span class="s1">  </span><span class="si">%-20s</span><span class="s1">  </span><span class="si">%10.5e</span><span class="s1">&#39;</span> <span class="o">%</span>
+                                 <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">kk</span><span class="p">,</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]))</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">L</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%-10s</span><span class="s1">  </span><span class="si">%-20s</span><span class="s1">   </span><span class="si">%10.5e</span><span class="s1">&#39;</span> <span class="o">%</span>
+                                 <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">kk</span><span class="p">,</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]))</span>
+
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">kk</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;norm&#39;</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;norm&#39;</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;fixed&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+                    <span class="n">L</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%10s</span><span class="s1"> </span><span class="si">%10s</span><span class="s1"> </span><span class="si">%10d</span><span class="s1">  </span><span class="si">%10.5e</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span>
+                        <span class="s1">&#39;norm&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">kk</span><span class="p">,</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;norm&#39;</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">L</span></div>
+
+<div class="viewcode-block" id="PARMAN.propagate_params"><a class="viewcode-back" href="../../fitlab_parman.html#fitlab.parman.PARMAN.propagate_params">[docs]</a>    <span class="k">def</span> <span class="nf">propagate_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">semaphore</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s1">&#39;pdf&#39;</span>          <span class="ow">in</span> <span class="n">semaphore</span> <span class="ow">and</span> <span class="n">semaphore</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">]</span>          <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_pdf_params</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;transversity&#39;</span> <span class="ow">in</span> <span class="n">semaphore</span> <span class="ow">and</span> <span class="n">semaphore</span><span class="p">[</span><span class="s1">&#39;transversity&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_transversity_params</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;sivers&#39;</span>       <span class="ow">in</span> <span class="n">semaphore</span> <span class="ow">and</span> <span class="n">semaphore</span><span class="p">[</span><span class="s1">&#39;sivers&#39;</span><span class="p">]</span>       <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_sivers_params</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;boermulders&#39;</span>  <span class="ow">in</span> <span class="n">semaphore</span> <span class="ow">and</span> <span class="n">semaphore</span><span class="p">[</span><span class="s1">&#39;boermulders&#39;</span><span class="p">]</span>  <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_boermulders_params</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;ffpi&#39;</span>         <span class="ow">in</span> <span class="n">semaphore</span> <span class="ow">and</span> <span class="n">semaphore</span><span class="p">[</span><span class="s1">&#39;ffpi&#39;</span><span class="p">]</span>         <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_ffpi_params</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;ffk&#39;</span>          <span class="ow">in</span> <span class="n">semaphore</span> <span class="ow">and</span> <span class="n">semaphore</span><span class="p">[</span><span class="s1">&#39;ffk&#39;</span><span class="p">]</span>          <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_ffk_params</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;collinspi&#39;</span>    <span class="ow">in</span> <span class="n">semaphore</span> <span class="ow">and</span> <span class="n">semaphore</span><span class="p">[</span><span class="s1">&#39;collinspi&#39;</span><span class="p">]</span>    <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_collinspi_params</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s1">&#39;collinsk&#39;</span>     <span class="ow">in</span> <span class="n">semaphore</span> <span class="ow">and</span> <span class="n">semaphore</span><span class="p">[</span><span class="s1">&#39;collinsk&#39;</span><span class="p">]</span>     <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_collinsk_params</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PARMAN.set_constraits"><a class="viewcode-back" href="../../fitlab_parman.html#fitlab.parman.PARMAN.set_constraits">[docs]</a>    <span class="k">def</span> <span class="nf">set_constraits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parkind</span><span class="p">):</span>
+
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">parkind</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">parkind</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;fixed&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>  <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">parkind</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;fixed&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span> <span class="k">continue</span>
+            <span class="n">ref_par</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">parkind</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;fixed&#39;</span><span class="p">]</span>
+            <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">parkind</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">parkind</span><span class="p">][</span><span class="n">ref_par</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="PARMAN.set_pdf_params"><a class="viewcode-back" href="../../fitlab_parman.html#fitlab.parman.PARMAN.set_pdf_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_pdf_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_constraits</span><span class="p">(</span><span class="s1">&#39;pdf&#39;</span><span class="p">)</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths1_uv</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;pdf&#39;</span><span class="p">][</span><span class="s1">&#39;widths1_uv&#39;</span> <span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths1_dv</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;pdf&#39;</span><span class="p">][</span><span class="s1">&#39;widths1_dv&#39;</span> <span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths1_sea</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;pdf&#39;</span><span class="p">][</span><span class="s1">&#39;widths1_sea&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths2_uv</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;pdf&#39;</span><span class="p">][</span><span class="s1">&#39;widths2_uv&#39;</span> <span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths2_dv</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;pdf&#39;</span><span class="p">][</span><span class="s1">&#39;widths2_dv&#39;</span> <span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths2_sea</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;pdf&#39;</span><span class="p">][</span><span class="s1">&#39;widths2_sea&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PARMAN.set_transversity_params"><a class="viewcode-back" href="../../fitlab_parman.html#fitlab.parman.PARMAN.set_transversity_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_transversity_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_constraits</span><span class="p">(</span><span class="s1">&#39;transversity&#39;</span><span class="p">)</span>
+
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;transversity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths1_uv</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;transversity&#39;</span><span class="p">][</span><span class="s1">&#39;widths1_uv&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;transversity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths1_dv</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;transversity&#39;</span><span class="p">][</span><span class="s1">&#39;widths1_dv&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;transversity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths1_sea</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;transversity&#39;</span><span class="p">][</span><span class="s1">&#39;widths1_sea&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;transversity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths2_uv</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;transversity&#39;</span><span class="p">][</span><span class="s1">&#39;widths2_uv&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;transversity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths2_dv</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;transversity&#39;</span><span class="p">][</span><span class="s1">&#39;widths2_dv&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;transversity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths2_sea</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;transversity&#39;</span><span class="p">][</span><span class="s1">&#39;widths2_sea&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+
+        <span class="n">iflav</span><span class="o">=</span><span class="mi">0</span>
+        <span class="k">for</span> <span class="n">flav</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span><span class="s1">&#39;ub&#39;</span><span class="p">,</span><span class="s1">&#39;d&#39;</span><span class="p">,</span><span class="s1">&#39;db&#39;</span><span class="p">,</span><span class="s1">&#39;s&#39;</span><span class="p">,</span><span class="s1">&#39;sb&#39;</span><span class="p">]:</span>
+            <span class="n">iflav</span><span class="o">+=</span><span class="mi">1</span>
+            <span class="n">ipar</span><span class="o">=-</span><span class="mi">1</span>
+            <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;N0&#39;</span><span class="p">,</span><span class="s1">&#39;a0&#39;</span><span class="p">,</span><span class="s1">&#39;b0&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="s1">&#39;d0&#39;</span><span class="p">,</span><span class="s1">&#39;N1&#39;</span><span class="p">,</span><span class="s1">&#39;a1&#39;</span><span class="p">,</span><span class="s1">&#39;b1&#39;</span><span class="p">,</span><span class="s1">&#39;c1&#39;</span><span class="p">,</span><span class="s1">&#39;d1&#39;</span><span class="p">]:</span>
+                <span class="n">ipar</span><span class="o">+=</span><span class="mi">1</span>
+                <span class="k">if</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> 1&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">flav</span><span class="p">,</span><span class="n">par</span><span class="p">)</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;transversity&#39;</span><span class="p">]:</span>
+                    <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;transversity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape1</span><span class="p">[</span><span class="n">iflav</span><span class="p">][</span><span class="n">ipar</span><span class="p">]</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;transversity&#39;</span><span class="p">][</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> 1&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">flav</span><span class="p">,</span><span class="n">par</span><span class="p">)][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> 2&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">flav</span><span class="p">,</span><span class="n">par</span><span class="p">)</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;transversity&#39;</span><span class="p">]:</span>
+                    <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;transversity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape2</span><span class="p">[</span><span class="n">iflav</span><span class="p">][</span><span class="n">ipar</span><span class="p">]</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;transversity&#39;</span><span class="p">][</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> 2&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">flav</span><span class="p">,</span><span class="n">par</span><span class="p">)][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;transversity&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PARMAN.set_sivers_params"><a class="viewcode-back" href="../../fitlab_parman.html#fitlab.parman.PARMAN.set_sivers_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_sivers_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_constraits</span><span class="p">(</span><span class="s1">&#39;sivers&#39;</span><span class="p">)</span>
+
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;sivers&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths1_uv</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;sivers&#39;</span><span class="p">][</span><span class="s1">&#39;widths1_uv&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;sivers&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths1_dv</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;sivers&#39;</span><span class="p">][</span><span class="s1">&#39;widths1_dv&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;sivers&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths1_sea</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;sivers&#39;</span><span class="p">][</span><span class="s1">&#39;widths1_sea&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;sivers&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths2_uv</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;sivers&#39;</span><span class="p">][</span><span class="s1">&#39;widths2_uv&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;sivers&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths2_dv</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;sivers&#39;</span><span class="p">][</span><span class="s1">&#39;widths2_dv&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;sivers&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths2_sea</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;sivers&#39;</span><span class="p">][</span><span class="s1">&#39;widths2_sea&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+
+        <span class="n">iflav</span><span class="o">=</span><span class="mi">0</span>
+        <span class="k">for</span> <span class="n">flav</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span><span class="s1">&#39;ub&#39;</span><span class="p">,</span><span class="s1">&#39;d&#39;</span><span class="p">,</span><span class="s1">&#39;db&#39;</span><span class="p">,</span><span class="s1">&#39;s&#39;</span><span class="p">,</span><span class="s1">&#39;sb&#39;</span><span class="p">]:</span>
+            <span class="n">iflav</span><span class="o">+=</span><span class="mi">1</span>
+            <span class="n">ipar</span><span class="o">=-</span><span class="mi">1</span>
+            <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;N0&#39;</span><span class="p">,</span><span class="s1">&#39;a0&#39;</span><span class="p">,</span><span class="s1">&#39;b0&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="s1">&#39;d0&#39;</span><span class="p">,</span><span class="s1">&#39;N1&#39;</span><span class="p">,</span><span class="s1">&#39;a1&#39;</span><span class="p">,</span><span class="s1">&#39;b1&#39;</span><span class="p">,</span><span class="s1">&#39;c1&#39;</span><span class="p">,</span><span class="s1">&#39;d1&#39;</span><span class="p">]:</span>
+                <span class="n">ipar</span><span class="o">+=</span><span class="mi">1</span>
+                <span class="k">if</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> 1&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">flav</span><span class="p">,</span><span class="n">par</span><span class="p">)</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;sivers&#39;</span><span class="p">]:</span>
+                    <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;sivers&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape1</span><span class="p">[</span><span class="n">iflav</span><span class="p">][</span><span class="n">ipar</span><span class="p">]</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;sivers&#39;</span><span class="p">][</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> 1&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">flav</span><span class="p">,</span><span class="n">par</span><span class="p">)][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> 2&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">flav</span><span class="p">,</span><span class="n">par</span><span class="p">)</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;sivers&#39;</span><span class="p">]:</span>
+                    <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;sivers&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape2</span><span class="p">[</span><span class="n">iflav</span><span class="p">][</span><span class="n">ipar</span><span class="p">]</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;sivers&#39;</span><span class="p">][</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> 2&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">flav</span><span class="p">,</span><span class="n">par</span><span class="p">)][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;sivers&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PARMAN.set_boermulders_params"><a class="viewcode-back" href="../../fitlab_parman.html#fitlab.parman.PARMAN.set_boermulders_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_boermulders_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_constraits</span><span class="p">(</span><span class="s1">&#39;boermulders&#39;</span><span class="p">)</span>
+
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;boermulders&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths1_uv</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;boermulders&#39;</span><span class="p">][</span><span class="s1">&#39;widths1_uv&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;boermulders&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths1_dv</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;boermulders&#39;</span><span class="p">][</span><span class="s1">&#39;widths1_dv&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;boermulders&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths1_sea</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;boermulders&#39;</span><span class="p">][</span><span class="s1">&#39;widths1_sea&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;boermulders&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths2_uv</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;boermulders&#39;</span><span class="p">][</span><span class="s1">&#39;widths2_uv&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;boermulders&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths2_dv</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;boermulders&#39;</span><span class="p">][</span><span class="s1">&#39;widths2_dv&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;boermulders&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths2_sea</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;boermulders&#39;</span><span class="p">][</span><span class="s1">&#39;widths2_sea&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+
+        <span class="n">iflav</span><span class="o">=</span><span class="mi">0</span>
+        <span class="k">for</span> <span class="n">flav</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span><span class="s1">&#39;ub&#39;</span><span class="p">,</span><span class="s1">&#39;d&#39;</span><span class="p">,</span><span class="s1">&#39;db&#39;</span><span class="p">,</span><span class="s1">&#39;s&#39;</span><span class="p">,</span><span class="s1">&#39;sb&#39;</span><span class="p">]:</span>
+            <span class="n">iflav</span><span class="o">+=</span><span class="mi">1</span>
+            <span class="n">ipar</span><span class="o">=-</span><span class="mi">1</span>
+            <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;N0&#39;</span><span class="p">,</span><span class="s1">&#39;a0&#39;</span><span class="p">,</span><span class="s1">&#39;b0&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="s1">&#39;d0&#39;</span><span class="p">,</span><span class="s1">&#39;N1&#39;</span><span class="p">,</span><span class="s1">&#39;a1&#39;</span><span class="p">,</span><span class="s1">&#39;b1&#39;</span><span class="p">,</span><span class="s1">&#39;c1&#39;</span><span class="p">,</span><span class="s1">&#39;d1&#39;</span><span class="p">]:</span>
+                <span class="n">ipar</span><span class="o">+=</span><span class="mi">1</span>
+                <span class="k">if</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> 1&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">flav</span><span class="p">,</span><span class="n">par</span><span class="p">)</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;boermulders&#39;</span><span class="p">]:</span>
+                    <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;boermulders&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape1</span><span class="p">[</span><span class="n">iflav</span><span class="p">][</span><span class="n">ipar</span><span class="p">]</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;boermulders&#39;</span><span class="p">][</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> 1&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">flav</span><span class="p">,</span><span class="n">par</span><span class="p">)][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> 2&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">flav</span><span class="p">,</span><span class="n">par</span><span class="p">)</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;boermulders&#39;</span><span class="p">]:</span>
+                    <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;boermulders&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape2</span><span class="p">[</span><span class="n">iflav</span><span class="p">][</span><span class="n">ipar</span><span class="p">]</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;boermulders&#39;</span><span class="p">][</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> 2&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">flav</span><span class="p">,</span><span class="n">par</span><span class="p">)][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;boermulders&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PARMAN.set_ffpi_params"><a class="viewcode-back" href="../../fitlab_parman.html#fitlab.parman.PARMAN.set_ffpi_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_ffpi_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_constraits</span><span class="p">(</span><span class="s1">&#39;ffpi&#39;</span><span class="p">)</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;ffpi&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths1_fav</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;ffpi&#39;</span><span class="p">][</span><span class="s1">&#39;widths1_fav&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;ffpi&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths1_ufav</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;ffpi&#39;</span><span class="p">][</span><span class="s1">&#39;widths1_ufav&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;ffpi&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths2_fav</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;ffpi&#39;</span><span class="p">][</span><span class="s1">&#39;widths2_fav&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;ffpi&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths2_ufav</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;ffpi&#39;</span><span class="p">][</span><span class="s1">&#39;widths2_ufav&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;ffpi&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PARMAN.set_ffk_params"><a class="viewcode-back" href="../../fitlab_parman.html#fitlab.parman.PARMAN.set_ffk_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_ffk_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_constraits</span><span class="p">(</span><span class="s1">&#39;ffk&#39;</span><span class="p">)</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;ffk&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths1_fav</span>   <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;ffk&#39;</span><span class="p">][</span><span class="s1">&#39;widths1_fav&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;ffk&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths1_ufav</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;ffk&#39;</span><span class="p">][</span><span class="s1">&#39;widths1_ufav&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;ffk&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths2_fav</span>   <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;ffk&#39;</span><span class="p">][</span><span class="s1">&#39;widths2_fav&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;ffk&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths2_ufav</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;ffk&#39;</span><span class="p">][</span><span class="s1">&#39;widths2_ufav&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;ffk&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PARMAN.set_collinspi_params"><a class="viewcode-back" href="../../fitlab_parman.html#fitlab.parman.PARMAN.set_collinspi_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_collinspi_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_constraits</span><span class="p">(</span><span class="s1">&#39;collinspi&#39;</span><span class="p">)</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;collinspi&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths1_fav</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;collinspi&#39;</span><span class="p">][</span><span class="s1">&#39;widths1_fav&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;collinspi&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths1_ufav</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;collinspi&#39;</span><span class="p">][</span><span class="s1">&#39;widths1_ufav&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;collinspi&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths2_fav</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;collinspi&#39;</span><span class="p">][</span><span class="s1">&#39;widths2_fav&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;collinspi&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths2_ufav</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;collinspi&#39;</span><span class="p">][</span><span class="s1">&#39;widths2_ufav&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+
+        <span class="n">iflav</span><span class="o">=</span><span class="mi">0</span>
+        <span class="k">for</span> <span class="n">flav</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span><span class="s1">&#39;ub&#39;</span><span class="p">,</span><span class="s1">&#39;d&#39;</span><span class="p">,</span><span class="s1">&#39;db&#39;</span><span class="p">,</span><span class="s1">&#39;s&#39;</span><span class="p">,</span><span class="s1">&#39;sb&#39;</span><span class="p">]:</span>
+            <span class="n">iflav</span><span class="o">+=</span><span class="mi">1</span>
+            <span class="n">ipar</span><span class="o">=-</span><span class="mi">1</span>
+            <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;N0&#39;</span><span class="p">,</span><span class="s1">&#39;a0&#39;</span><span class="p">,</span><span class="s1">&#39;b0&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="s1">&#39;d0&#39;</span><span class="p">,</span><span class="s1">&#39;N1&#39;</span><span class="p">,</span><span class="s1">&#39;a1&#39;</span><span class="p">,</span><span class="s1">&#39;b1&#39;</span><span class="p">,</span><span class="s1">&#39;c1&#39;</span><span class="p">,</span><span class="s1">&#39;d1&#39;</span><span class="p">]:</span>
+                <span class="n">ipar</span><span class="o">+=</span><span class="mi">1</span>
+                <span class="k">if</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> 1&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">flav</span><span class="p">,</span><span class="n">par</span><span class="p">)</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;collinspi&#39;</span><span class="p">]:</span>
+                    <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;collinspi&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape1</span><span class="p">[</span><span class="n">iflav</span><span class="p">][</span><span class="n">ipar</span><span class="p">]</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;collinspi&#39;</span><span class="p">][</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> 1&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">flav</span><span class="p">,</span><span class="n">par</span><span class="p">)][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> 2&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">flav</span><span class="p">,</span><span class="n">par</span><span class="p">)</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;collinspi&#39;</span><span class="p">]:</span>
+                    <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;collinspi&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape2</span><span class="p">[</span><span class="n">iflav</span><span class="p">][</span><span class="n">ipar</span><span class="p">]</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;collinspi&#39;</span><span class="p">][</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> 2&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">flav</span><span class="p">,</span><span class="n">par</span><span class="p">)][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;collinspi&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PARMAN.set_collinsk_params"><a class="viewcode-back" href="../../fitlab_parman.html#fitlab.parman.PARMAN.set_collinsk_params">[docs]</a>    <span class="k">def</span> <span class="nf">set_collinsk_params</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_constraits</span><span class="p">(</span><span class="s1">&#39;collinsk&#39;</span><span class="p">)</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;collinsk&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths1_fav</span>   <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;collinsk&#39;</span><span class="p">][</span><span class="s1">&#39;widths1_fav&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;collinsk&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths1_ufav</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;collinsk&#39;</span><span class="p">][</span><span class="s1">&#39;widths1_ufav&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;collinsk&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths2_fav</span>   <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;collinsk&#39;</span><span class="p">][</span><span class="s1">&#39;widths2_fav&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;collinsk&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">_widths2_ufav</span>  <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;collinsk&#39;</span><span class="p">][</span><span class="s1">&#39;widths2_ufav&#39;</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">iflav</span><span class="o">=</span><span class="mi">0</span>
+        <span class="k">for</span> <span class="n">flav</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">,</span><span class="s1">&#39;ub&#39;</span><span class="p">,</span><span class="s1">&#39;d&#39;</span><span class="p">,</span><span class="s1">&#39;db&#39;</span><span class="p">,</span><span class="s1">&#39;s&#39;</span><span class="p">,</span><span class="s1">&#39;sb&#39;</span><span class="p">]:</span>
+            <span class="n">iflav</span><span class="o">+=</span><span class="mi">1</span>
+            <span class="n">ipar</span><span class="o">=-</span><span class="mi">1</span>
+            <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;N0&#39;</span><span class="p">,</span><span class="s1">&#39;a0&#39;</span><span class="p">,</span><span class="s1">&#39;b0&#39;</span><span class="p">,</span><span class="s1">&#39;c0&#39;</span><span class="p">,</span><span class="s1">&#39;d0&#39;</span><span class="p">,</span><span class="s1">&#39;N1&#39;</span><span class="p">,</span><span class="s1">&#39;a1&#39;</span><span class="p">,</span><span class="s1">&#39;b1&#39;</span><span class="p">,</span><span class="s1">&#39;c1&#39;</span><span class="p">,</span><span class="s1">&#39;d1&#39;</span><span class="p">]:</span>
+                <span class="n">ipar</span><span class="o">+=</span><span class="mi">1</span>
+                <span class="k">if</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> 1&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">flav</span><span class="p">,</span><span class="n">par</span><span class="p">)</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;collinsk&#39;</span><span class="p">]:</span>
+                    <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;collinsk&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape1</span><span class="p">[</span><span class="n">iflav</span><span class="p">][</span><span class="n">ipar</span><span class="p">]</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;collinsk&#39;</span><span class="p">][</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> 1&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">flav</span><span class="p">,</span><span class="n">par</span><span class="p">)][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> 2&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">flav</span><span class="p">,</span><span class="n">par</span><span class="p">)</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;collinsk&#39;</span><span class="p">]:</span>
+                    <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;collinsk&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape2</span><span class="p">[</span><span class="n">iflav</span><span class="p">][</span><span class="n">ipar</span><span class="p">]</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="s1">&#39;collinsk&#39;</span><span class="p">][</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> </span><span class="si">%s</span><span class="s1"> 2&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">flav</span><span class="p">,</span><span class="n">par</span><span class="p">)][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;collinsk&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span></div></div>
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, N. Sato.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

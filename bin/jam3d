@@ -1,0 +1,35 @@
+#!/usr/bin/env python
+try:
+  import setproctitle
+  setproctitle.setproctitle("jam3d")
+except:
+  pass
+
+import argparse
+import sys,os
+import tools.config
+
+#--from fitlib
+from  fitlib.maxlike import MAXLIKE
+
+ap = argparse.ArgumentParser()
+ap.add_argument('input', help='config file (e.g. input.py)')
+msg =" 0: speedtest"
+msg+=" 1: maxlike"
+ap.add_argument('-t','--task',type=int,default=0,help=msg)
+ap.add_argument('-n','--ncores',type=int,default=20,help='cpu cores')
+ap.add_argument('-v','--verbose',type=int,default=1,help='verbose')
+ap.add_argument('-msrh','--msrhook',type=str,default=None,help='msr hook')
+ap.add_argument('-p','--prior',type=str,default=None,help='path to prior')
+args = ap.parse_args()
+
+if  args.task==1:
+
+    MAXLIKE( args.input\
+            ,args.ncores\
+            ,args.verbose\
+            ,args.msrhook\
+            ,args.prior\
+            ).run()
+
+

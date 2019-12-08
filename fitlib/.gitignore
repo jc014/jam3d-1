@@ -1,0 +1,12 @@
+*.pyc
+.ipynb_checkpoints/*
+runs/*
+more/*
+outputs/*
+.ipynb_checkpoints
+
+# profiling files
+*.lprof
+*.prof
+*.profile
+

@@ -1,0 +1,735 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>fitlab.maxlike &mdash; JAM3D 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> JAM3D
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                1.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">JAM3D</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorial.html">Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../extraction/index.html">TMD extraction tool</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../simulation.html">Simulator</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../physics/physics.html">Physics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../publications.html">Publications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">JAM3D</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>fitlab.maxlike</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for fitlab.maxlike</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span><span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">tools.tools</span> <span class="k">import</span> <span class="n">checkdir</span><span class="p">,</span><span class="n">save</span><span class="p">,</span><span class="n">load</span>
+<span class="kn">from</span> <span class="nn">tools.config</span> <span class="k">import</span> <span class="n">load_config</span><span class="p">,</span> <span class="n">conf</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">minimize</span><span class="p">,</span><span class="n">leastsq</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">tools.bar</span> <span class="k">import</span> <span class="n">BAR</span>
+<span class="kn">import</span> <span class="nn">itertools</span> <span class="k">as</span> <span class="nn">it</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="k">import</span> <span class="n">clear_output</span>
+<span class="kn">from</span> <span class="nn">tools.inputmod</span> <span class="k">import</span> <span class="n">INPUTMOD</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">least_squares</span>
+
+<div class="viewcode-block" id="ML"><a class="viewcode-back" href="../../fitlab_maxlike.html#fitlab.maxlike.ML">[docs]</a><span class="k">class</span> <span class="nc">ML</span><span class="p">:</span>
+
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s1">&#39;args&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">inputfile</span><span class="o">=</span><span class="n">inputfile</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">config</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">cum_shifts</span><span class="o">=</span><span class="mi">0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">iteration</span><span class="o">=</span><span class="mi">0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">CHI2T</span><span class="o">=</span><span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">CHI2V</span><span class="o">=</span><span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">PARAMS</span><span class="o">=</span><span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">TOT</span><span class="o">=</span><span class="p">[]</span>
+
+<div class="viewcode-block" id="ML.get_stats"><a class="viewcode-back" href="../../fitlab_maxlike.html#fitlab.maxlike.ML.get_stats">[docs]</a>  <span class="k">def</span> <span class="nf">get_stats</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">res</span><span class="p">,</span><span class="n">rres</span><span class="p">,</span><span class="n">nres</span><span class="p">,</span><span class="n">delay</span><span class="p">):</span>
+
+    <span class="n">shifts</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shifts</span>
+    <span class="n">etime</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">t0</span><span class="p">)</span><span class="o">/</span><span class="mi">60</span>
+
+    <span class="n">npts</span><span class="o">=</span><span class="n">res</span><span class="o">.</span><span class="n">size</span>
+    <span class="n">chi2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">res</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">rchi2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">rres</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">nchi2</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">nres</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">chi2tot</span><span class="o">=</span><span class="n">chi2</span><span class="o">+</span><span class="n">rchi2</span><span class="o">+</span><span class="n">nchi2</span>
+    <span class="n">dchi2</span><span class="o">=</span><span class="n">chi2tot</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">chi2tot</span>
+    <span class="k">if</span> <span class="n">shifts</span><span class="o">&gt;</span><span class="mi">2</span><span class="p">:</span> 
+      <span class="k">if</span> <span class="n">chi2tot</span><span class="o">&lt;</span><span class="bp">self</span><span class="o">.</span><span class="n">chi2tot</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dchi2</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">chi2tot</span><span class="o">-</span><span class="n">chi2tot</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chi2tot</span><span class="o">=</span><span class="n">chi2tot</span>
+
+
+    <span class="n">status</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">status</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;JAM FITTER&#39;</span><span class="p">)</span>
+    <span class="n">status</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;count        = </span><span class="si">%d</span><span class="s1">&#39;</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">cnt</span><span class="p">)</span>
+    <span class="n">status</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;elapsed time(mins)=</span><span class="si">%f</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">etime</span><span class="p">)</span>
+    <span class="n">status</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;shifts       = </span><span class="si">%d</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">shifts</span><span class="p">)</span>
+    <span class="n">status</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;npts         = </span><span class="si">%d</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">npts</span><span class="p">)</span>
+    <span class="n">dof</span> <span class="o">=</span> <span class="n">npts</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">par</span><span class="p">)</span>
+    <span class="n">status</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;d.o.f.       = </span><span class="si">%d</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">dof</span><span class="p">)</span>
+    <span class="n">status</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;chi2         = </span><span class="si">%f</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">chi2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">dof</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+      <span class="n">status</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;chi2/d.o.f   = </span><span class="si">%f</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">chi2</span><span class="o">/</span><span class="n">dof</span><span class="p">))</span>
+    <span class="n">status</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;rchi2        = </span><span class="si">%f</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">rchi2</span><span class="p">)</span>
+    <span class="n">status</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;nchi2        = </span><span class="si">%f</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">nchi2</span><span class="p">)</span>
+    <span class="n">status</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;chi2tot      = </span><span class="si">%f</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">chi2tot</span><span class="p">))</span>
+    <span class="n">status</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;dchi2(iter)  = </span><span class="si">%f</span><span class="s1">&#39;</span><span class="o">%</span><span class="bp">self</span><span class="o">.</span><span class="n">dchi2</span><span class="p">)</span>
+    <span class="n">status</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;dchi2(local) = </span><span class="si">%f</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">dchi2</span><span class="p">)</span>
+    <span class="n">status</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">status</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;resman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">gen_report</span><span class="p">())</span>
+    <span class="n">parstatus</span> <span class="o">=</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">gen_report</span><span class="p">()</span>
+
+    <span class="n">nstatus</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+    <span class="n">nparstatus</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">parstatus</span><span class="p">)</span>
+
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;clear&#39;</span><span class="p">)</span> 
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">max</span><span class="p">([</span><span class="n">nstatus</span><span class="p">,</span><span class="n">nparstatus</span><span class="p">])):</span>
+      <span class="n">data</span><span class="o">=</span><span class="p">[]</span>
+      <span class="k">if</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nstatus</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">status</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+      <span class="k">else</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">nparstatus</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">parstatus</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+      <span class="k">else</span><span class="p">:</span> <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+      <span class="nb">print</span> <span class="s1">&#39;</span><span class="si">%-120s</span><span class="s1">  | </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="nb">tuple</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+      
+    
+    <span class="k">if</span> <span class="n">delay</span><span class="o">==</span><span class="kc">True</span><span class="p">:</span> 
+      <span class="k">if</span> <span class="s1">&#39;args&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen_output</span><span class="p">()</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">gen_output</span><span class="p">()</span></div>
+      <span class="c1">#sys.exit()</span>
+
+    <span class="c1">#clear_output(wait=True)</span>
+    <span class="c1">#if conf[&#39;screen mode&#39;]==&#39;curses&#39;:</span>
+
+    <span class="c1">#  self.status.append(&#39;&#39;)</span>
+    <span class="c1">#  if    delay==False: self.status.append(&#39;&#39;)</span>
+    <span class="c1">#  else: self.status.append(&#39;Its over!!!&#39;)</span>
+    <span class="c1">#  self.status.append(&#39;&#39;)</span>
+    <span class="c1">#  self.status.append(&#39;press q to exit&#39;)</span>
+
+    <span class="c1">#  conf[&#39;screen&#39;].clear()</span>
+    <span class="c1">#  conf[&#39;screen&#39;].border(0)</span>
+    <span class="c1">#  if delay==False: conf[&#39;screen&#39;].nodelay(1)</span>
+    <span class="c1">#  else: conf[&#39;screen&#39;].nodelay(0)</span>
+
+    <span class="c1">#  for i in range(len(self.status)):</span>
+    <span class="c1">#    conf[&#39;screen&#39;].addstr(i+2,2,self.status[i])</span>
+
+    <span class="c1">#  for i in range(len(parstatus)):</span>
+    <span class="c1">#    conf[&#39;screen&#39;].addstr(i+2,80,parstatus[i])</span>
+
+
+    <span class="c1">#  conf[&#39;screen&#39;].refresh()</span>
+    <span class="c1">#  if conf[&#39;screen&#39;].getch()==ord(&#39;q&#39;):</span>
+    <span class="c1">#    curses.endwin()</span>
+    <span class="c1">#    self.gen_output()</span>
+    <span class="c1">#    sys.exit()</span>
+
+    <span class="c1">#elif conf[&#39;screen mode&#39;]==&#39;plain&#39;:</span>
+
+<div class="viewcode-block" id="ML.get_residuals"><a class="viewcode-back" href="../../fitlab_maxlike.html#fitlab.maxlike.ML.get_residuals">[docs]</a>  <span class="k">def</span> <span class="nf">get_residuals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">par</span><span class="p">,</span><span class="n">delay</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">status</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">res</span><span class="p">,</span><span class="n">rres</span><span class="p">,</span><span class="n">nres</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;resman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_residuals</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">status</span><span class="p">:</span> 
+      <span class="bp">self</span><span class="o">.</span><span class="n">cnt</span><span class="o">+=</span><span class="mi">1</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">get_stats</span><span class="p">(</span><span class="n">res</span><span class="p">,</span><span class="n">rres</span><span class="p">,</span><span class="n">nres</span><span class="p">,</span><span class="n">delay</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rres</span><span class="p">)</span><span class="o">!=</span><span class="mi">0</span><span class="p">:</span> <span class="n">res</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">,</span><span class="n">rres</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nres</span><span class="p">)</span><span class="o">!=</span><span class="mi">0</span><span class="p">:</span> <span class="n">res</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">,</span><span class="n">nres</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">res</span></div>
+
+<div class="viewcode-block" id="ML.gen_output"><a class="viewcode-back" href="../../fitlab_maxlike.html#fitlab.maxlike.ML.gen_output">[docs]</a>  <span class="k">def</span> <span class="nf">gen_output</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="n">inputmod</span><span class="o">=</span><span class="n">INPUTMOD</span><span class="p">(</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">]:</span> 
+      <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">kind</span><span class="p">]:</span>
+        <span class="n">value</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">kind</span><span class="p">][</span><span class="n">par</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">inputmod</span><span class="o">.</span><span class="n">mod_par</span><span class="p">(</span><span class="n">kind</span><span class="p">,</span><span class="n">par</span><span class="p">,</span><span class="s1">&#39;value&#39;</span><span class="p">,</span><span class="n">value</span><span class="p">)</span> 
+
+    <span class="k">for</span> <span class="n">reaction</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">]:</span>
+      <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">][</span><span class="n">reaction</span><span class="p">][</span><span class="s1">&#39;norm&#39;</span><span class="p">]:</span>
+        <span class="n">value</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">][</span><span class="n">reaction</span><span class="p">][</span><span class="s1">&#39;norm&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">inputmod</span><span class="o">.</span><span class="n">mod_norm</span><span class="p">(</span><span class="n">reaction</span><span class="p">,</span><span class="n">idx</span><span class="p">,</span><span class="s1">&#39;value&#39;</span><span class="p">,</span><span class="n">value</span><span class="p">)</span> 
+
+    <span class="n">inputmod</span><span class="o">.</span><span class="n">gen_input</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ML.get_chi2"><a class="viewcode-back" href="../../fitlab_maxlike.html#fitlab.maxlike.ML.get_chi2">[docs]</a>  <span class="k">def</span> <span class="nf">get_chi2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">par</span><span class="p">,</span><span class="n">status</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_residuals</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ML.run_minimize"><a class="viewcode-back" href="../../fitlab_maxlike.html#fitlab.maxlike.ML.run_minimize">[docs]</a>  <span class="k">def</span> <span class="nf">run_minimize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="n">guess</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">par</span>
+    <span class="n">order</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">order</span>
+    <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;screen mode&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;plain&#39;</span>
+
+    <span class="n">bounds</span><span class="o">=</span><span class="p">[]</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">order</span><span class="p">:</span>
+      <span class="n">i</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">kk</span><span class="o">=</span><span class="n">entry</span>
+      <span class="k">if</span> <span class="n">i</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">bounds</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;min&#39;</span><span class="p">],</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;max&#39;</span><span class="p">]])</span>
+      <span class="k">elif</span> <span class="n">i</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+        <span class="n">bounds</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;screen mode&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;curses&#39;</span><span class="p">:</span>
+      <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;screen&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">curses</span><span class="o">.</span><span class="n">initscr</span><span class="p">()</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">chi2tot</span><span class="o">=</span><span class="mf">1e1000</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dchi2</span><span class="o">=</span><span class="mi">0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">cnt</span><span class="o">=</span><span class="mi">0</span>
+
+    <span class="c1">#self.get_residuals(guess)</span>
+    <span class="c1">#sys.exit()</span>
+
+    <span class="n">res</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_chi2</span><span class="p">,</span><span class="n">guess</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="n">bounds</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;TNC&#39;</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_residuals</span><span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="n">delay</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ML.run_leastsq"><a class="viewcode-back" href="../../fitlab_maxlike.html#fitlab.maxlike.ML.run_leastsq">[docs]</a>  <span class="k">def</span> <span class="nf">run_leastsq</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="n">guess</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">par</span>
+    <span class="n">order</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">order</span>
+    <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;screen mode&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;plain&#39;</span>
+
+
+    <span class="n">bounds</span><span class="o">=</span><span class="p">[]</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">order</span><span class="p">:</span>
+      <span class="n">i</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">kk</span><span class="o">=</span><span class="n">entry</span>
+      <span class="k">if</span> <span class="n">i</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">bounds</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;min&#39;</span><span class="p">],</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;max&#39;</span><span class="p">]])</span>
+      <span class="k">elif</span> <span class="n">i</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+        <span class="n">bounds</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;screen mode&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;curses&#39;</span><span class="p">:</span>
+      <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;screen&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">curses</span><span class="o">.</span><span class="n">initscr</span><span class="p">()</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">chi2tot</span><span class="o">=</span><span class="mf">1e1000</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dchi2</span><span class="o">=</span><span class="mi">0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">cnt</span><span class="o">=</span><span class="mi">0</span>
+
+    <span class="c1">#self.get_residuals(guess)</span>
+    <span class="c1">#self.gen_output()</span>
+    <span class="c1">#sys.exit()</span>
+
+    <span class="c1">#print conf[&#39;lmdiff tol&#39;]</span>
+    <span class="c1">#sys.exit()</span>
+
+    <span class="k">if</span> <span class="s1">&#39;lmdiff tol&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">:</span>
+      <span class="n">fit</span><span class="o">=</span><span class="n">leastsq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_residuals</span><span class="p">,</span><span class="n">guess</span><span class="p">,</span><span class="n">full_output</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="n">ftol</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;lmdiff tol&#39;</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">fit</span><span class="o">=</span><span class="n">leastsq</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_residuals</span><span class="p">,</span><span class="n">guess</span><span class="p">,</span><span class="n">full_output</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">res</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_residuals</span><span class="p">(</span><span class="n">fit</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">delay</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ML.run_leastsq2"><a class="viewcode-back" href="../../fitlab_maxlike.html#fitlab.maxlike.ML.run_leastsq2">[docs]</a>  <span class="k">def</span> <span class="nf">run_leastsq2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="s1">&#39;flat par&#39;</span> <span class="ow">in</span> <span class="n">conf</span> <span class="ow">and</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;flat par&#39;</span><span class="p">]</span><span class="o">==</span><span class="kc">True</span><span class="p">:</span>
+      <span class="n">guess</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">gen_flat</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">guess</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">par</span>
+
+    <span class="n">order</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">order</span>
+    <span class="c1">#conf[&#39;screen mode&#39;]=&#39;plain&#39;</span>
+
+    <span class="n">bounds_min</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">bounds_max</span><span class="o">=</span><span class="p">[]</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">order</span><span class="p">:</span>
+      <span class="n">i</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">kk</span><span class="o">=</span><span class="n">entry</span>
+      <span class="k">if</span> <span class="n">i</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">p</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+        <span class="n">pmin</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;min&#39;</span><span class="p">]</span>
+        <span class="n">pmax</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;max&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">p</span><span class="o">&lt;</span><span class="n">pmin</span> <span class="ow">or</span> <span class="n">p</span><span class="o">&gt;</span><span class="n">pmax</span><span class="p">:</span> 
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1"> outsize the limits&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="n">kk</span><span class="p">))</span>
+        <span class="n">bounds_min</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;min&#39;</span><span class="p">])</span>
+        <span class="n">bounds_max</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;max&#39;</span><span class="p">])</span>
+      <span class="k">elif</span> <span class="n">i</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+        <span class="n">bounds_min</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;norm&#39;</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;min&#39;</span><span class="p">])</span>
+        <span class="n">bounds_max</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="s1">&#39;norm&#39;</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;max&#39;</span><span class="p">])</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">chi2tot</span><span class="o">=</span><span class="mf">1e1000</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dchi2</span><span class="o">=</span><span class="mi">0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">cnt</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">least_squares</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_residuals</span><span class="p">,</span> <span class="n">guess</span><span class="p">,</span><span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="n">bounds_min</span><span class="p">,</span><span class="n">bounds_max</span><span class="p">),</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;trf&#39;</span><span class="p">,</span><span class="n">ftol</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;ftol&#39;</span><span class="p">])</span>
+    <span class="n">res</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_residuals</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="n">delay</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="s1">&#39;bootstrap&#39;</span> <span class="ow">in</span> <span class="n">conf</span> <span class="ow">and</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;bootstrap&#39;</span><span class="p">]:</span>
+      <span class="n">fname</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">.mcr&#39;</span><span class="o">%</span><span class="n">id_generator</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+      <span class="n">save</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="n">fname</span><span class="p">)</span>
+      <span class="k">if</span> <span class="s1">&#39;cmd&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+          <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;cmd&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&lt;&lt;fname&gt;&gt;&#39;</span><span class="p">,</span><span class="n">fname</span><span class="p">))</span>
+        <span class="k">except</span><span class="p">:</span>
+          <span class="nb">print</span> <span class="s1">&#39;could not execute </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">cmd</span></div>
+
+<div class="viewcode-block" id="ML.run_test"><a class="viewcode-back" href="../../fitlab_maxlike.html#fitlab.maxlike.ML.run_test">[docs]</a>  <span class="k">def</span> <span class="nf">run_test</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="n">guess</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">par</span>
+    <span class="n">order</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">order</span>
+    <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;screen mode&#39;</span><span class="p">]</span><span class="o">=</span><span class="s1">&#39;plain&#39;</span>
+
+    <span class="n">bounds</span><span class="o">=</span><span class="p">[]</span>
+    <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">order</span><span class="p">:</span>
+      <span class="n">i</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">kk</span><span class="o">=</span><span class="n">entry</span>
+      <span class="k">if</span> <span class="n">i</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">bounds</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;min&#39;</span><span class="p">],</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;params&#39;</span><span class="p">][</span><span class="n">k</span><span class="p">][</span><span class="n">kk</span><span class="p">][</span><span class="s1">&#39;max&#39;</span><span class="p">]])</span>
+      <span class="k">elif</span> <span class="n">i</span><span class="o">==</span><span class="mi">2</span><span class="p">:</span>
+        <span class="n">bounds</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;screen mode&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;curses&#39;</span><span class="p">:</span>
+      <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;screen&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">curses</span><span class="o">.</span><span class="n">initscr</span><span class="p">()</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">chi2tot</span><span class="o">=</span><span class="mf">1e1000</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dchi2</span><span class="o">=</span><span class="mi">0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">cnt</span><span class="o">=</span><span class="mi">0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">get_residuals</span><span class="p">(</span><span class="n">guess</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;resman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">gen_report</span><span class="p">(</span><span class="n">verb</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+      <span class="nb">print</span> <span class="n">l</span></div>
+
+<div class="viewcode-block" id="ML.analysis"><a class="viewcode-back" href="../../fitlab_maxlike.html#fitlab.maxlike.ML.analysis">[docs]</a>  <span class="k">def</span> <span class="nf">analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">gen_report</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ML.gen_report"><a class="viewcode-back" href="../../fitlab_maxlike.html#fitlab.maxlike.ML.gen_report">[docs]</a>  <span class="k">def</span> <span class="nf">gen_report</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">inputfile</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">config</span>
+    <span class="n">outdir</span><span class="o">=</span><span class="s1">&#39;outputs/&#39;</span><span class="o">+</span><span class="n">inputfile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.py&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">checkdir</span><span class="p">(</span><span class="n">outdir</span><span class="p">)</span>
+    <span class="n">par</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">par</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">cnt</span><span class="o">=</span><span class="mi">0</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">get_residuals</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">status</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;pdf&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sr</span>
+    <span class="n">report</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;resman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">gen_report</span><span class="p">(</span><span class="n">verb</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">level</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">save</span><span class="p">(</span><span class="n">report</span><span class="p">,</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/report-ML&#39;</span><span class="o">%</span><span class="n">outdir</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ML.simulation"><a class="viewcode-back" href="../../fitlab_maxlike.html#fitlab.maxlike.ML.simulation">[docs]</a>  <span class="k">def</span> <span class="nf">simulation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">par</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">par</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">get_residuals</span><span class="p">(</span><span class="n">par</span><span class="p">,</span><span class="n">delay</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">status</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">obs</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">]:</span>
+      <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">][</span><span class="n">obs</span><span class="p">][</span><span class="s1">&#39;xlsx&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">idx</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">:</span> 
+          <span class="n">fname</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;datasets&#39;</span><span class="p">][</span><span class="n">obs</span><span class="p">][</span><span class="s1">&#39;xlsx&#39;</span><span class="p">][</span><span class="n">idx</span><span class="p">]</span>
+          <span class="n">tab</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+          <span class="n">tab</span><span class="o">.</span><span class="n">value</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1"> tabs&#39;</span><span class="o">%</span><span class="n">obs</span><span class="p">][</span><span class="n">idx</span><span class="p">][</span><span class="s1">&#39;thy&#39;</span><span class="p">]</span>
+          <span class="n">tab</span><span class="p">[</span><span class="s1">&#39;stat_u&#39;</span><span class="p">]</span><span class="o">=</span><span class="n">tab</span><span class="o">.</span><span class="n">value</span><span class="o">*</span><span class="n">tab</span><span class="p">[</span><span class="s1">&#39;stat(%)&#39;</span><span class="p">]</span>
+          <span class="n">writer</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">ExcelWriter</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+          <span class="n">tab</span><span class="o">.</span><span class="n">to_excel</span><span class="p">(</span><span class="n">writer</span><span class="p">,</span><span class="s1">&#39;Sheet1&#39;</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+          <span class="n">writer</span><span class="o">.</span><span class="n">save</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ML.simulation_json"><a class="viewcode-back" href="../../fitlab_maxlike.html#fitlab.maxlike.ML.simulation_json">[docs]</a>  <span class="k">def</span> <span class="nf">simulation_json</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">resman</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;resman&#39;</span><span class="p">]</span>
+    <span class="n">parman</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span>
+    <span class="n">inputfile</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">config</span>
+    
+    <span class="n">par</span><span class="o">=</span><span class="n">parman</span><span class="o">.</span><span class="n">par</span>
+    <span class="n">parman</span><span class="o">.</span><span class="n">set_new_params</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+
+
+    <span class="n">M2</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;aux&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">M2</span>
+    <span class="n">M</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">M2</span><span class="p">)</span>
+
+    <span class="n">data</span><span class="o">=</span><span class="p">{}</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;author&#39;</span><span class="p">]</span><span class="o">=</span><span class="s2">&quot;N. Sato&quot;</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;generator&#39;</span><span class="p">]</span><span class="o">=</span><span class="s2">&quot;JAM&quot;</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;reaction&#39;</span><span class="p">]</span><span class="o">=</span><span class="s2">&quot;DIS&quot;</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span><span class="o">=</span><span class="s2">&quot;p&quot;</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Elab&#39;</span><span class="p">]</span><span class="o">=</span><span class="s2">&quot;10.6&quot;</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;lepton&#39;</span><span class="p">]</span><span class="o">=</span><span class="s2">&quot;e-&quot;</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;variables&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;x,y,Q2,F2,FL,FL,dsig/dxdy&quot;</span><span class="p">]</span>
+
+    <span class="n">Elab</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Elab&#39;</span><span class="p">])</span>
+    <span class="n">xmin</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">M</span><span class="o">*</span><span class="n">Elab</span><span class="p">)</span>
+    <span class="n">ymin</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">M</span><span class="o">*</span><span class="n">Elab</span><span class="p">)</span>
+
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;axis&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;axis&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;bins&quot;</span><span class="p">:</span>  <span class="mi">200</span><span class="p">,</span> <span class="s2">&quot;min&quot;</span><span class="p">:</span>  <span class="n">xmin</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">:</span>   <span class="mf">0.999</span><span class="p">,</span> <span class="s2">&quot;scale&quot;</span><span class="p">:</span><span class="s2">&quot;arb&quot;</span> <span class="p">,</span><span class="s2">&quot;description&quot;</span><span class="p">:</span><span class="s2">&quot;Bjorken x&quot;</span><span class="p">})</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;axis&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;bins&quot;</span><span class="p">:</span>  <span class="mi">200</span><span class="p">,</span> <span class="s2">&quot;min&quot;</span><span class="p">:</span>  <span class="n">ymin</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">:</span>   <span class="mf">0.999</span><span class="p">,</span> <span class="s2">&quot;scale&quot;</span><span class="p">:</span><span class="s2">&quot;arb&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span><span class="s2">&quot;y&quot;</span><span class="p">},)</span>
+
+    <span class="n">Tab</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;: &#39;</span><span class="p">))</span>
+    <span class="n">Tab</span><span class="o">=</span><span class="p">[</span><span class="n">Tab</span><span class="p">]</span>
+    <span class="n">Tab</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%10s</span><span class="s1"> </span><span class="si">%10s</span><span class="s1"> </span><span class="si">%10s</span><span class="s1"> </span><span class="si">%10s</span><span class="s1"> </span><span class="si">%10s</span><span class="s1"> </span><span class="si">%10s</span><span class="s1"> </span><span class="si">%10s</span><span class="s1"> </span><span class="si">%10s</span><span class="s1"> </span><span class="si">%10s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="s1">&#39;ix&#39;</span><span class="p">,</span><span class="s1">&#39;iy&#39;</span><span class="p">,</span><span class="s1">&#39;x&#39;</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;Q2&#39;</span><span class="p">,</span><span class="s1">&#39;F2&#39;</span><span class="p">,</span><span class="s1">&#39;FL&#39;</span><span class="p">,</span><span class="s1">&#39;F3&#39;</span><span class="p">,</span><span class="s1">&#39;dsig/dxdy&#39;</span><span class="p">))</span>
+
+    <span class="c1">#Tab=[&quot;#!&quot;+Tab]</span>
+
+    <span class="n">bin_center</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">xmin</span><span class="p">,</span><span class="n">xmax</span><span class="p">,</span><span class="n">n</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">xmin</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">xmax</span><span class="o">-</span><span class="n">xmin</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)])</span>
+
+    <span class="n">xs</span> <span class="o">=</span><span class="n">bin_center</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;axis&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;min&#39;</span><span class="p">],</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;axis&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;max&#39;</span><span class="p">],</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;axis&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;bins&#39;</span><span class="p">])</span>
+    <span class="n">ys</span> <span class="o">=</span><span class="n">bin_center</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;axis&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;min&#39;</span><span class="p">],</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;axis&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;max&#39;</span><span class="p">],</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;axis&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;bins&#39;</span><span class="p">])</span>
+
+    <span class="n">I</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">xs</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="nb">print</span> 
+    <span class="n">bar</span><span class="o">=</span><span class="n">BAR</span><span class="p">(</span><span class="s1">&#39;generating json file&#39;</span><span class="p">,</span><span class="n">xs</span><span class="o">.</span><span class="n">size</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">it</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">I</span><span class="p">,</span><span class="n">I</span><span class="p">):</span>
+      <span class="n">ix</span><span class="p">,</span><span class="n">iy</span><span class="o">=</span><span class="n">item</span>
+
+      <span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">[</span><span class="n">ix</span><span class="p">]</span>
+      <span class="n">y</span><span class="o">=</span><span class="n">ys</span><span class="p">[</span><span class="n">iy</span><span class="p">]</span>
+      <span class="n">Q2</span><span class="o">=</span><span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">M</span><span class="o">*</span><span class="n">Elab</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">Q2</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">:</span> <span class="k">continue</span>
+
+      <span class="n">F2</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;stfuncs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_FXN</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">Q2</span><span class="p">,</span><span class="s1">&#39;F2&#39;</span><span class="p">,</span><span class="n">nucleon</span><span class="o">=</span><span class="s1">&#39;proton&#39;</span><span class="p">,</span><span class="n">twist</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">tmc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">evolve</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+      <span class="n">FL</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;stfuncs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_FXN</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">Q2</span><span class="p">,</span><span class="s1">&#39;FL&#39;</span><span class="p">,</span><span class="n">nucleon</span><span class="o">=</span><span class="s1">&#39;proton&#39;</span><span class="p">,</span><span class="n">twist</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">tmc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">evolve</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+      <span class="n">F3</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;stfuncs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_FXN</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">Q2</span><span class="p">,</span><span class="s1">&#39;F3&#39;</span><span class="p">,</span><span class="n">nucleon</span><span class="o">=</span><span class="s1">&#39;proton&#39;</span><span class="p">,</span><span class="n">twist</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">tmc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">evolve</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">F2</span><span class="p">):</span> <span class="k">continue</span>
+      <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">FL</span><span class="p">):</span> <span class="k">continue</span>
+      <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">F3</span><span class="p">):</span> <span class="k">continue</span>
+      
+      <span class="n">s</span><span class="o">=</span><span class="n">M2</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">Elab</span><span class="o">*</span><span class="n">M2</span><span class="o">**</span><span class="mf">0.5</span>
+      <span class="n">y</span><span class="o">=</span><span class="p">(</span><span class="n">Q2</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="p">((</span><span class="n">s</span><span class="o">-</span><span class="n">M2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="n">y</span><span class="o">&lt;</span><span class="mi">0</span> <span class="ow">or</span> <span class="n">y</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span> 
+        <span class="n">bar</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+        <span class="k">continue</span> 
+        
+      <span class="n">YP</span><span class="o">=</span><span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+      <span class="n">YM</span><span class="o">=</span><span class="mi">1</span><span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+      <span class="k">if</span>   <span class="n">data</span><span class="p">[</span><span class="s1">&#39;lepton&#39;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;e-&quot;</span><span class="p">:</span> <span class="n">sign</span><span class="o">=</span><span class="mi">1</span>
+      <span class="k">elif</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;lepton&#39;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;e+&quot;</span><span class="p">:</span> <span class="n">sign</span><span class="o">=-</span><span class="mi">1</span>
+
+      <span class="n">xsec</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;aux&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">alfa</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">x</span><span class="o">/</span><span class="n">y</span><span class="o">/</span><span class="n">Q2</span>
+      <span class="n">xsec</span><span class="o">*=</span><span class="p">(</span><span class="n">YP</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">M2</span><span class="o">/</span><span class="n">Q2</span><span class="p">)</span><span class="o">*</span><span class="n">F2</span><span class="o">-</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">FL</span><span class="o">+</span><span class="n">sign</span><span class="o">*</span><span class="n">YM</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">F3</span>
+
+      <span class="k">if</span> <span class="n">xsec</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">:</span> <span class="k">continue</span>
+
+      <span class="n">row</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%10d</span><span class="s1"> </span><span class="si">%10d</span><span class="s1"> </span><span class="si">%10.4e</span><span class="s1"> </span><span class="si">%10.4e</span><span class="s1"> </span><span class="si">%10.4e</span><span class="s1"> </span><span class="si">%10.4e</span><span class="s1"> </span><span class="si">%10.4e</span><span class="s1"> </span><span class="si">%10.4e</span><span class="s1"> </span><span class="si">%10.4e</span><span class="s1">&#39;</span>
+      <span class="n">row</span><span class="o">=</span><span class="n">row</span><span class="o">%</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span><span class="n">iy</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">Q2</span><span class="p">,</span><span class="n">F2</span><span class="p">,</span><span class="n">FL</span><span class="p">,</span><span class="n">F3</span><span class="p">,</span><span class="n">xsec</span><span class="p">)</span>
+      <span class="n">Tab</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+      <span class="n">bar</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+    <span class="n">bar</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+    <span class="nb">print</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">saving...&#39;</span>
+    <span class="n">Tab</span><span class="o">=</span><span class="p">[</span><span class="n">row</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">Tab</span><span class="p">]</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;dis-jam.json&quot;</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">Tab</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ML.simulation_json2"><a class="viewcode-back" href="../../fitlab_maxlike.html#fitlab.maxlike.ML.simulation_json2">[docs]</a>  <span class="k">def</span> <span class="nf">simulation_json2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">resman</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;resman&#39;</span><span class="p">]</span>
+    <span class="n">parman</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span>
+    <span class="n">inputfile</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">config</span>
+    
+    <span class="n">par</span><span class="o">=</span><span class="n">parman</span><span class="o">.</span><span class="n">par</span>
+    <span class="n">parman</span><span class="o">.</span><span class="n">set_new_params</span><span class="p">(</span><span class="n">par</span><span class="p">)</span>
+
+
+    <span class="n">M2</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;aux&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">M2</span>
+    <span class="n">M</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">M2</span><span class="p">)</span>
+
+    <span class="n">data</span><span class="o">=</span><span class="p">{}</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;author&#39;</span><span class="p">]</span><span class="o">=</span><span class="s2">&quot;N. Sato&quot;</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;generator&#39;</span><span class="p">]</span><span class="o">=</span><span class="s2">&quot;JAM&quot;</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;reaction&#39;</span><span class="p">]</span><span class="o">=</span><span class="s2">&quot;DIS&quot;</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span><span class="o">=</span><span class="s2">&quot;p&quot;</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;Elab&#39;</span><span class="p">]</span><span class="o">=</span><span class="s2">&quot;10.6&quot;</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;lepton&#39;</span><span class="p">]</span><span class="o">=</span><span class="s2">&quot;e-&quot;</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;variables&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Counts&quot;</span><span class="p">,</span><span class="s2">&quot;Err.Counts&quot;</span><span class="p">,</span><span class="s2">&quot;xav&quot;</span><span class="p">,</span><span class="s2">&quot;yav&quot;</span><span class="p">,</span><span class="s2">&quot;q2av&quot;</span><span class="p">]</span>
+
+    <span class="n">Elab</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;Elab&#39;</span><span class="p">])</span>
+    <span class="n">xmin</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">M</span><span class="o">*</span><span class="n">Elab</span><span class="p">)</span>
+    <span class="n">ymin</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">M</span><span class="o">*</span><span class="n">Elab</span><span class="p">)</span>
+
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;axis&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;axis&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;bins&quot;</span><span class="p">:</span>  <span class="mi">100</span><span class="p">,</span> <span class="s2">&quot;min&quot;</span><span class="p">:</span>  <span class="n">xmin</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">:</span>   <span class="mf">0.999</span><span class="p">,</span> <span class="s2">&quot;scale&quot;</span><span class="p">:</span><span class="s2">&quot;arb&quot;</span> <span class="p">,</span><span class="s2">&quot;description&quot;</span><span class="p">:</span><span class="s2">&quot;Bjorken x&quot;</span><span class="p">})</span>
+    <span class="n">data</span><span class="p">[</span><span class="s1">&#39;axis&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="s2">&quot;bins&quot;</span><span class="p">:</span>  <span class="mi">50</span><span class="p">,</span> <span class="s2">&quot;min&quot;</span><span class="p">:</span>  <span class="n">ymin</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">:</span>   <span class="mf">0.999</span><span class="p">,</span> <span class="s2">&quot;scale&quot;</span><span class="p">:</span><span class="s2">&quot;arb&quot;</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span><span class="s2">&quot;y&quot;</span><span class="p">},)</span>
+
+    <span class="n">Tab</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">data</span><span class="p">,</span><span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">separators</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">,</span> <span class="s1">&#39;: &#39;</span><span class="p">))</span>
+    <span class="n">Tab</span><span class="o">=</span><span class="p">[</span><span class="n">Tab</span><span class="p">]</span>
+
+    <span class="c1">#Tab=[&quot;#!&quot;+Tab]</span>
+
+    <span class="n">bin_center</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">xmin</span><span class="p">,</span><span class="n">xmax</span><span class="p">,</span><span class="n">n</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">xmin</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">xmax</span><span class="o">-</span><span class="n">xmin</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)])</span>
+
+    <span class="n">xs</span> <span class="o">=</span><span class="n">bin_center</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;axis&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;min&#39;</span><span class="p">],</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;axis&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;max&#39;</span><span class="p">],</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;axis&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;bins&#39;</span><span class="p">])</span>
+    <span class="n">ys</span> <span class="o">=</span><span class="n">bin_center</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;axis&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;min&#39;</span><span class="p">],</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;axis&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;max&#39;</span><span class="p">],</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;axis&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;bins&#39;</span><span class="p">])</span>
+
+    <span class="n">IX</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">xs</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="n">IY</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">ys</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="nb">print</span> 
+    <span class="n">bar</span><span class="o">=</span><span class="n">BAR</span><span class="p">(</span><span class="s1">&#39;generating json file&#39;</span><span class="p">,</span><span class="n">xs</span><span class="o">.</span><span class="n">size</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">it</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">IX</span><span class="p">,</span><span class="n">IY</span><span class="p">):</span>
+      <span class="n">ix</span><span class="p">,</span><span class="n">iy</span><span class="o">=</span><span class="n">item</span>
+
+      <span class="n">x</span><span class="o">=</span><span class="n">xs</span><span class="p">[</span><span class="n">ix</span><span class="p">]</span>
+      <span class="n">y</span><span class="o">=</span><span class="n">ys</span><span class="p">[</span><span class="n">iy</span><span class="p">]</span>
+      <span class="n">Q2</span><span class="o">=</span><span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="o">*</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">M</span><span class="o">*</span><span class="n">Elab</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">Q2</span><span class="o">&lt;</span><span class="mi">1</span><span class="p">:</span> <span class="k">continue</span>
+
+      <span class="n">F2</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;stfuncs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_FXN</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">Q2</span><span class="p">,</span><span class="s1">&#39;F2&#39;</span><span class="p">,</span><span class="n">nucleon</span><span class="o">=</span><span class="s1">&#39;proton&#39;</span><span class="p">,</span><span class="n">twist</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">tmc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">evolve</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+      <span class="n">FL</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;stfuncs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_FXN</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">Q2</span><span class="p">,</span><span class="s1">&#39;FL&#39;</span><span class="p">,</span><span class="n">nucleon</span><span class="o">=</span><span class="s1">&#39;proton&#39;</span><span class="p">,</span><span class="n">twist</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">tmc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">evolve</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+      <span class="n">F3</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;stfuncs&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_FXN</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">Q2</span><span class="p">,</span><span class="s1">&#39;F3&#39;</span><span class="p">,</span><span class="n">nucleon</span><span class="o">=</span><span class="s1">&#39;proton&#39;</span><span class="p">,</span><span class="n">twist</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">tmc</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">evolve</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">F2</span><span class="p">):</span> <span class="k">continue</span>
+      <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">FL</span><span class="p">):</span> <span class="k">continue</span>
+      <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">F3</span><span class="p">):</span> <span class="k">continue</span>
+      
+      <span class="n">s</span><span class="o">=</span><span class="n">M2</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">Elab</span><span class="o">*</span><span class="n">M2</span><span class="o">**</span><span class="mf">0.5</span>
+      <span class="n">y</span><span class="o">=</span><span class="p">(</span><span class="n">Q2</span><span class="o">/</span><span class="mi">2</span><span class="o">/</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="p">((</span><span class="n">s</span><span class="o">-</span><span class="n">M2</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="n">y</span><span class="o">&lt;</span><span class="mi">0</span> <span class="ow">or</span> <span class="n">y</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span> 
+        <span class="n">bar</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+        <span class="k">continue</span> 
+        
+      <span class="n">YP</span><span class="o">=</span><span class="mi">1</span><span class="o">+</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+      <span class="n">YM</span><span class="o">=</span><span class="mi">1</span><span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+      <span class="k">if</span>   <span class="n">data</span><span class="p">[</span><span class="s1">&#39;lepton&#39;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;e-&quot;</span><span class="p">:</span> <span class="n">sign</span><span class="o">=</span><span class="mi">1</span>
+      <span class="k">elif</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;lepton&#39;</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;e+&quot;</span><span class="p">:</span> <span class="n">sign</span><span class="o">=-</span><span class="mi">1</span>
+
+      <span class="n">xsec</span><span class="o">=</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;aux&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">alfa</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">x</span><span class="o">/</span><span class="n">y</span><span class="o">/</span><span class="n">Q2</span>
+      <span class="n">xsec</span><span class="o">*=</span><span class="p">(</span><span class="n">YP</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">M2</span><span class="o">/</span><span class="n">Q2</span><span class="p">)</span><span class="o">*</span><span class="n">F2</span><span class="o">-</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">FL</span><span class="o">+</span><span class="n">sign</span><span class="o">*</span><span class="n">YM</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">F3</span>
+
+      <span class="n">xsec</span><span class="o">*=</span><span class="mf">1e8</span>
+
+      <span class="k">if</span> <span class="n">xsec</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">:</span> <span class="k">continue</span>
+
+      <span class="n">row</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%10d</span><span class="s1"> </span><span class="si">%10d</span><span class="s1"> </span><span class="si">%10.4e</span><span class="s1"> </span><span class="si">%10.4e</span><span class="s1"> </span><span class="si">%10.4e</span><span class="s1"> </span><span class="si">%10.4e</span><span class="s1"> </span><span class="si">%10.4e</span><span class="s1"> &#39;</span>
+      <span class="n">row</span><span class="o">=</span><span class="n">row</span><span class="o">%</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span><span class="n">iy</span><span class="p">,</span><span class="n">xsec</span><span class="p">,</span><span class="n">xsec</span><span class="o">*</span><span class="mf">0.05</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">Q2</span><span class="p">)</span>
+      <span class="n">Tab</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+      <span class="n">bar</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+    <span class="n">bar</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+    <span class="nb">print</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">saving...&#39;</span>
+    <span class="n">Tab</span><span class="o">=</span><span class="p">[</span><span class="n">row</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">Tab</span><span class="p">]</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;jam.dat&quot;</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">Tab</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ML.bootstrap"><a class="viewcode-back" href="../../fitlab_maxlike.html#fitlab.maxlike.ML.bootstrap">[docs]</a>  <span class="k">def</span> <span class="nf">bootstrap</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+    <span class="k">if</span> <span class="s1">&#39;args&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">:</span>
+      <span class="n">outputdir</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/mcdata&#39;</span><span class="o">%</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.py&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">checkdir</span><span class="p">(</span><span class="n">outputdir</span><span class="p">)</span>
+
+    <span class="n">guess</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">par</span>
+    <span class="n">order</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">order</span>
+    <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;screen mode&#39;</span><span class="p">]</span><span class="o">=</span><span class="kc">None</span>
+    <span class="n">npar</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">guess</span><span class="p">)</span>
+    <span class="n">nruns</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;num replicas&#39;</span><span class="p">]</span>
+    <span class="n">bar</span><span class="o">=</span><span class="n">BAR</span><span class="p">(</span><span class="s1">&#39;running bootstrap run&#39;</span><span class="p">,</span><span class="n">nruns</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nruns</span><span class="p">):</span>
+      <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">get_ordered_free_params</span><span class="p">()</span>
+      <span class="n">conf</span><span class="p">[</span><span class="s1">&#39;resman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">resample</span><span class="p">()</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">chi2tot</span><span class="o">=</span><span class="mf">1e1000</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">dchi2</span><span class="o">=</span><span class="mi">0</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">cnt</span><span class="o">=</span><span class="mi">0</span>
+      <span class="k">if</span> <span class="s1">&#39;lmdiff tol&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">:</span>
+        <span class="n">fit</span><span class="o">=</span><span class="n">leastsq</span><span class="p">(</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_residuals</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">),</span><span class="n">guess</span><span class="p">,</span><span class="n">full_output</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span><span class="n">ftol</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;lmdiff tol&#39;</span><span class="p">])</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="n">fit</span><span class="o">=</span><span class="n">leastsq</span><span class="p">(</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_residuals</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="kc">False</span><span class="p">,</span><span class="kc">True</span><span class="p">),</span><span class="n">guess</span><span class="p">,</span><span class="n">full_output</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+      <span class="n">save</span><span class="p">(</span><span class="n">fit</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/rep</span><span class="si">%d</span><span class="s1">.dat&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">outputdir</span><span class="p">,</span><span class="n">i</span><span class="p">))</span>
+      <span class="n">bar</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+    <span class="n">bar</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ML.hessian"><a class="viewcode-back" href="../../fitlab_maxlike.html#fitlab.maxlike.ML.hessian">[docs]</a>  <span class="k">def</span> <span class="nf">hessian</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">p0</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">par</span>
+    <span class="n">npar</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;parman&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">par</span><span class="p">)</span>
+    <span class="c1">#idel=[i for i in range(npar) if conf[&#39;parman&#39;].order[i][0]==2]</span>
+    <span class="c1">#H=np.delete(H,idel,axis=0)</span>
+    <span class="c1">#H=np.delete(H,idel,axis=1)</span>
+    <span class="n">hess</span><span class="o">=</span><span class="n">HESS</span><span class="p">(</span><span class="n">p0</span><span class="p">,</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_chi2</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">status</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span><span class="o">.</span><span class="n">data</span>
+    <span class="k">if</span> <span class="s1">&#39;args&#39;</span> <span class="ow">in</span> <span class="n">conf</span><span class="p">:</span>
+      <span class="n">outputdir</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/hess&#39;</span><span class="o">%</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">outdir</span>
+      <span class="n">checkdir</span><span class="p">(</span><span class="n">outputdir</span><span class="p">)</span>
+      <span class="n">fname</span><span class="o">=</span><span class="n">conf</span><span class="p">[</span><span class="s1">&#39;args&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.py&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+      <span class="n">save</span><span class="p">(</span><span class="n">hess</span><span class="p">,</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">.par&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">outputdir</span><span class="p">,</span><span class="n">fname</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">hess</span></div></div>
+     
+
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, N. Sato.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'1.0.0',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1391 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 10.2' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     49140,       1382]
+NotebookOptionsPosition[     44028,       1196]
+NotebookOutlinePosition[     44380,       1212]
+CellTagsIndexPosition[     44337,       1209]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell[BoxData[
+ RowBox[{"ch0", " ", "=", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Fu", " ", "Du"}], " ", "+", " ", 
+         RowBox[{"Fd", " ", "Dd"}], "+", 
+         RowBox[{"Fs", " ", "Ds"}]}], ")"}], 
+       RowBox[{"(", 
+        RowBox[{"Ftu", "+", "Ftd", "+", "Fts"}], ")"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730631291306367*^9, 3.730631362439323*^9}, {
+  3.730633889954072*^9, 3.730633894414715*^9}, {3.730633950357562*^9, 
+  3.7306339621141*^9}, {3.7306340193203*^9, 3.73063406019844*^9}, {
+  3.730634170722642*^9, 3.7306342294116993`*^9}, {3.7306343063646317`*^9, 
+  3.730634417454904*^9}, {3.7306344925044413`*^9, 3.7306345055115147`*^9}, {
+  3.7306370626250277`*^9, 3.730637064033471*^9}, {3.7307199870807953`*^9, 
+  3.730719987429933*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdFdFtd+DsFsFtd+DdFdFts+DsFsFts+DdFdFtu+DsFsFtu+DuFtdFu+DuFtsFu+\
+DuFtuFu\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{
+  3.730631363268532*^9, 3.730633894963654*^9, 3.730633956417104*^9, 
+   3.730634060976841*^9, {3.730634203526597*^9, 3.7306342312912073`*^9}, {
+   3.7306343171286583`*^9, 3.730634353844173*^9}, {3.730634389406507*^9, 
+   3.730634419261003*^9}, 3.730634509520537*^9, 3.7306370646096907`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch1", " ", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"Fu", "+", "Fd", "+", "Fs"}], ")"}], 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Ftu", " ", "Du"}], "+", 
+         RowBox[{"Ftd", " ", "Dd"}], "+", 
+         RowBox[{"Fts", " ", "Ds"}]}], ")"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730631291306367*^9, 3.730631362439323*^9}, {
+  3.730633889954072*^9, 3.730633894414715*^9}, {3.730633950357562*^9, 
+  3.7306339621141*^9}, {3.7306340193203*^9, 3.73063406019844*^9}, {
+  3.730634170722642*^9, 3.7306342294116993`*^9}, {3.7306343063646317`*^9, 
+  3.730634417454904*^9}, {3.7306344925044413`*^9, 3.7306345055115147`*^9}, {
+  3.730635003315281*^9, 3.730635041601738*^9}, {3.730637066640172*^9, 
+  3.730637068768168*^9}, {3.7307199890769167`*^9, 3.730719989361067*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdFdFtd+DdFsFtd+DsFdFts+DsFsFts+DuFdFtu+DuFsFtu+DdFtdFu+DsFtsFu+\
+DuFtuFu\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.7306350436774397`*^9, 3.730637069324698*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch2", " ", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"Fu", " ", "Ftu", " ", "Du"}], " ", "+", " ", 
+       RowBox[{"Fd", " ", "Ftd", " ", "Dd"}], " ", "+", " ", 
+       RowBox[{"Fs", " ", "Fts", " ", "Ds"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730631291306367*^9, 3.730631362439323*^9}, {
+  3.730633889954072*^9, 3.730633894414715*^9}, {3.730633950357562*^9, 
+  3.7306339621141*^9}, {3.7306340193203*^9, 3.73063406019844*^9}, {
+  3.730634170722642*^9, 3.7306342294116993`*^9}, {3.7306343063646317`*^9, 
+  3.730634417454904*^9}, {3.7306344925044413`*^9, 3.7306345055115147`*^9}, {
+  3.730635003315281*^9, 3.730635041601738*^9}, {3.7306352085968018`*^9, 
+  3.7306352490933943`*^9}, {3.730637071209758*^9, 3.7306370726629*^9}, {
+  3.7307199908709307`*^9, 3.730719991108837*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdFdFtd+DsFsFts+DuFtuFu\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.730635269574615*^9, 3.730637073190526*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch3", " ", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Fub", " ", "Dub"}], " ", "+", " ", 
+         RowBox[{"Fdb", " ", "Ddb"}], "+", 
+         RowBox[{"Fsb", " ", "Dsb"}]}], ")"}], 
+       RowBox[{"(", 
+        RowBox[{"Ftub", "+", "Ftdb", "+", "Ftsb"}], ")"}]}], "]"}], "]"}], 
+    ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730631291306367*^9, 3.730631362439323*^9}, {
+  3.730633889954072*^9, 3.730633894414715*^9}, {3.730633950357562*^9, 
+  3.7306339621141*^9}, {3.7306340193203*^9, 3.73063406019844*^9}, {
+  3.730634170722642*^9, 3.7306342294116993`*^9}, {3.7306343063646317`*^9, 
+  3.730634417454904*^9}, {3.7306344925044413`*^9, 3.7306345055115147`*^9}, {
+  3.730635003315281*^9, 3.730635041601738*^9}, {3.7306352085968018`*^9, 
+  3.7306352490933943`*^9}, {3.730635930552578*^9, 3.7306359663597527`*^9}, {
+  3.730637075239953*^9, 3.730637076098035*^9}, {3.730719992563971*^9, 
+  3.7307199927698727`*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdbFdbFtdb+DsbFsbFtdb+DdbFdbFtsb+DsbFsbFtsb+DdbFdbFtub+\
+DsbFsbFtub+DubFtdbFub+DubFtsbFub+DubFtubFub\"\>", TraditionalForm]], "Output",\
+
+ CellChangeTimes->{3.730635992814674*^9, 3.7306370765025797`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch4", " ", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"Fub", "  ", "+", " ", "Fdb", " ", "+", "Fsb"}], " ", ")"}], 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Ftub", " ", "Dub"}], "+", 
+         RowBox[{"Ftdb", " ", "Ddb"}], "+", 
+         RowBox[{"Ftsb", " ", "Dsb"}]}], ")"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730631291306367*^9, 3.730631362439323*^9}, {
+  3.730633889954072*^9, 3.730633894414715*^9}, {3.730633950357562*^9, 
+  3.7306339621141*^9}, {3.7306340193203*^9, 3.73063406019844*^9}, {
+  3.730634170722642*^9, 3.7306342294116993`*^9}, {3.7306343063646317`*^9, 
+  3.730634417454904*^9}, {3.7306344925044413`*^9, 3.7306345055115147`*^9}, {
+  3.730635003315281*^9, 3.730635041601738*^9}, {3.7306352085968018`*^9, 
+  3.7306352490933943`*^9}, {3.730635930552578*^9, 3.7306359663597527`*^9}, {
+  3.730636052425035*^9, 3.7306360712283497`*^9}, {3.730637078724594*^9, 
+  3.730637079749255*^9}, {3.730719994264968*^9, 3.730719994450057*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdbFdbFtdb+DdbFsbFtdb+DsbFdbFtsb+DsbFsbFtsb+DubFdbFtub+\
+DubFsbFtub+DdbFtdbFub+DsbFtsbFub+DubFtubFub\"\>", TraditionalForm]], "Output",\
+
+ CellChangeTimes->{3.7306360960244637`*^9, 3.730637080275798*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch5", " ", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"Fub", " ", "Ftub", " ", "Dub"}], " ", "+", " ", 
+       RowBox[{"Fdb", " ", "Ftdb", " ", "Ddb"}], " ", "+", " ", 
+       RowBox[{"Fsb", " ", "Ftsb", " ", "Dsb"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730631291306367*^9, 3.730631362439323*^9}, {
+  3.730633889954072*^9, 3.730633894414715*^9}, {3.730633950357562*^9, 
+  3.7306339621141*^9}, {3.7306340193203*^9, 3.73063406019844*^9}, {
+  3.730634170722642*^9, 3.7306342294116993`*^9}, {3.7306343063646317`*^9, 
+  3.730634417454904*^9}, {3.7306344925044413`*^9, 3.7306345055115147`*^9}, {
+  3.730635003315281*^9, 3.730635041601738*^9}, {3.7306352085968018`*^9, 
+  3.7306352490933943`*^9}, {3.730636155975358*^9, 3.730636166712517*^9}, {
+  3.7306370826089497`*^9, 3.730637084017572*^9}, {3.730719996025803*^9, 
+  3.730719996223716*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdbFdbFtdb+DsbFsbFtsb+DubFtubFub\"\>", 
+  TraditionalForm]], "Output",
+ CellChangeTimes->{3.7306361677621517`*^9, 3.730637084556926*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch6", " ", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Fu", " ", "Du"}], "+", 
+         RowBox[{"Fd", " ", "Dd"}], "+", 
+         RowBox[{"Fs", " ", "Ds"}]}], ")"}], 
+       RowBox[{"(", 
+        RowBox[{"Ftub", "+", "Ftdb", "+", "Ftsb"}], ")"}]}], "]"}], "]"}], 
+    ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730631291306367*^9, 3.730631362439323*^9}, {
+  3.730633889954072*^9, 3.730633894414715*^9}, {3.730633950357562*^9, 
+  3.7306339621141*^9}, {3.7306340193203*^9, 3.73063406019844*^9}, {
+  3.730634170722642*^9, 3.7306342294116993`*^9}, {3.7306343063646317`*^9, 
+  3.730634417454904*^9}, {3.7306344925044413`*^9, 3.7306345055115147`*^9}, {
+  3.730635003315281*^9, 3.730635041601738*^9}, {3.7306352085968018`*^9, 
+  3.7306352490933943`*^9}, {3.730636155975358*^9, 3.730636166712517*^9}, {
+  3.730636320126891*^9, 3.730636343102723*^9}, {3.730637086504712*^9, 
+  3.730637088133245*^9}, {3.730719997712821*^9, 3.730719997957692*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdFdFtdb+DsFsFtdb+DdFdFtsb+DsFsFtsb+DdFdFtub+DsFsFtub+DuFtdbFu+\
+DuFtsbFu+DuFtubFu\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.7306363449022703`*^9, 3.7306370884825563`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch7", " ", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Fu", " ", "Ftub"}], "+", 
+         RowBox[{"Fd", " ", "Ftdb"}], "+", 
+         RowBox[{"Fs", " ", "Ftsb"}]}], ")"}], 
+       RowBox[{"(", 
+        RowBox[{"Du", "+", "Dd", "+", "Ds"}], ")"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730631291306367*^9, 3.730631362439323*^9}, {
+  3.730633889954072*^9, 3.730633894414715*^9}, {3.730633950357562*^9, 
+  3.7306339621141*^9}, {3.7306340193203*^9, 3.73063406019844*^9}, {
+  3.730634170722642*^9, 3.7306342294116993`*^9}, {3.7306343063646317`*^9, 
+  3.730634417454904*^9}, {3.7306344925044413`*^9, 3.7306345055115147`*^9}, {
+  3.730635003315281*^9, 3.730635041601738*^9}, {3.7306352085968018`*^9, 
+  3.7306352490933943`*^9}, {3.730636155975358*^9, 3.730636166712517*^9}, {
+  3.730636320126891*^9, 3.730636343102723*^9}, {3.730636734717111*^9, 
+  3.730636757147118*^9}, {3.730637090280939*^9, 3.730637091678774*^9}, {
+  3.730719999354764*^9, 3.7307199995726433`*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdFdFtdb+DsFdFtdb+DuFdFtdb+DdFsFtsb+DsFsFtsb+DuFsFtsb+DdFtubFu+\
+DsFtubFu+DuFtubFu\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.730636758205872*^9, 3.730637092092905*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch8", " ", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"Fu", " ", "Ftub", " ", "Du"}], " ", "+", " ", 
+       RowBox[{"Fd", " ", "Ftdb", " ", "Dd"}], " ", "+", " ", 
+       RowBox[{"Fs", " ", "Ftsb", " ", "Ds"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730631291306367*^9, 3.730631362439323*^9}, {
+  3.730633889954072*^9, 3.730633894414715*^9}, {3.730633950357562*^9, 
+  3.7306339621141*^9}, {3.7306340193203*^9, 3.73063406019844*^9}, {
+  3.730634170722642*^9, 3.7306342294116993`*^9}, {3.7306343063646317`*^9, 
+  3.730634417454904*^9}, {3.7306344925044413`*^9, 3.7306345055115147`*^9}, {
+  3.730635003315281*^9, 3.730635041601738*^9}, {3.7306352085968018`*^9, 
+  3.7306352490933943`*^9}, {3.730636155975358*^9, 3.730636166712517*^9}, {
+  3.730636320126891*^9, 3.730636343102723*^9}, {3.730636734717111*^9, 
+  3.730636757147118*^9}, {3.73063681694048*^9, 3.7306368444650993`*^9}, {
+  3.730637094178789*^9, 3.730637095372076*^9}, {3.730720001327667*^9, 
+  3.730720001505773*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdFdFtdb+DsFsFtsb+DuFtubFu\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.730636846072653*^9, 3.730637095779656*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch9", " ", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Fub", " ", "Dub"}], " ", "+", 
+         RowBox[{"Fdb", " ", "Ddb"}], "+", 
+         RowBox[{"Fsb", " ", "Dsb"}]}], ")"}], 
+       RowBox[{"(", 
+        RowBox[{"Ftu", "+", "Ftd", "+", "Fts"}], ")"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730631291306367*^9, 3.730631362439323*^9}, {
+  3.730633889954072*^9, 3.730633894414715*^9}, {3.730633950357562*^9, 
+  3.7306339621141*^9}, {3.7306340193203*^9, 3.73063406019844*^9}, {
+  3.730634170722642*^9, 3.7306342294116993`*^9}, {3.7306343063646317`*^9, 
+  3.730634417454904*^9}, {3.7306344925044413`*^9, 3.7306345055115147`*^9}, {
+  3.730635003315281*^9, 3.730635041601738*^9}, {3.7306352085968018`*^9, 
+  3.7306352490933943`*^9}, {3.730636155975358*^9, 3.730636166712517*^9}, {
+  3.730636320126891*^9, 3.730636343102723*^9}, {3.730636734717111*^9, 
+  3.730636757147118*^9}, {3.73063681694048*^9, 3.7306368444650993`*^9}, {
+  3.730636970444806*^9, 3.730637009476797*^9}, {3.730637097641581*^9, 
+  3.730637099470766*^9}, {3.730720003108692*^9, 3.730720003647849*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdbFdbFtd+DsbFsbFtd+DdbFdbFts+DsbFsbFts+DdbFdbFtu+DsbFsbFtu+\
+DubFtdFub+DubFtsFub+DubFtuFub\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.730637023852405*^9, 3.730637099847044*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch10", " ", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Fub", " ", "Ftu"}], "+", 
+         RowBox[{"Fdb", " ", "Ftd"}], "+", 
+         RowBox[{"Fsb", " ", "Fts"}]}], ")"}], 
+       RowBox[{"(", 
+        RowBox[{"Dub", "+", "Ddb", "+", "Dsb"}], ")"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730631291306367*^9, 3.730631362439323*^9}, {
+  3.730633889954072*^9, 3.730633894414715*^9}, {3.730633950357562*^9, 
+  3.7306339621141*^9}, {3.7306340193203*^9, 3.73063406019844*^9}, {
+  3.730634170722642*^9, 3.7306342294116993`*^9}, {3.7306343063646317`*^9, 
+  3.730634417454904*^9}, {3.7306344925044413`*^9, 3.7306345055115147`*^9}, {
+  3.730635003315281*^9, 3.730635041601738*^9}, {3.7306352085968018`*^9, 
+  3.7306352490933943`*^9}, {3.730636155975358*^9, 3.730636166712517*^9}, {
+  3.730636320126891*^9, 3.730636343102723*^9}, {3.730636734717111*^9, 
+  3.730636757147118*^9}, {3.73063681694048*^9, 3.7306368444650993`*^9}, {
+  3.730636970444806*^9, 3.730637009476797*^9}, {3.730637102327091*^9, 
+  3.730637137081547*^9}, {3.7307200052376347`*^9, 3.730720005506221*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdbFdbFtd+DsbFdbFtd+DubFdbFtd+DdbFsbFts+DsbFsbFts+DubFsbFts+\
+DdbFtuFub+DsbFtuFub+DubFtuFub\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.7306371528493156`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch11", " ", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"Fub", " ", "Ftu", " ", "Dub"}], "+", 
+       RowBox[{"Fdb", " ", "Ftd", " ", "Ddb"}], "+", 
+       RowBox[{"Fsb", " ", "Fts", " ", "Dsb"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730631291306367*^9, 3.730631362439323*^9}, {
+  3.730633889954072*^9, 3.730633894414715*^9}, {3.730633950357562*^9, 
+  3.7306339621141*^9}, {3.7306340193203*^9, 3.73063406019844*^9}, {
+  3.730634170722642*^9, 3.7306342294116993`*^9}, {3.7306343063646317`*^9, 
+  3.730634417454904*^9}, {3.7306344925044413`*^9, 3.7306345055115147`*^9}, {
+  3.730635003315281*^9, 3.730635041601738*^9}, {3.7306352085968018`*^9, 
+  3.7306352490933943`*^9}, {3.730636155975358*^9, 3.730636166712517*^9}, {
+  3.730636320126891*^9, 3.730636343102723*^9}, {3.730636734717111*^9, 
+  3.730636757147118*^9}, {3.73063681694048*^9, 3.7306368444650993`*^9}, {
+  3.730636970444806*^9, 3.730637009476797*^9}, {3.730637102327091*^9, 
+  3.730637137081547*^9}, {3.730637198272023*^9, 3.730637228896676*^9}, {
+  3.73072000728753*^9, 3.7307200074213448`*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdbFdbFtd+DsbFsbFts+DubFtuFub\"\>", TraditionalForm]], "Output",\
+
+ CellChangeTimes->{3.7306372323729343`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch12", " ", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"Fu", "+", "Fd", "+", "Fs"}], ")"}], 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Ftub", " ", "Dub"}], "+", 
+         RowBox[{"Ftdb", " ", "Ddb"}], " ", "+", " ", 
+         RowBox[{"Ftsb", " ", "Dsb"}]}], ")"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730631291306367*^9, 3.730631362439323*^9}, {
+  3.730633889954072*^9, 3.730633894414715*^9}, {3.730633950357562*^9, 
+  3.7306339621141*^9}, {3.7306340193203*^9, 3.73063406019844*^9}, {
+  3.730634170722642*^9, 3.7306342294116993`*^9}, {3.7306343063646317`*^9, 
+  3.730634417454904*^9}, {3.7306344925044413`*^9, 3.7306345055115147`*^9}, {
+  3.730635003315281*^9, 3.730635041601738*^9}, {3.7306352085968018`*^9, 
+  3.7306352490933943`*^9}, {3.730636155975358*^9, 3.730636166712517*^9}, {
+  3.730636320126891*^9, 3.730636343102723*^9}, {3.730636734717111*^9, 
+  3.730636757147118*^9}, {3.73063681694048*^9, 3.7306368444650993`*^9}, {
+  3.730636970444806*^9, 3.730637009476797*^9}, {3.730637102327091*^9, 
+  3.730637137081547*^9}, {3.730637198272023*^9, 3.730637228896676*^9}, {
+  3.730637475101941*^9, 3.730637521407071*^9}, {3.7307200090059013`*^9, 
+  3.7307200091793737`*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdbFdFtdb+DdbFsFtdb+DsbFdFtsb+DsbFsFtsb+DubFdFtub+DubFsFtub+\
+DdbFtdbFu+DsbFtsbFu+DubFtubFu\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.7306375404438334`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch13", " ", "=", "  ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Fu", " ", "Ftub"}], "+", 
+         RowBox[{"Fd", " ", "Ftdb"}], " ", "+", 
+         RowBox[{"Fs", " ", "Ftsb"}]}], ")"}], 
+       RowBox[{"(", 
+        RowBox[{"Dub", "+", "Ddb", "+", "Dsb"}], ")"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730649797950233*^9, 3.730649845455036*^9}, {
+  3.73072001080084*^9, 3.73072001093852*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdbFdFtdb+DsbFdFtdb+DubFdFtdb+DdbFsFtsb+DsbFsFtsb+DubFsFtsb+\
+DdbFtubFu+DsbFtubFu+DubFtubFu\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.730649866520185*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch14", " ", "=", "  ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"Fu", " ", "Ftub", " ", "Dub"}], "+", 
+       RowBox[{"Fd", " ", "Ftdb", " ", "Ddb"}], "+", 
+       RowBox[{"Fs", " ", "Ftsb", " ", "Dsb"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730649797950233*^9, 3.730649845455036*^9}, {
+  3.7306516862564917`*^9, 3.7306517241370068`*^9}, {3.730720012828349*^9, 
+  3.7307200129762993`*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdbFdFtdb+DsbFsFtsb+DubFtubFu\"\>", TraditionalForm]], "Output",\
+
+ CellChangeTimes->{3.73065174033834*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch15", " ", "=", "  ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"Fub", "+", "Fdb", "+", "Fsb"}], ")"}], 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Ftu", " ", "Du"}], "+", 
+         RowBox[{"Ftd", " ", "Dd"}], "+", 
+         RowBox[{"Fts", " ", "Ds"}]}], ")"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730649797950233*^9, 3.730649845455036*^9}, {
+  3.7306516862564917`*^9, 3.7306517241370068`*^9}, {3.730651831937285*^9, 
+  3.730651866651351*^9}, {3.7307200159394007`*^9, 3.730720016160203*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdFdbFtd+DdFsbFtd+DsFdbFts+DsFsbFts+DuFdbFtu+DuFsbFtu+DdFtdFub+\
+DsFtsFub+DuFtuFub\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.73065188170651*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch16", " ", "=", "  ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Fub", " ", "Ftu"}], "+", 
+         RowBox[{"Fdb", " ", "Ftd"}], "+", 
+         RowBox[{"Fsb", " ", "Fts"}]}], ")"}], 
+       RowBox[{"(", 
+        RowBox[{"Du", "+", "Dd", "+", "Ds"}], ")"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730649797950233*^9, 3.730649845455036*^9}, {
+  3.7306516862564917`*^9, 3.7306517241370068`*^9}, {3.730651831937285*^9, 
+  3.730651866651351*^9}, {3.7306519411235523`*^9, 3.730651974500889*^9}, {
+  3.730720017774222*^9, 3.730720017960449*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdFdbFtd+DsFdbFtd+DuFdbFtd+DdFsbFts+DsFsbFts+DuFsbFts+DdFtuFub+\
+DsFtuFub+DuFtuFub\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.730651987477817*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch17", " ", "=", "  ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"Fub", " ", "Ftu", " ", "Du"}], " ", "+", 
+       RowBox[{"Fdb", " ", "Ftd", " ", "Dd"}], "+", 
+       RowBox[{"Fsb", " ", "Fts", " ", "Ds"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730649797950233*^9, 3.730649845455036*^9}, {
+  3.7306516862564917`*^9, 3.7306517241370068`*^9}, {3.730651831937285*^9, 
+  3.730651866651351*^9}, {3.7306519411235523`*^9, 3.730651974500889*^9}, {
+  3.73065203962414*^9, 3.73065207952652*^9}, {3.73072001955319*^9, 
+  3.73072001974352*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdFdbFtd+DsFsbFts+DuFtuFub\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.7306520805500593`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch18", " ", "=", "  ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Fu", " ", "Ftub"}], "+", 
+         RowBox[{"Fd", " ", "Ftdb"}], "+", 
+         RowBox[{"Fs", " ", "Ftsb"}]}], ")"}], "Dg"}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730649797950233*^9, 3.730649845455036*^9}, {
+  3.7306516862564917`*^9, 3.7306517241370068`*^9}, {3.730651831937285*^9, 
+  3.730651866651351*^9}, {3.7306519411235523`*^9, 3.730651974500889*^9}, {
+  3.73065203962414*^9, 3.73065207952652*^9}, {3.730652192247764*^9, 
+  3.730652215592493*^9}, {3.730652324529983*^9, 3.7306523249420958`*^9}, {
+  3.7307200215231953`*^9, 3.7307200218089647`*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DgFdFtdb+DgFsFtsb+DgFtubFu\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{
+  3.730652217353169*^9, {3.730652316251091*^9, 3.7306523274456167`*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch19", " ", "=", "  ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Fub", " ", "Ftu"}], "+", 
+         RowBox[{"Fdb", " ", "Ftd"}], "+", 
+         RowBox[{"Fsb", " ", "Fts"}]}], ")"}], "Dg"}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730649797950233*^9, 3.730649845455036*^9}, {
+  3.7306516862564917`*^9, 3.7306517241370068`*^9}, {3.730651831937285*^9, 
+  3.730651866651351*^9}, {3.7306519411235523`*^9, 3.730651974500889*^9}, {
+  3.73065203962414*^9, 3.73065207952652*^9}, {3.730652192247764*^9, 
+  3.730652215592493*^9}, {3.730652332053103*^9, 3.7306523480057783`*^9}, {
+  3.730720023573421*^9, 3.730720024487303*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DgFdbFtd+DgFsbFts+DgFtuFub\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.730652348864991*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch20", " ", "=", "  ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Fu", " ", "Du"}], "+", 
+         RowBox[{"Fd", " ", "Dd"}], "+", 
+         RowBox[{"Fs", " ", "Ds"}]}], ")"}], "Ftg"}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730649797950233*^9, 3.730649845455036*^9}, {
+  3.7306516862564917`*^9, 3.7306517241370068`*^9}, {3.730651831937285*^9, 
+  3.730651866651351*^9}, {3.7306519411235523`*^9, 3.730651974500889*^9}, {
+  3.73065203962414*^9, 3.73065207952652*^9}, {3.730652192247764*^9, 
+  3.730652215592493*^9}, {3.730652332053103*^9, 3.7306523480057783`*^9}, {
+  3.730652419080503*^9, 3.730652451427994*^9}, {3.730720027158948*^9, 
+  3.730720027686911*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdFdFtg+DsFsFtg+DuFtgFu\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.730652452646874*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch21", " ", "=", "  ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Fub", " ", "Dub"}], "+", 
+         RowBox[{"Fdb", " ", "Ddb"}], "+", 
+         RowBox[{"Fsb", " ", "Dsb"}]}], ")"}], "Ftg"}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730649797950233*^9, 3.730649845455036*^9}, {
+  3.7306516862564917`*^9, 3.7306517241370068`*^9}, {3.730651831937285*^9, 
+  3.730651866651351*^9}, {3.7306519411235523`*^9, 3.730651974500889*^9}, {
+  3.73065203962414*^9, 3.73065207952652*^9}, {3.730652192247764*^9, 
+  3.730652215592493*^9}, {3.730652332053103*^9, 3.7306523480057783`*^9}, {
+  3.730652419080503*^9, 3.730652451427994*^9}, {3.730652538467185*^9, 
+  3.730652553621962*^9}, {3.7307200294228687`*^9, 3.7307200296118298`*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdbFdbFtg+DsbFsbFtg+DubFtgFub\"\>", TraditionalForm]], "Output",\
+
+ CellChangeTimes->{3.730652554602462*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch22", " ", "=", "  ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"Fu", "+", "Fd", "+", "Fs"}], ")"}], "Ftg", " ", "Dg"}], 
+      "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730649797950233*^9, 3.730649845455036*^9}, {
+  3.7306516862564917`*^9, 3.7306517241370068`*^9}, {3.730651831937285*^9, 
+  3.730651866651351*^9}, {3.7306519411235523`*^9, 3.730651974500889*^9}, {
+  3.73065203962414*^9, 3.73065207952652*^9}, {3.730652192247764*^9, 
+  3.730652215592493*^9}, {3.730652332053103*^9, 3.7306523480057783`*^9}, {
+  3.730652419080503*^9, 3.730652451427994*^9}, {3.730652538467185*^9, 
+  3.730652553621962*^9}, {3.730652622393095*^9, 3.730652645916539*^9}, {
+  3.7307200310357656`*^9, 3.730720031192978*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DgFdFtg+DgFsFtg+DgFtgFu\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.730652646930726*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch23", " ", "=", "  ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{"Fub", "+", "Fdb", "+", "Fsb"}], ")"}], "Ftg", " ", "Dg"}], 
+      "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730652695859542*^9, 3.730652705292074*^9}, {
+  3.730720032992024*^9, 3.730720033225726*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DgFdbFtg+DgFsbFtg+DgFtgFub\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.730652705974731*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch24", " ", "=", "  ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{"Fg", " ", "Ftg", 
+       RowBox[{"(", 
+        RowBox[{"Du", "+", "Dd", "+", "Ds"}], ")"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.7306527680910997`*^9, 3.730652790439927*^9}, {
+  3.730720036387792*^9, 3.730720036575412*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdFgFtg+DsFgFtg+DuFgFtg\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.7306527996994267`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch25", " ", "=", "  ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{"Fg", " ", "Ftg", 
+       RowBox[{"(", 
+        RowBox[{"Dub", "+", "Ddb", "+", "Dsb"}], ")"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.7306528549572897`*^9, 3.7306528640536737`*^9}, {
+  3.730720038594009*^9, 3.730720038886622*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdbFgFtg+DsbFgFtg+DubFgFtg\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.7306528680118113`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch26", " ", "=", "  ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{"Fg", " ", "Ftg", " ", "Dg"}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730652918574109*^9, 3.730652925837709*^9}, {
+  3.730720040452286*^9, 3.730720040633684*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DgFgFtg\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.730652926425899*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch27", " ", "=", "  ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{"Fg", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Ftu", " ", "Du"}], "+", 
+         RowBox[{"Ftd", " ", "Dd"}], "+", 
+         RowBox[{"Fts", " ", "Ds"}]}], ")"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730652979354938*^9, 3.7306530057316093`*^9}, {
+  3.730720042078607*^9, 3.730720042273437*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdFgFtd+DsFgFts+DuFgFtu\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.730653015332178*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch28", " ", "=", "  ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{"Fg", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"Ftub", " ", "Dub"}], "+", 
+         RowBox[{"Ftdb", " ", "Ddb"}], "+", 
+         RowBox[{"Ftsb", " ", "Dsb"}]}], ")"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.7306530610242558`*^9, 3.7306530725306187`*^9}, {
+  3.730720044771482*^9, 3.730720045143021*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DdbFgFtdb+DsbFgFtsb+DubFgFtub\"\>", TraditionalForm]], "Output",\
+
+ CellChangeTimes->{3.730653082714655*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch29", " ", "=", "  ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{"Fg", 
+       RowBox[{"(", 
+        RowBox[{"Ftu", " ", "+", "Ftd", "+", "Fts"}], ")"}], "Dg"}], "]"}], 
+     "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.7306531318947153`*^9, 3.730653147822654*^9}, 
+   3.730653266988913*^9, {3.730720046745398*^9, 3.730720047745862*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DgFgFtd+DgFgFts+DgFgFtu\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.730653156396022*^9, 3.73065327418941*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"ch30", " ", "=", "  ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{"Fg", 
+       RowBox[{"(", 
+        RowBox[{"Ftub", " ", "+", "Ftdb", "+", "Ftsb"}], ")"}], "Dg"}], "]"}],
+      "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730653232914352*^9, 3.7306532342371607`*^9}, {
+  3.7306532876600847`*^9, 3.730653289582724*^9}, {3.7307200495773277`*^9, 
+  3.7307200498313017`*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"DgFgFtdb+DgFgFtsb+DgFgFtub\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.730653291544237*^9}]
+}, Open  ]],
+
+Cell[BoxData["\[IndentingNewLine]"], "Input",
+ CellChangeTimes->{3.730719978571988*^9}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"chT0", " ", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{"Ftg", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"hu", " ", "HH0u"}], "+", 
+         RowBox[{"hd", " ", "HH0d"}], " ", "+", " ", 
+         RowBox[{"hs", " ", "HH0s"}]}], ")"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730719981327186*^9, 3.73071998165998*^9}, {
+  3.730720052389762*^9, 3.730720096205064*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"FtghdHH0d+FtgHH0shs+FtgHH0uhu\"\>", TraditionalForm]], "Output",\
+
+ CellChangeTimes->{3.730720097478754*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"chT1", " ", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"hu", " ", "Ftu", " ", "HH1u"}], "+", 
+       RowBox[{"hd", " ", "Ftd", " ", "HH1d"}], "+", 
+       RowBox[{"hs", " ", "Fts", " ", "HH1s"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730720183307788*^9, 3.7307202285158854`*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"FtdhdHH1d+FtsHH1shs+FtuHH1uhu\"\>", TraditionalForm]], "Output",\
+
+ CellChangeTimes->{3.730720246566381*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"chT2", " ", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"hu", " ", "Ftub", " ", "HH2u"}], "+", 
+       RowBox[{"hd", " ", "Ftdb", " ", "HH2d"}], " ", "+", " ", 
+       RowBox[{"hs", " ", "Ftsb", " ", "HH2s"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730720315304164*^9, 3.73072035687351*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"FtdbhdHH2d+FtsbHH2shs+FtubHH2uhu\"\>", 
+  TraditionalForm]], "Output",
+ CellChangeTimes->{3.730720358404642*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"chT3", " ", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"hub", " ", "Ftu", " ", "HH3u"}], "+", 
+       RowBox[{"hdb", " ", "Ftd", " ", "HH3d"}], " ", "+", " ", 
+       RowBox[{"hsb", " ", "Fts", " ", "HH3s"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.7307204553957157`*^9, 3.7307204966187983`*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"FtdhdbHH3d+FtsHH3shsb+FtuHH3uhub\"\>", 
+  TraditionalForm]], "Output",
+ CellChangeTimes->{3.730720497831423*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"chT4", " ", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"Ftu", " ", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"hd", " ", "HH4d"}], "+", 
+          RowBox[{"hs", " ", "HH4s"}]}], ")"}]}], "+", 
+       RowBox[{"Ftd", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"hu", " ", "HH4u"}], "+", 
+          RowBox[{"hs", " ", "HH4s"}]}], ")"}]}], "+", 
+       RowBox[{"Fts", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"hu", " ", "HH4u"}], "+", 
+          RowBox[{"hd", " ", "HH4d"}]}], ")"}]}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730720571498743*^9, 3.730720641093433*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"FtshdHH4d+FtuhdHH4d+FtdHH4shs+FtuHH4shs+FtdHH4uhu+FtsHH4uhu\"\>\
+", TraditionalForm]], "Output",
+ CellChangeTimes->{3.730720642634948*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"chT5", " ", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"Ftub", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"hd", " ", "HH5d"}], "+", 
+          RowBox[{"hs", " ", "HH5s"}]}], ")"}]}], "+", 
+       RowBox[{"Ftdb", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"hu", " ", "HH5u"}], "+", 
+          RowBox[{"hs", " ", "HH5s"}]}], ")"}]}], "+", 
+       RowBox[{"Ftsb", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"hu", " ", "HH5u"}], "+", 
+          RowBox[{"hd", " ", "HH5d"}]}], ")"}]}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730720811413039*^9, 3.730720869272627*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"FtsbhdHH5d+FtubhdHH5d+FtdbHH5shs+FtubHH5shs+FtdbHH5uhu+\
+FtsbHH5uhu\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.73072087063815*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"chT6", " ", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{"Ftg", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"hub", " ", "HH6ub"}], "+", 
+         RowBox[{"hdb", " ", "HH6db"}], "+", 
+         RowBox[{"hsb", " ", "HH6sb"}]}], ")"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730720951075636*^9, 3.730720973953999*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"FtghdbHH6db+FtgHH6sbhsb+FtgHH6ubhub\"\>", 
+  TraditionalForm]], "Output",
+ CellChangeTimes->{3.730720977678461*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"chT7", " ", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"hub", " ", "Ftub", " ", "HH7ub"}], "+", 
+       RowBox[{"hdb", " ", "Ftdb", " ", "HH7db"}], "+", 
+       RowBox[{"hsb", " ", "Ftsb", " ", "HH7sb"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730720951075636*^9, 3.730720973953999*^9}, {
+  3.7307210389865303`*^9, 3.730721065112617*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"FtdbhdbHH7db+FtsbHH7sbhsb+FtubHH7ubhub\"\>", 
+  TraditionalForm]], "Output",
+ CellChangeTimes->{3.7307210663563128`*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"chT8", " ", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"hub", " ", "Ftu", " ", "HH8ub"}], "+", 
+       RowBox[{"hdb", " ", "Ftd", " ", "HH8db"}], "+", 
+       RowBox[{"hsb", " ", "Fts", " ", "HH8sb"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730721140570779*^9, 3.730721169660653*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"FtdhdbHH8db+FtsHH8sbhsb+FtuHH8ubhub\"\>", 
+  TraditionalForm]], "Output",
+ CellChangeTimes->{3.730721170855538*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"chT9", " ", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"hu", " ", "Ftub", " ", "HH9ub"}], "+", 
+       RowBox[{"hd", " ", "Ftdb", " ", "HH9db"}], "+", 
+       RowBox[{"hs", " ", "Ftsb", " ", "HH9sb"}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730721140570779*^9, 3.730721169660653*^9}, {
+  3.7307212461596813`*^9, 3.730721280482871*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"FtdbhdHH9db+FtsbHH9sbhs+FtubHH9ubhu\"\>", 
+  TraditionalForm]], "Output",
+ CellChangeTimes->{3.730721294216639*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"chT10", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"Ftub", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"hdb", " ", "HH10db"}], "+", 
+          RowBox[{"hsb", " ", "HH10sb"}]}], ")"}]}], "+", 
+       RowBox[{"Ftdb", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"hub", " ", "HH10ub"}], "+", 
+          RowBox[{"hsb", " ", "HH10sb"}]}], ")"}]}], "+", 
+       RowBox[{"Ftsb", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"hub", " ", "HH10ub"}], "+", 
+          RowBox[{"hdb", " ", "HH10db"}]}], ")"}]}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.730721140570779*^9, 3.730721169660653*^9}, {
+  3.7307212461596813`*^9, 3.730721280482871*^9}, {3.730721337476122*^9, 
+  3.7307213947412853`*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"FtsbhdbHH10db+FtubhdbHH10db+FtdbHH10sbhsb+FtubHH10sbhsb+\
+FtdbHH10ubhub+FtsbHH10ubhub\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.730721437524803*^9}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"chT11", "=", " ", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{
+    RowBox[{"ToString", "[", 
+     RowBox[{"Expand", "[", 
+      RowBox[{
+       RowBox[{"Ftu", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"hdb", " ", "HH11db"}], "+", 
+          RowBox[{"hsb", " ", "HH11sb"}]}], ")"}]}], "+", 
+       RowBox[{"Ftd", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"hub", " ", "HH11ub"}], "+", 
+          RowBox[{"hsb", " ", "HH11sb"}]}], ")"}]}], "+", 
+       RowBox[{"Fts", 
+        RowBox[{"(", 
+         RowBox[{
+          RowBox[{"hub", " ", "HH11ub"}], "+", 
+          RowBox[{"hdb", " ", "HH11db"}]}], ")"}]}]}], "]"}], "]"}], ",", 
+    RowBox[{"\"\< \>\"", "\[Rule]", "\"\<\>\""}]}], "]"}]}]], "Input",
+ CellChangeTimes->{{3.7307214812614193`*^9, 3.730721508309125*^9}}],
+
+Cell[BoxData[
+ FormBox["\<\"FtshdbHH11db+FtuhdbHH11db+FtdHH11sbhsb+FtuHH11sbhsb+\
+FtdHH11ubhub+FtsHH11ubhub\"\>", TraditionalForm]], "Output",
+ CellChangeTimes->{3.730721535311756*^9}]
+}, Open  ]]
+},
+WindowSize->{827, 951},
+WindowMargins->{{Automatic, 0}, {Automatic, 0}},
+FrontEndVersion->"10.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 29, \
+2015)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[580, 22, 966, 21, 28, "Input"],
+Cell[1549, 45, 447, 7, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[2033, 57, 1005, 21, 28, "Input"],
+Cell[3041, 80, 202, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[3280, 88, 981, 18, 28, "Input"],
+Cell[4264, 108, 150, 2, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[4451, 115, 1133, 24, 28, "Input"],
+Cell[5587, 141, 231, 4, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[5855, 150, 1185, 23, 46, "Input"],
+Cell[7043, 175, 231, 4, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[7311, 184, 1041, 19, 28, "Input"],
+Cell[8355, 205, 164, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[8556, 213, 1159, 24, 28, "Input"],
+Cell[9718, 239, 213, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[9968, 247, 1205, 24, 28, "Input"],
+Cell[11176, 273, 209, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[11422, 281, 1178, 21, 28, "Input"],
+Cell[12603, 304, 153, 2, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[12793, 311, 1307, 25, 28, "Input"],
+Cell[14103, 338, 218, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[14358, 346, 1305, 25, 28, "Input"],
+Cell[15666, 373, 198, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[15901, 381, 1258, 22, 28, "Input"],
+Cell[17162, 405, 138, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[17337, 413, 1415, 27, 28, "Input"],
+Cell[18755, 442, 198, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[18990, 450, 628, 16, 28, "Input"],
+Cell[19621, 468, 196, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[19854, 476, 585, 13, 28, "Input"],
+Cell[20442, 491, 135, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[20614, 499, 723, 17, 28, "Input"],
+Cell[21340, 518, 186, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[21563, 526, 772, 18, 28, "Input"],
+Cell[22338, 546, 187, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[22562, 554, 727, 15, 28, "Input"],
+Cell[23292, 571, 133, 2, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[23462, 578, 851, 18, 28, "Input"],
+Cell[24316, 598, 182, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[24535, 606, 847, 18, 28, "Input"],
+Cell[25385, 626, 131, 2, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[25553, 633, 891, 19, 28, "Input"],
+Cell[26447, 654, 128, 2, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[26612, 661, 947, 19, 28, "Input"],
+Cell[27562, 682, 136, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[27735, 690, 913, 18, 28, "Input"],
+Cell[28651, 710, 128, 2, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[28816, 717, 476, 12, 28, "Input"],
+Cell[29295, 731, 131, 2, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[29463, 738, 468, 11, 28, "Input"],
+Cell[29934, 751, 130, 2, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[30101, 758, 473, 11, 28, "Input"],
+Cell[30577, 771, 133, 2, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[30747, 778, 402, 9, 28, "Input"],
+Cell[31152, 789, 112, 2, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[31301, 796, 552, 14, 28, "Input"],
+Cell[31856, 812, 128, 2, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[32021, 819, 560, 14, 28, "Input"],
+Cell[32584, 835, 136, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[32757, 843, 499, 12, 28, "Input"],
+Cell[33259, 857, 149, 2, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[33445, 864, 534, 13, 28, "Input"],
+Cell[33982, 879, 131, 2, 28, "Output"]
+}, Open  ]],
+Cell[34128, 884, 87, 1, 46, "Input"],
+Cell[CellGroupData[{
+Cell[34240, 889, 562, 14, 28, "Input"],
+Cell[34805, 905, 136, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[34978, 913, 482, 11, 28, "Input"],
+Cell[35463, 926, 136, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[35636, 934, 492, 11, 28, "Input"],
+Cell[36131, 947, 140, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[36308, 955, 497, 11, 28, "Input"],
+Cell[36808, 968, 140, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[36985, 976, 815, 23, 80, "Input"],
+Cell[37803, 1001, 166, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[38006, 1009, 813, 23, 80, "Input"],
+Cell[38822, 1034, 171, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[39030, 1042, 510, 13, 28, "Input"],
+Cell[39543, 1057, 143, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[39723, 1065, 540, 12, 28, "Input"],
+Cell[40266, 1079, 148, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[40451, 1087, 486, 11, 28, "Input"],
+Cell[40940, 1100, 143, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[41120, 1108, 537, 12, 28, "Input"],
+Cell[41660, 1122, 143, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[41840, 1130, 929, 25, 80, "Input"],
+Cell[42772, 1157, 190, 3, 28, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[42999, 1165, 826, 23, 80, "Input"],
+Cell[43828, 1190, 184, 3, 62, "Output"]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
