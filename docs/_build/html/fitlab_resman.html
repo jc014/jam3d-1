@@ -17,34 +17,37 @@
   
 
   
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="qcdlib.alphaS" href="qcdlib_alphaS.html" />
     <link rel="prev" title="fitlab.parman" href="fitlab_parman.html" /> 
-
-  
-  <script src="_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -170,73 +173,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="module-fitlab.resman">
-<span id="fitlab-resman"></span><h1>fitlab.resman<a class="headerlink" href="#module-fitlab.resman" title="Permalink to this headline">¶</a></h1>
-<dl class="class">
-<dt id="fitlab.resman.RESMAN">
-<em class="property">class </em><code class="descclassname">fitlab.resman.</code><code class="descname">RESMAN</code><span class="sig-paren">(</span><em>mode='solo'</em>, <em>ip=None</em>, <em>nworkers=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fitlab/resman.html#RESMAN"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fitlab.resman.RESMAN" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
-<dt id="fitlab.resman.RESMAN.gen_report">
-<code class="descname">gen_report</code><span class="sig-paren">(</span><em>verb=0</em>, <em>level=0</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fitlab/resman.html#RESMAN.gen_report"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fitlab.resman.RESMAN.gen_report" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get a report.</p>
-<dl class="docutils">
-<dt>Returns:</dt>
-<dd>A list of the lines of the report.</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="fitlab.resman.RESMAN.get_residuals">
-<code class="descname">get_residuals</code><span class="sig-paren">(</span><em>par</em>, <em>calc=True</em>, <em>simple=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/fitlab/resman.html#RESMAN.get_residuals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fitlab.resman.RESMAN.get_residuals" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get the residuals that result from the given parameters.</p>
-<dl class="docutils">
-<dt>Args:</dt>
-<dd>par (vector): A vector (numpy array) of the parameters for the fit.</dd>
-<dt>Returns:</dt>
-<dd>A 3-tuple of the residuals, <em>&#8216;r-residuals&#8217;</em>, and normalized
-residuals. The <em>r-residuals</em> result from the correlational
-considerations.</dd>
-</dl>
-</dd></dl>
-
-<dl class="method">
-<dt id="fitlab.resman.RESMAN.run_worker">
-<code class="descname">run_worker</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fitlab/resman.html#RESMAN.run_worker"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fitlab.resman.RESMAN.run_worker" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fitlab.resman.RESMAN.setup_AN">
-<code class="descname">setup_AN</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fitlab/resman.html#RESMAN.setup_AN"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fitlab.resman.RESMAN.setup_AN" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fitlab.resman.RESMAN.setup_moments">
-<code class="descname">setup_moments</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fitlab/resman.html#RESMAN.setup_moments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fitlab.resman.RESMAN.setup_moments" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fitlab.resman.RESMAN.setup_sia">
-<code class="descname">setup_sia</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fitlab/resman.html#RESMAN.setup_sia"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fitlab.resman.RESMAN.setup_sia" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fitlab.resman.RESMAN.setup_sidis">
-<code class="descname">setup_sidis</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fitlab/resman.html#RESMAN.setup_sidis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fitlab.resman.RESMAN.setup_sidis" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fitlab.resman.RESMAN.setup_tmds">
-<code class="descname">setup_tmds</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fitlab/resman.html#RESMAN.setup_tmds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fitlab.resman.RESMAN.setup_tmds" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="fitlab.resman.RESMAN.shutdown">
-<code class="descname">shutdown</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/fitlab/resman.html#RESMAN.shutdown"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#fitlab.resman.RESMAN.shutdown" title="Permalink to this definition">¶</a></dt>
-<dd><p>Release the resources used by the RESMAN instance.</p>
-</dd></dl>
-
-</dd></dl>
-
+  <div class="section" id="fitlab-resman">
+<h1>fitlab.resman<a class="headerlink" href="#fitlab-resman" title="Permalink to this headline">¶</a></h1>
 </div>
 
 
@@ -250,7 +188,7 @@ considerations.</dd>
         <a href="qcdlib_alphaS.html" class="btn btn-neutral float-right" title="qcdlib.alphaS" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="fitlab_parman.html" class="btn btn-neutral" title="fitlab.parman" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="fitlab_parman.html" class="btn btn-neutral float-left" title="fitlab.parman" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
@@ -259,7 +197,7 @@ considerations.</dd>
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, N. Sato.
+        &copy; Copyright 2018, N. Sato
 
     </p>
   </div>
@@ -276,33 +214,16 @@ considerations.</dd>
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'./',
-            VERSION:'1.0.0',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="_static/jquery.js"></script>
-      <script type="text/javascript" src="_static/underscore.js"></script>
-      <script type="text/javascript" src="_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  <script type="text/javascript" src="_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>
