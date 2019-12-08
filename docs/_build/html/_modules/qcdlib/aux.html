@@ -17,32 +17,35 @@
   
 
   
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script type="text/javascript" src="../../_static/language_data.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
 
-  
-  
     
 
   
-
   <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" /> 
-
-  
-  <script src="../../_static/js/modernizr.min.js"></script>
-
 </head>
 
 <body class="wy-body-for-nav">
 
    
   <div class="wy-grid-for-nav">
-
     
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
-        <div class="wy-side-nav-search">
+        <div class="wy-side-nav-search" >
           
 
           
@@ -157,14 +160,14 @@
 <span></span><span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">mpmath</span> <span class="k">import</span> <span class="n">fp</span>
-<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="k">import</span> <span class="n">gamma</span>
-<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="k">import</span> <span class="n">quad</span>
+<span class="kn">from</span> <span class="nn">mpmath</span> <span class="kn">import</span> <span class="n">fp</span>
+<span class="kn">from</span> <span class="nn">scipy.special</span> <span class="kn">import</span> <span class="n">gamma</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">quad</span>
 
 
 <div class="viewcode-block" id="AUX"><a class="viewcode-back" href="../../qcdlib_aux.html#qcdlib.aux.AUX">[docs]</a><span class="k">class</span> <span class="nc">AUX</span><span class="p">:</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">set_constants</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">set_masses</span><span class="p">()</span>
@@ -220,30 +223,26 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">alphaSMZ</span> <span class="o">=</span> <span class="mf">0.118</span></div>
 
 <div class="viewcode-block" id="AUX.set_evolution"><a class="viewcode-back" href="../../qcdlib_aux.html#qcdlib.aux.AUX.set_evolution">[docs]</a>    <span class="k">def</span> <span class="nf">set_evolution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">Q02</span><span class="o">=</span><span class="mf">1.0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">lam2</span><span class="o">=</span><span class="mf">0.4</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Q02</span><span class="o">=</span><span class="mf">2.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lam2</span><span class="o">=</span><span class="mf">0.04</span></div>
 
 <div class="viewcode-block" id="AUX.p2n"><a class="viewcode-back" href="../../qcdlib_aux.html#qcdlib.aux.AUX.p2n">[docs]</a>    <span class="k">def</span> <span class="nf">p2n</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">p</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">]])</span></div>
 
 <div class="viewcode-block" id="AUX.charge_conj"><a class="viewcode-back" href="../../qcdlib_aux.html#qcdlib.aux.AUX.charge_conj">[docs]</a>    <span class="k">def</span> <span class="nf">charge_conj</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">p</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">p</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">9</span><span class="p">]])</span></div>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">p</span><span class="p">[[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">9</span><span class="p">]])</span></div></div>
 
-<div class="viewcode-block" id="AUX.pip2piz"><a class="viewcode-back" href="../../qcdlib_aux.html#qcdlib.aux.AUX.pip2piz">[docs]</a>    <span class="k">def</span> <span class="nf">pip2piz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pip</span><span class="p">):</span>
-        <span class="n">piz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">pip</span><span class="p">)</span>
-        <span class="n">u</span> <span class="o">=</span> <span class="n">pip</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">ub</span> <span class="o">=</span> <span class="n">pip</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="n">pip</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
-        <span class="n">db</span> <span class="o">=</span> <span class="n">pip</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
-        <span class="n">piz</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">u</span> <span class="o">+</span> <span class="n">ub</span><span class="p">)</span>
-        <span class="n">piz</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">u</span> <span class="o">+</span> <span class="n">ub</span><span class="p">)</span>
-        <span class="n">piz</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">d</span> <span class="o">+</span> <span class="n">db</span><span class="p">)</span>
-        <span class="n">piz</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">d</span> <span class="o">+</span> <span class="n">db</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">piz</span></div></div>
-
-
-
-
+    <span class="c1">#def pip2piz(self, pip):</span>
+    <span class="c1">#    piz = np.copy(pip)</span>
+    <span class="c1">#    u = pip[1]</span>
+    <span class="c1">#    ub = pip[2]</span>
+    <span class="c1">#    d = pip[3]</span>
+    <span class="c1">#    db = pip[4]</span>
+    <span class="c1">#    piz[1] = 0.5 * (u + ub)</span>
+    <span class="c1">#    piz[2] = 0.5 * (u + ub)</span>
+    <span class="c1">#    piz[3] = 0.5 * (d + db)</span>
+    <span class="c1">#    piz[4] = 0.5 * (d + db)</span>
+    <span class="c1">#    return piz</span>
 </pre></div>
 
            </div>
@@ -256,7 +255,7 @@
 
   <div role="contentinfo">
     <p>
-        &copy; Copyright 2018, N. Sato.
+        &copy; Copyright 2018, N. Sato
 
     </p>
   </div>
@@ -273,33 +272,16 @@
   
 
 
-  
-
-    <script type="text/javascript">
-        var DOCUMENTATION_OPTIONS = {
-            URL_ROOT:'../../',
-            VERSION:'1.0.0',
-            LANGUAGE:'None',
-            COLLAPSE_INDEX:false,
-            FILE_SUFFIX:'.html',
-            HAS_SOURCE:  true,
-            SOURCELINK_SUFFIX: '.txt'
-        };
-    </script>
-      <script type="text/javascript" src="../../_static/jquery.js"></script>
-      <script type="text/javascript" src="../../_static/underscore.js"></script>
-      <script type="text/javascript" src="../../_static/doctools.js"></script>
-      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-
-  
-
-  <script type="text/javascript" src="../../_static/js/theme.js"></script>
-
   <script type="text/javascript">
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script> 
+  </script>
+
+  
+  
+    
+   
 
 </body>
 </html>

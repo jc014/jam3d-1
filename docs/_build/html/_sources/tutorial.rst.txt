@@ -9,10 +9,19 @@ dependencies
 - We recommend to install anaconda (python2) which 
   comes will all the necessary libraries
 
+clonning the code
+-----------------
+
+Go to https://github.com/JeffersonLab/fitpack
+and fork the repository under your GitHub account 
+and clone your forked fitpack repo 
+
 installation
 ------------
 
-Clone the codes from https://github.com/JeffersonLab/jam3d
+Go to  https://github.com/JeffersonLab/jam3d
+and fork the repository under your GitHub account 
+and clone your forked fitpack repo 
 
 Certain enviroment variables needs to be set in your terminal session. 
 For bash they are ::
@@ -38,6 +47,17 @@ There are two ways to use the code:
 1) As a TMD extraction tool
 
 2) As a simulator for TMD observables
+
+
+How to contribute
+-----------------
+
+You should run, test and develop the code under your fork. 
+If you want to share some develpment, you can send us a pull 
+request
+
+
+
 
 
 
