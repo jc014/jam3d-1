@@ -45,9 +45,6 @@ def _get_FU1(xA,xB,Q2,qT,hadronA,hadronB,PDFA,PDFB,w_hadronA,w_hadronB):
     wq = np.abs(w_hadronA) + np.abs(w_hadronB)
     gauss = np.exp(-qT**2 / wq) / (np.pi * wq)
     return np.sum(e2*PDFA*PDFB*gauss)    
-        
-
-
 
 def get_FU1(xA,xB,Q2,qT,hadronA,hadronB):
 
@@ -59,11 +56,12 @@ def get_FU1(xA,xB,Q2,qT,hadronA,hadronB):
         PDFA = conf['aux'].p2n(conf['sivers'].get_C(xA, Q2))
         w_hadronA = conf['aux'].p2n(conf['pdf'].get_widths(Q2))
     elif hadronA == 'pi-':  
-        PDFA = conf['aux'].piplus2piminus(conf['pdfpi'].get_C(xA, Q2))
-        w_hadronA = conf['aux'].piplus2piminus(conf['pdfpi'].get_widths(Q2))
-    elif hadronA == 'pi+':  
-        PDFA = conf['pdfpi'].get_C(xA, Q2)
-        w_hadronB = conf['pdfpi'].get_widths(Q2)        
+        print xA,Q2
+        PDFA = conf['pdfpi-'].get_C(xA, Q2)
+        w_hadronA = conf['pdfpi-'].get_widths(Q2)
+    #elif hadronA == 'pi+':  
+    #    PDFA = conf['pdfpi'].get_C(xA, Q2)
+    #    w_hadronB = conf['pdfpi'].get_widths(Q2)        
         
     if hadronB == 'p':  
         PDFB = conf['pdf'].get_C(xB, Q2)
@@ -81,23 +79,25 @@ def get_FU1(xA,xB,Q2,qT,hadronA,hadronB):
 
     # build structure function
     return _get_FU1(xA,xB,Q2,qT,hadronA,hadronB,PDFA,PDFB,w_hadronA,w_hadronB)
-    
-
-
 
 if __name__ == '__main__':
 
-    from qcdlib.pdf1 import PDF
+    from qcdlib import pdf0 
+    from qcdlib import pdf1 
     conf['aux']= AUX()
-    conf['pdf']=PDF()
-    conf['pdfpi']=PDF('pi')
+    conf['pdf']=pdf0.PDF('p')
+    conf['pdfpi-']=pdf0.PDF('pi-')
 
     xA = 0.25
     xB = 0.5
-    Q2 = 16,
+    Q2 = 16
     qT = 0.3
     hadronA = 'pi-'
     hadronB = 'p'
  
     print get_FU1(xA,xB,Q2,qT,hadronA,hadronB)
+
+
+
+
 
