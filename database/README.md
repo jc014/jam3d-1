@@ -17,7 +17,7 @@
   +STAR pi0
   
 - DY
-+ COMPASS
-+ STAR W+-,Z
+  + COMPASS
+  + STAR W+-,Z
 
 
