@@ -182,6 +182,17 @@ comes will all the necessary libraries</li>
 <p>Go to <a class="reference external" href="https://github.com/JeffersonLab/fitpack">https://github.com/JeffersonLab/fitpack</a>
 and fork the repository under your GitHub account
 and clone your forked fitpack repo</p>
+<p>To sync your fork with updates on upstream we need to first
+setup the upstream</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">remote</span> <span class="n">add</span> <span class="n">upstream</span> <span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">JeffersonLab</span><span class="o">/</span><span class="n">jam3d</span><span class="o">.</span><span class="n">git</span>
+<span class="n">git</span> <span class="n">fetch</span> <span class="n">upstream</span>
+</pre></div>
+</div>
+<p>After that you can use</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">pull</span> <span class="n">upstream</span> <span class="n">master</span>
+</pre></div>
+</div>
+<p>to be able to sync your fork.</p>
 </div>
 <div class="section" id="installation">
 <h2>installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
