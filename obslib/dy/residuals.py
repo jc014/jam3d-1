@@ -88,6 +88,9 @@ if __name__ == '__main__':
 
     # COMPASS Sivers
     conf['datasets']['dy']['xlsx'][1000]='dy/expdata/1000.xlsx'  
+    conf['datasets']['dy']['xlsx'][1000]='dy/expdata/1001.xlsx'  
+    conf['datasets']['dy']['xlsx'][1000]='dy/expdata/1002.xlsx'  
+    conf['datasets']['dy']['xlsx'][1000]='dy/expdata/1003.xlsx'  
 
 
     conf['datasets']['dy']['norm']={}
