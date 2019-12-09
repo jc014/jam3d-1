@@ -45,16 +45,14 @@ def _get_FUT(xA,xB,Q2,qT,hadronA,hadronB,TransversePolarizationA,TransversePolar
     MA=conf['aux'].MA
     MB=conf['aux'].MB
 
-    if TransversePolarizationA: # hadronA is transversely polarised
-    
+    if TransversePolarizationA: # hadronA is transversely polarised   
             # FTU1 asymmetry equation (95)
             wq = np.abs(w_hadronA) + np.abs(w_hadronB)
             K = -2 * qT * MA / wq
             gauss = np.exp(-qT**2 / wq) / (np.pi * wq)
             return np.sum(e2*K*PDFA*PDFB*gauss)    
     
-    elif TransversePolarizationA: # hadronB is transversely polarised
-    
+    elif TransversePolarizationB: # hadronB is transversely polarised   
             # FUT1 asymmetry equation (98)
             wq = np.abs(w_hadronA) + np.abs(w_hadronB)
             K = 2 * qT * MB / wq
@@ -71,46 +69,57 @@ def get_FUT(xA,xB,Q2,qT,hadronA,hadronB,TransversePolarizationA,TransversePolari
 
     
     if TransversePolarizationA:
+        # Set up Sivers functions for hadron A
         if hadronA == 'p':
             PDFA = (-1.)*conf['sivers'].get_C(xA, Q2) # DY Sivers is opposite to SIDIS
             w_hadronA=conf['sivers'].get_widths(Q2)
         elif hadronA == 'n':
             PDFA = (-1.)*conf['aux'].p2n(conf['sivers'].get_C(xA, Q2)) # DY Sivers is opposite to SIDIS
             w_hadronA=conf['aux'].p2n(conf['sivers'].get_widths(Q2))
-        
+        else:
+            print 'ERR: Sivers hadronA = %s is not implemented' % (hadronA)
+            sys.exit()
+            
+        # Set up unpolarized functions for hadron B
         if hadronB == 'p':  
             PDFB = conf['pdf'].get_C(xB, Q2)
             w_hadronB = conf['pdf'].get_widths(Q2)
         elif hadronB == 'n':  
-            PDFB = conf['aux'].p2n(conf['sivers'].get_C(xB, Q2))
+            PDFB = conf['aux'].p2n(conf['pdf'].get_C(xB, Q2))
             w_hadronB = conf['aux'].p2n(conf['pdf'].get_widths(Q2))
         elif hadronB == 'pi-':  
-            PDFB = conf['aux'].piplus2piminus(conf['pdfpi'].get_C(xB, Q2))
-            w_hadronB = conf['aux'].piplus2piminus(conf['pdfpi'].get_widths(Q2))
-        elif hadronB == 'pi+':  
-            PDFB = conf['pdfpi'].get_C(xB, Q2)
-            w_hadronB = conf['pdfpi'].get_widths(Q2) 
+            PDFB = conf['pdfpi-'].get_C(xB, Q2)
+            w_hadronB = conf['pdfpi-'].get_widths(Q2)
+        else:
+            print 'ERR: hadronB = %s is not implemented' % (hadronB)
+            sys.exit()
+
             
     elif TransversePolarizationB:
+        # Set up Sivers functions for hadron B
         if hadronB == 'p':
             PDFB = (-1.)*conf['sivers'].get_C(xB, Q2) # DY Sivers is opposite to SIDIS
             w_hadronB=conf['sivers'].get_widths(Q2)
         elif hadronB == 'n':
-            PDFA = (-1.)*conf['aux'].p2n(conf['sivers'].get_C(xB, Q2)) # DY Sivers is opposite to SIDIS
-            w_hadronA=conf['aux'].p2n(conf['sivers'].get_widths(Q2))
+            PDFB = (-1.)*conf['aux'].p2n(conf['sivers'].get_C(xB, Q2)) # DY Sivers is opposite to SIDIS
+            w_hadronB=conf['aux'].p2n(conf['sivers'].get_widths(Q2))
+        else:
+            print 'ERR: Sivers hadronB = %s is not implemented' % (hadronB)
+            sys.exit()
         
+        # Set up unpolarized functions for hadron A
         if hadronA == 'p':  
-            PDFB = conf['pdf'].get_C(xA, Q2)
+            PDFA = conf['pdf'].get_C(xA, Q2)
             w_hadronB = conf['pdf'].get_widths(Q2)
         elif hadronA == 'n':  
             PDFA = conf['aux'].p2n(conf['sivers'].get_C(xA, Q2))
             w_hadronA = conf['aux'].p2n(conf['pdf'].get_widths(Q2))
         elif hadronA == 'pi-':  
-            PDFA = conf['aux'].piplus2piminus(conf['pdfpi'].get_C(xA, Q2))
-            w_hadronA = conf['aux'].piplus2piminus(conf['pdfpi'].get_widths(Q2))
-        elif hadronA == 'pi+':  
-            PDFA = conf['pdfpi'].get_C(xA, Q2)
-            w_hadronB = conf['pdfpi'].get_widths(Q2)        
+            PDFA = conf['pdfpi-'].get_C(xA, Q2)
+            w_hadronA = conf['pdfpi-'].get_widths(Q2)
+        else:
+            print 'ERR: hadronA = %s is not implemented' % (hadronA)
+            sys.exit()
     
 
     # build structure function
@@ -121,15 +130,16 @@ def get_FUT(xA,xB,Q2,qT,hadronA,hadronB,TransversePolarizationA,TransversePolari
 
 if __name__ == '__main__':
 
-    from qcdlib.pdf1 import PDF
+    from qcdlib import pdf0 
+    from qcdlib import pdf1 
     conf['aux']= AUX()
-    conf['sivers']=PDF()
-    conf['pdf']=PDF()
-    conf['pdfpi']=PDF('pi')
+    conf['sivers']=pdf1.PDF()
+    conf['pdf']=pdf0.PDF('p')
+    conf['pdfpi-']=pdf0.PDF('pi-')
 
     xA = 0.25
     xB = 0.5
-    Q2 = 16,
+    Q2 = 16
     qT = 0.3
     hadronA = 'pi-'
     TransversePolarizationA = False

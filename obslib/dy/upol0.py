@@ -38,9 +38,7 @@ def _get_FU1(xA,xB,Q2,qT,hadronA,hadronB,PDFA,PDFB,w_hadronA,w_hadronB):
     PDFB - hadronB pdf distributions
     w_hadronA - widths of hadronA TMDs
     w_hadronB - widths of hadronB TMDs
-    """
-
-     
+    """     
     # FU1 equation (91)
     wq = np.abs(w_hadronA) + np.abs(w_hadronB)
     gauss = np.exp(-qT**2 / wq) / (np.pi * wq)
@@ -49,6 +47,7 @@ def _get_FU1(xA,xB,Q2,qT,hadronA,hadronB,PDFA,PDFB,w_hadronA,w_hadronB):
 def get_FU1(xA,xB,Q2,qT,hadronA,hadronB):
 
     
+    # Set up unpolarized functions for hadron A
     if hadronA == 'p':  
         PDFB = conf['pdf'].get_C(xA, Q2)
         w_hadronB = conf['pdf'].get_widths(Q2)
@@ -59,10 +58,12 @@ def get_FU1(xA,xB,Q2,qT,hadronA,hadronB):
         print xA,Q2
         PDFA = conf['pdfpi-'].get_C(xA, Q2)
         w_hadronA = conf['pdfpi-'].get_widths(Q2)
-    #elif hadronA == 'pi+':  
-    #    PDFA = conf['pdfpi'].get_C(xA, Q2)
-    #    w_hadronB = conf['pdfpi'].get_widths(Q2)        
+    else:
+        print 'ERR: hadronA = %s is not implemented' % (hadronA)
+        sys.exit()
+      
         
+    # Set up unpolarized functions for hadron B
     if hadronB == 'p':  
         PDFB = conf['pdf'].get_C(xB, Q2)
         w_hadronB = conf['pdf'].get_widths(Q2)
@@ -70,11 +71,12 @@ def get_FU1(xA,xB,Q2,qT,hadronA,hadronB):
         PDFB = conf['aux'].p2n(conf['sivers'].get_C(xB, Q2))
         w_hadronB = conf['aux'].p2n(conf['pdf'].get_widths(Q2))
     elif hadronB == 'pi-':  
-        PDFB = conf['aux'].piplus2piminus(conf['pdfpi'].get_C(xB, Q2))
-        w_hadronB = conf['aux'].piplus2piminus(conf['pdfpi'].get_widths(Q2))
-    elif hadronB == 'pi+':  
-        PDFB = conf['pdfpi'].get_C(xB, Q2)
-        w_hadronB = conf['pdfpi'].get_widths(Q2) 
+        PDFB = conf['pdfpi-'].get_C(xB, Q2)
+        w_hadronB = conf['pdfpi-'].get_widths(Q2)
+    else:
+        print 'ERR: hadronB = %s is not implemented' % (hadronB)
+        sys.exit()
+
                 
 
     # build structure function
