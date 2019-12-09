@@ -16,6 +16,19 @@ Go to https://github.com/JeffersonLab/fitpack
 and fork the repository under your GitHub account 
 and clone your forked fitpack repo 
 
+To sync your fork with updates on upstream we need to first 
+setup the upstream ::
+
+  git remote add upstream git@github.com:JeffersonLab/jam3d.git
+  git fetch upstream
+
+After that you can use ::
+  
+  git pull upstream master
+
+to be able to sync your fork.
+
+
 installation
 ------------
 
