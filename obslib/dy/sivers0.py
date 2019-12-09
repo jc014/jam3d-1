@@ -77,8 +77,8 @@ def get_FUT(xA,xB,Q2,qT,hadronA,hadronB,TransversePolarizationA,TransversePolari
             PDFA = (-1.)*conf['aux'].p2n(conf['sivers'].get_C(xA, Q2)) # DY Sivers is opposite to SIDIS
             w_hadronA=conf['aux'].p2n(conf['sivers'].get_widths(Q2))
         else:
-            print(hadronA,' Sivers function is not implemented')
-            return 0 
+            print 'ERR: Sivers hadronA = %s is not implemented' % (hadronA)
+            sys.exit()
             
         # Set up unpolarized functions for hadron B
         if hadronB == 'p':  
@@ -91,8 +91,9 @@ def get_FUT(xA,xB,Q2,qT,hadronA,hadronB,TransversePolarizationA,TransversePolari
             PDFB = conf['pdfpi-'].get_C(xB, Q2)
             w_hadronB = conf['pdfpi-'].get_widths(Q2)
         else:
-            print(hadronB,' is not implemented')
-            return 0 
+            print 'ERR: hadronB = %s is not implemented' % (hadronB)
+            sys.exit()
+
             
     elif TransversePolarizationB:
         # Set up Sivers functions for hadron B
@@ -101,7 +102,10 @@ def get_FUT(xA,xB,Q2,qT,hadronA,hadronB,TransversePolarizationA,TransversePolari
             w_hadronB=conf['sivers'].get_widths(Q2)
         elif hadronB == 'n':
             PDFB = (-1.)*conf['aux'].p2n(conf['sivers'].get_C(xB, Q2)) # DY Sivers is opposite to SIDIS
-            w_hadronA=conf['aux'].p2n(conf['sivers'].get_widths(Q2))
+            w_hadronB=conf['aux'].p2n(conf['sivers'].get_widths(Q2))
+        else:
+            print 'ERR: Sivers hadronB = %s is not implemented' % (hadronB)
+            sys.exit()
         
         # Set up unpolarized functions for hadron A
         if hadronA == 'p':  
@@ -114,8 +118,8 @@ def get_FUT(xA,xB,Q2,qT,hadronA,hadronB,TransversePolarizationA,TransversePolari
             PDFA = conf['pdfpi-'].get_C(xA, Q2)
             w_hadronA = conf['pdfpi-'].get_widths(Q2)
         else:
-            print(hadronA,' is not implemented')
-            return 0   
+            print 'ERR: hadronA = %s is not implemented' % (hadronA)
+            sys.exit()
     
 
     # build structure function
@@ -129,7 +133,7 @@ if __name__ == '__main__':
     from qcdlib import pdf0 
     from qcdlib import pdf1 
     conf['aux']= AUX()
-    conf['sivers']=pdf0.PDF('p')
+    conf['sivers']=pdf1.PDF()
     conf['pdf']=pdf0.PDF('p')
     conf['pdfpi-']=pdf0.PDF('pi-')
 

@@ -59,8 +59,8 @@ def get_FU1(xA,xB,Q2,qT,hadronA,hadronB):
         PDFA = conf['pdfpi-'].get_C(xA, Q2)
         w_hadronA = conf['pdfpi-'].get_widths(Q2)
     else:
-        print(hadronA,' is not implemented')
-        return 0
+        print 'ERR: hadronA = %s is not implemented' % (hadronA)
+        sys.exit()
       
         
     # Set up unpolarized functions for hadron B
@@ -74,8 +74,8 @@ def get_FU1(xA,xB,Q2,qT,hadronA,hadronB):
         PDFB = conf['pdfpi-'].get_C(xB, Q2)
         w_hadronB = conf['pdfpi-'].get_widths(Q2)
     else:
-        print(hadronB,' is not implemented')
-        return 0    
+        print 'ERR: hadronB = %s is not implemented' % (hadronB)
+        sys.exit()
 
                 
 
