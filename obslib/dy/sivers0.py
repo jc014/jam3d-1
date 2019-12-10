@@ -40,8 +40,8 @@ def _get_FUT(xA,xB,Q2,qT,hadronA,hadronB,TransversePolarizationA,TransversePolar
     PDFB - hadronB pdf distributions
     w_hadronA - widths of hadronA TMDs
     w_hadronB - widths of hadronB TMDs
-    """
- 
+    """   
+
     MA=conf['aux'].MA
     MB=conf['aux'].MB
 

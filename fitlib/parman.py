@@ -82,6 +82,7 @@ class dev_PARMAN:
 
     def propagate_params(self, semaphore):
         if 'pdf'          in semaphore and semaphore['pdf']          == 1: self.set_pdf_params()
+        if 'pdfpi-'       in semaphore and semaphore['pdfpi-']       == 1: self.set_pdfpi_params()
         if 'transversity' in semaphore and semaphore['transversity'] == 1: self.set_transversity_params()
         if 'sivers'       in semaphore and semaphore['sivers']       == 1: self.set_sivers_params()
         if 'boermulders'  in semaphore and semaphore['boermulders']  == 1: self.set_boermulders_params()
@@ -97,18 +98,36 @@ class dev_PARMAN:
         for k in conf['params'][parkind]:
             if conf['params'][parkind][k]['fixed'] == True:  continue
             if conf['params'][parkind][k]['fixed'] == False: continue
-            ref_par = conf['params'][parkind][k]['fixed']
-            conf['params'][parkind][k]['value'] = conf['params'][parkind][ref_par]['value']
+            if parkind=='pdfpi-':
+                ref_par = conf['params'][parkind][k]['fixed']
+                if 'proton widths uv' in ref_par: conf['params']['pdfpi-']['widths1_ubv']['value'] = conf['params']['pdf']['widths1_uv']['value']
+                elif 'proton widths sea' in ref_par: conf['params']['pdfpi-']['widths1_sea']['value'] = conf['params']['pdf']['widths1_sea']['value']
+                else: conf['params'][parkind][k]['value'] = conf['params'][parkind][ref_par]['value']
+            else:
+                ref_par = conf['params'][parkind][k]['fixed']
+                conf['params'][parkind][k]['value'] = conf['params'][parkind][ref_par]['value']
 
     def set_pdf_params(self):
         self.set_constraits('pdf')
+        hadron='p'
         conf['pdf']._widths1_uv  = conf['params']['pdf']['widths1_uv' ]['value']
         conf['pdf']._widths1_dv  = conf['params']['pdf']['widths1_dv' ]['value']
         conf['pdf']._widths1_sea = conf['params']['pdf']['widths1_sea']['value']
         conf['pdf']._widths2_uv  = conf['params']['pdf']['widths2_uv' ]['value']
         conf['pdf']._widths2_dv  = conf['params']['pdf']['widths2_dv' ]['value']
         conf['pdf']._widths2_sea = conf['params']['pdf']['widths2_sea']['value']
-        conf['pdf'].setup()
+        conf['pdf'].setup(hadron)
+
+    def set_pdfpi_params(self):
+        self.set_constraits('pdfpi-')
+        hadron='pi-'
+        conf['pdfpi-']._widths1_ubv = conf['params']['pdfpi-']['widths1_ubv' ]['value']
+        conf['pdfpi-']._widths1_dv  = conf['params']['pdfpi-']['widths1_dv' ]['value']
+        conf['pdfpi-']._widths1_sea = conf['params']['pdfpi-']['widths1_sea']['value']
+        conf['pdfpi-']._widths2_ubv = conf['params']['pdfpi-']['widths2_ubv' ]['value']
+        conf['pdfpi-']._widths2_dv  = conf['params']['pdfpi-']['widths2_dv' ]['value']
+        conf['pdfpi-']._widths2_sea = conf['params']['pdfpi-']['widths2_sea']['value']       
+        conf['pdfpi-'].setup(hadron)
 
     def set_transversity_params(self):
         self.set_constraits('transversity')
@@ -403,6 +422,7 @@ class PARMAN:
     def propagate_params(self,semaphore):
       flag=False
       if 'pdf'          in semaphore and semaphore['pdf']          == 1: self.set_pdf_params()
+      if 'pdfpi-'       in semaphore and semaphore['pdfpi-']       == 1: self.set_pdfpi_params()
       if 'transversity' in semaphore and semaphore['transversity'] == 1: self.set_transversity_params()
       if 'sivers'       in semaphore and semaphore['sivers']       == 1: self.set_sivers_params()
       if 'boermulders'  in semaphore and semaphore['boermulders']  == 1: self.set_boermulders_params()
@@ -418,18 +438,37 @@ class PARMAN:
         for k in conf['params'][parkind]:
             if conf['params'][parkind][k]['fixed'] == True:  continue
             if conf['params'][parkind][k]['fixed'] == False: continue
-            ref_par = conf['params'][parkind][k]['fixed']
-            conf['params'][parkind][k]['value'] = conf['params'][parkind][ref_par]['value']
+            if parkind=='pdfpi-':
+                ref_par = conf['params'][parkind][k]['fixed']
+                if 'proton widths uv' in ref_par: conf['params']['pdfpi-']['widths1_ubv']['value'] = conf['params']['pdf']['widths1_uv']['value']
+                elif 'proton widths sea' in ref_par: conf['params']['pdfpi-']['widths1_sea']['value'] = conf['params']['pdf']['widths1_sea']['value'] 
+                else: conf['params'][parkind][k]['value'] = conf['params'][parkind][ref_par]['value']
+            else:
+                ref_par = conf['params'][parkind][k]['fixed']
+                conf['params'][parkind][k]['value'] = conf['params'][parkind][ref_par]['value']
 
     def set_pdf_params(self):
         self.set_constraits('pdf')
+        hadron='p'
         conf['pdf']._widths1_uv  = conf['params']['pdf']['widths1_uv' ]['value']
         conf['pdf']._widths1_dv  = conf['params']['pdf']['widths1_dv' ]['value']
         conf['pdf']._widths1_sea = conf['params']['pdf']['widths1_sea']['value']
         conf['pdf']._widths2_uv  = conf['params']['pdf']['widths2_uv' ]['value']
         conf['pdf']._widths2_dv  = conf['params']['pdf']['widths2_dv' ]['value']
         conf['pdf']._widths2_sea = conf['params']['pdf']['widths2_sea']['value']
-        conf['pdf'].setup()
+        conf['pdf'].setup(hadron)
+
+    def set_pdfpi_params(self):
+        self.set_constraits('pdfpi-')
+        hadron='pi-'
+        conf['pdfpi-']._widths1_ubv = conf['params']['pdfpi-']['widths1_ubv' ]['value']
+        conf['pdfpi-']._widths1_dv  = conf['params']['pdfpi-']['widths1_dv' ]['value']
+        conf['pdfpi-']._widths1_sea = conf['params']['pdfpi-']['widths1_sea']['value']
+        conf['pdfpi-']._widths2_ubv = conf['params']['pdfpi-']['widths2_ubv' ]['value']
+        conf['pdfpi-']._widths2_dv  = conf['params']['pdfpi-']['widths2_dv' ]['value']
+        conf['pdfpi-']._widths2_sea = conf['params']['pdfpi-']['widths2_sea']['value']
+        conf['pdfpi-'].setup(hadron)
+
 
     def set_transversity_params(self):
         self.set_constraits('transversity')

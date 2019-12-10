@@ -13,14 +13,14 @@ import qcdlib.interpolator
 #--from obslib
 import obslib.sidis.residuals
 import obslib.sidis.reader
-import obslib.sia.collins0
 import obslib.sia.residuals
 import obslib.sia.reader
 import obslib.moments.reader
 import obslib.moments.residuals
-import obslib.AN_pp.AN_theory0
 import obslib.AN_pp.residuals
 import obslib.AN_pp.reader
+import obslib.dy.reader
+import obslib.dy.residuals
 
 #--from fitlib
 from fitlib.parman import PARMAN
@@ -42,6 +42,7 @@ class RESMAN:
             if 'sia'     in conf['datasets']: self.setup_sia()
             if 'moments' in conf['datasets']: self.setup_moments()
             if 'AN'      in conf['datasets']: self.setup_AN()
+            if 'dy'      in conf['datasets']: self.setup_dy()
 
         if  parallel:
             self.setup_parallel(nworkers)
@@ -52,6 +53,7 @@ class RESMAN:
         conf['aux'] = qcdlib.aux.AUX()
 
         if 'pdf'          in conf['params']: conf['pdf']          = pdf0.PDF()
+        if 'pdfpi-'       in conf['params']: conf['pdfpi-']       = pdf0.PDF('pi-')
         if 'transversity' in conf['params']: conf['transversity'] = pdf1.PDF()
         if 'sivers'       in conf['params']: conf['sivers']       = pdf1.PDF()
         if 'boermulders'  in conf['params']: conf['boermulders']  = pdf1.PDF()
@@ -73,6 +75,10 @@ class RESMAN:
     def setup_AN(self):
         conf['AN tabs']   = obslib.AN_pp.reader.READER().load_data_sets('AN')
         self.ANres = obslib.AN_pp.residuals.RESIDUALS()
+    
+    def setup_dy(self):
+        conf['dy tabs']   = obslib.dy.reader.READER().load_data_sets('dy')
+        self.dyres = obslib.dy.residuals.RESIDUALS()
 
     def setup_parallel(self,nworkers):
         self.parallel=PARALLEL()
@@ -85,6 +91,7 @@ class RESMAN:
     def get_state(self):
         state={}
         if 'pdf'          in conf: state['pdf'         ]    = conf['pdf'          ].get_state()
+        if 'pdfpi-'       in conf: state['pdfpi-'      ]    = conf['pdfpi-'       ].get_state()
         if 'transversity' in conf: state['transversity']    = conf['transversity' ].get_state()
         if 'sivers'       in conf: state['sivers'      ]    = conf['sivers'       ].get_state()
         if 'boermulders'  in conf: state['boermulders' ]    = conf['boermulders'  ].get_state()
@@ -98,6 +105,7 @@ class RESMAN:
 
     def set_state(self,state):
         if 'pdf'          in conf: conf['pdf'         ].set_state(state['pdf'         ])
+        if 'pdfpi-'       in conf: conf['pdfpi-'      ].set_state(state['pdfpi-'      ])
         if 'transversity' in conf: conf['transversity'].set_state(state['transversity'])
         if 'sivers'       in conf: conf['sivers'      ].set_state(state['sivers'      ])
         if 'boermulders'  in conf: conf['boermulders' ].set_state(state['boermulders' ])
@@ -120,6 +128,7 @@ class RESMAN:
         if 'sidis'  in conf['datasets']:  self.distribute_requests(container,self.sidisres.requests) 
         if 'sia'    in conf['datasets']:  self.distribute_requests(container,self.siares.requests) 
         if 'AN'     in conf['datasets']:  self.distribute_requests(container,self.ANres.requests) 
+        if 'dy'     in conf['datasets']:  self.distribute_requests(container,self.dyres.requests)
         return container
 
     def task(self,request):
@@ -127,6 +136,7 @@ class RESMAN:
             if  request[i]['reaction']=='sidis' :  self.sidisres.process_request(request[i])
             if  request[i]['reaction']=='sia'   :  self.siares.process_request(request[i])
             if  request[i]['reaction']=='AN'    :  self.ANres.process_request(request[i])
+            if  request[i]['reaction']=='dy'    :  self.dyres.process_request(request[i])
         return request
  
     def get_residuals(self,par):
@@ -141,6 +151,7 @@ class RESMAN:
                 if request['reaction']=='sidis'  : self.sidisres.update_tabs_external(request)
                 if request['reaction']=='sia'    : self.siares.update_tabs_external(request)
                 if request['reaction']=='AN'     : self.ANres.update_tabs_external(request)
+                if request['reaction']=='dy'     : self.dyres.update_tabs_external(request)
 
         #--compute residuals
         res,rres,nres=[],[],[]
@@ -159,6 +170,11 @@ class RESMAN:
             res=np.append(res,out[0])
             rres=np.append(rres,out[1])
             nres=np.append(nres,out[2])
+        if 'dy' in conf['datasets']:
+            out=self.dyres.get_residuals(calc=False)
+            res=np.append(res,out[0])
+            rres=np.append(rres,out[1])
+            nres=np.append(nres,out[2])
         return res,rres,nres
 
     def get_data_info(self):
@@ -174,6 +190,9 @@ class RESMAN:
         if 'AN' in conf['datasets']:
             out=self.ANres.get_residuals(calc=False)
             reaction.extend(['AN' for _ in out[0]])
+        if 'dy' in conf['datasets']:
+            out=self.dyres.get_residuals(calc=False)
+            reaction.extend(['dy' for _ in out[0]])
         return reaction
 
     def gen_report(self,verb=0,level=0):
@@ -181,6 +200,7 @@ class RESMAN:
         if 'sidis'   in conf['datasets']: L.extend(self.sidisres.gen_report(verb,level))
         if 'sia'     in conf['datasets']: L.extend(self.siares.gen_report(verb,level))
         if 'AN'      in conf['datasets']: L.extend(self.ANres.gen_report(verb,level))
+        if 'dy'      in conf['datasets']: L.extend(self.dyres.gen_report(verb,level))
         return L
 
     def get_chi2(self):
@@ -188,6 +208,7 @@ class RESMAN:
         if 'sidis'   in conf['datasets']: data.update(self.sidisres.get_chi2())
         if 'sia'     in conf['datasets']: data.update(self.siares.get_chi2())
         if 'AN'      in conf['datasets']: data.update(self.ANres.get_chi2())
+        if 'dy'      in conf['datasets']: data.update(self.dyres.get_chi2())
         return data
 
     def test(self,ntasks=10):
