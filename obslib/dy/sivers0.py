@@ -34,30 +34,46 @@ def _get_FUT(xA,xB,Q2,qT,hadronA,hadronB,TransversePolarizationA,TransversePolar
     hadronB - moves along -Z in cm frame
     xA - x of a parton in hadronA
     xB - x of a parton in hadronB
-    TransversePolarizationA - False True fro ST of hadronA
-    TransversePolarizationB - False True fro ST of hadronB
+    TransversePolarizationA - False True for ST of hadronA
+    TransversePolarizationB - False True for ST of hadronB
     PDFA - hadronA pdf distributions
     PDFB - hadronB pdf distributions
     w_hadronA - widths of hadronA TMDs
     w_hadronB - widths of hadronB TMDs
     """   
 
-    MA=conf['aux'].MA
-    MB=conf['aux'].MB
+    if hadronA=='p': MA=conf['aux'].M
+    if hadronB=='p': MB=conf['aux'].M
+
+    PDFAq,PDFAqb=PDFA,conf['aux'].q2qbar(PDFA)
+    PDFBq,PDFBqb=PDFB,conf['aux'].q2qbar(PDFB)
+
+    wAq,wAqb=w_hadronA,conf['aux'].q2qbar(w_hadronA)
+    wBq,wBqb=w_hadronB,conf['aux'].q2qbar(w_hadronB)
 
     if TransversePolarizationA: # hadronA is transversely polarised   
             # FTU1 asymmetry equation (95)
-            wq = np.abs(w_hadronA) + np.abs(w_hadronB)
-            K = -2 * qT * MA / wq
-            gauss = np.exp(-qT**2 / wq) / (np.pi * wq)
-            return np.sum(e2*K*PDFA*PDFB*gauss)    
+            wq1 = np.abs(wAq) + np.abs(wBqb)
+            K1 = -2 * qT * MA / wq1
+            gauss1 = np.exp(-qT**2 / wq1) / (np.pi * wq1)
+
+            wq2 = np.abs(wAqb) + np.abs(wBq)
+            K2 = -2 * qT * MA / wq2
+            gauss2 = np.exp(-qT**2 / wq2) / (np.pi * wq2)
+
+            return np.sum(e2*K1*PDFAq*PDFBqb*gauss1) + np.sum(e2*K2*PDFAqb*PDFBq*gauss2) 
     
     elif TransversePolarizationB: # hadronB is transversely polarised   
             # FUT1 asymmetry equation (98)
-            wq = np.abs(w_hadronA) + np.abs(w_hadronB)
-            K = 2 * qT * MB / wq
-            gauss = np.exp(-qT**2 / wq) / (np.pi * wq)
-            return np.sum(e2*K*PDFA*PDFB*gauss)    
+            wq1 = np.abs(wAq) + np.abs(wBqb)
+            K1 = 2 * qT * MB / wq1
+            gauss1 = np.exp(-qT**2 / wq1) / (np.pi * wq1)
+
+            wq2 = np.abs(wAqb) + np.abs(wBq)
+            K2 = 2 * qT * MB / wq2
+            gauss2 = np.exp(-qT**2 / wq2) / (np.pi * wq2)
+
+            return np.sum(e2*K1*PDFAq*PDFBqb*gauss1) + np.sum(e2*K2*PDFAqb*PDFBq*gauss2)    
     
     else:     
         return 0 # cannot be any asymmetry if none of the particles is polarised
@@ -123,8 +139,7 @@ def get_FUT(xA,xB,Q2,qT,hadronA,hadronB,TransversePolarizationA,TransversePolari
     
 
     # build structure function
-    return _get_FUT(xA,xB,Q2,qT,hadronA,hadronB,TransversePolarizationA,TransversePolarizationB,PDFA,conf['aux'].q2qbar(PDFB),w_hadronA,conf['aux'].q2qbar(w_hadronB)) # sum eq^2 fA_q fB_qbar
-    
+    return _get_FUT(xA,xB,Q2,qT,hadronA,hadronB,TransversePolarizationA,TransversePolarizationB,PDFA,PDFB,w_hadronA,w_hadronB)
 
 
 

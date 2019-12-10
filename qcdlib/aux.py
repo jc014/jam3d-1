@@ -41,8 +41,8 @@ class AUX:
         self.M = 0.93891897
         self.Mpi = 0.135
         self.Mk = 0.497
-        self.MA = 0.93891897 # Used for DY
-        self.MB = 0.93891897 # Used for DY
+        #self.MA = 0.93891897 # Used for DY
+        #self.MB = 0.93891897 # Used for DY
 
         self.me2 = self.me**2
         self.mmu2 = self.mmu**2
