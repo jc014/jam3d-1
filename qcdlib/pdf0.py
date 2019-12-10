@@ -14,37 +14,58 @@ class PDF(CORE):
 
     def __init__(self,hadron='p'):
         self.aux = conf['aux']
-        self.set_default_params()
-        self.setup()
+        self.set_default_params(hadron)
+        self.setup(hadron)
         if hadron=='p':    table='CJ15lo_0000'
         if hadron=='pi-':  table='JAM18PionPDFnlo_0000'
 
         conf['cpdf']=INTERPOLATOR(table)
 
-    def set_default_params(self):
+    def set_default_params(self,hadron):
 
         # free params
-        self._widths1_uv  = 0.3
-        self._widths1_dv  = 0.3
-        self._widths1_sea = 0.3
+        if hadron=='p':
+            self._widths1_uv  = 0.3
+            self._widths1_dv  = 0.3
+            self._widths1_sea = 0.3
 
-        self._widths2_uv  = 0
-        self._widths2_dv = 0
-        self._widths2_sea = 0
+            self._widths2_uv  = 0
+            self._widths2_dv = 0
+            self._widths2_sea = 0
+
+        if hadron=='pi-':
+            self._widths1_ubv  = 0.3
+            self._widths1_dv  = 0.3
+            self._widths1_sea = 0.3
+
+            self._widths2_ubv  = 0
+            self._widths2_dv = 0
+            self._widths2_sea = 0
 
         # internal
         self.widths1 = np.ones(11)
         self.widths2 = np.ones(11)
 
-    def setup(self):
-        for i in range(11):
-            if   i == 1: self.widths1[i] = self._widths1_uv
-            elif i == 3: self.widths1[i] = self._widths1_dv
-            else:        self.widths1[i] = self._widths1_sea
-        for i in range(11):
-            if   i == 1: self.widths2[i] = self._widths2_uv
-            elif i == 3: self.widths2[i] = self._widths2_dv
-            else:        self.widths2[i] = self._widths2_sea
+    def setup(self,hadron):
+        if hadron=='p':
+            for i in range(11):
+                if   i == 1: self.widths1[i] = self._widths1_uv
+                elif i == 3: self.widths1[i] = self._widths1_dv
+                else:        self.widths1[i] = self._widths1_sea
+            for i in range(11):
+                if   i == 1: self.widths2[i] = self._widths2_uv
+                elif i == 3: self.widths2[i] = self._widths2_dv
+                else:        self.widths2[i] = self._widths2_sea
+   
+        if hadron=='pi-':
+            for i in range(11):
+                if   i == 2: self.widths1[i] = self._widths1_ubv
+                elif i == 3: self.widths1[i] = self._widths1_dv
+                else:        self.widths1[i] = self._widths1_sea
+            for i in range(11):
+                if   i == 2: self.widths2[i] = self._widths2_ubv
+                elif i == 3: self.widths2[i] = self._widths2_dv
+                else:        self.widths2[i] = self._widths2_sea
 
     def get_C(self, x, Q2):
         return conf['cpdf'].get_f(x,Q2)
