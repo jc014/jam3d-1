@@ -80,7 +80,7 @@ def get_FU1(xA,xB,Q2,qT,hadronA,hadronB):
                 
 
     # build structure function
-    return _get_FU1(xA,xB,Q2,qT,hadronA,hadronB,PDFA,PDFB,w_hadronA,w_hadronB)
+    return _get_FU1(xA,xB,Q2,qT,hadronA,hadronB,PDFA,conf['aux'].q2qbar(PDFB),w_hadronA,conf['aux'].q2qbar(w_hadronB)) # sum eq^2 fA_q fB_qbar
 
 if __name__ == '__main__':
 
