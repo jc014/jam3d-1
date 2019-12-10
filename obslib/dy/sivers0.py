@@ -123,7 +123,7 @@ def get_FUT(xA,xB,Q2,qT,hadronA,hadronB,TransversePolarizationA,TransversePolari
     
 
     # build structure function
-    return _get_FUT(xA,xB,Q2,qT,hadronA,hadronB,TransversePolarizationA,TransversePolarizationB,PDFA,PDFB,w_hadronA,w_hadronB)
+    return _get_FUT(xA,xB,Q2,qT,hadronA,hadronB,TransversePolarizationA,TransversePolarizationB,PDFA,conf['aux'].q2qbar(PDFB),w_hadronA,conf['aux'].q2qbar(w_hadronB)) # sum eq^2 fA_q fB_qbar
     
 
 
