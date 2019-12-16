@@ -38,11 +38,22 @@ def _get_FU1(xA,xB,Q2,qT,hadronA,hadronB,PDFA,PDFB,w_hadronA,w_hadronB):
     PDFB - hadronB pdf distributions
     w_hadronA - widths of hadronA TMDs
     w_hadronB - widths of hadronB TMDs
-    """     
+    """
+
+    PDFAq,PDFAqb=PDFA,conf['aux'].q2qbar(PDFA)
+    PDFBq,PDFBqb=PDFB,conf['aux'].q2qbar(PDFB)
+
+    wAq,wAqb=w_hadronA,conf['aux'].q2qbar(w_hadronA)
+    wBq,wBqb=w_hadronB,conf['aux'].q2qbar(w_hadronB)
+     
     # FU1 equation (91)
-    wq = np.abs(w_hadronA) + np.abs(w_hadronB)
-    gauss = np.exp(-qT**2 / wq) / (np.pi * wq)
-    return np.sum(e2*PDFA*PDFB*gauss)    
+    wq1 = np.abs(wAq) + np.abs(wBqb)
+    gauss1 = np.exp(-qT**2 / wq1) / (np.pi * wq1)
+
+    wq2 = np.abs(wAqb) + np.abs(wBq)
+    gauss2 = np.exp(-qT**2 / wq2) / (np.pi * wq2)
+
+    return np.sum(e2*PDFAq*PDFBqb*gauss1) + np.sum(e2*PDFAqb*PDFBq*gauss2)   
 
 def get_FU1(xA,xB,Q2,qT,hadronA,hadronB):
 

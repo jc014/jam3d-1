@@ -41,8 +41,8 @@ class AUX:
         self.M = 0.93891897
         self.Mpi = 0.135
         self.Mk = 0.497
-        self.MA = 0.93891897 # Used for DY
-        self.MB = 0.93891897 # Used for DY
+        #self.MA = 0.93891897 # Used for DY
+        #self.MB = 0.93891897 # Used for DY
 
         self.me2 = self.me**2
         self.mmu2 = self.mmu**2
@@ -75,6 +75,25 @@ class AUX:
     def charge_conj(self,p):
         return np.copy(p[[0,2,1,4,3,6,5,8,7,10,9]])
 
+# distributions p
+# p[0]    # g
+# p[1]    # u
+# p[2]    # ub
+# p[3]    # d
+# p[4]    # db
+# p[5]    # s
+# p[6]    # sb
+# p[7]    # c
+# p[8]    # cb
+# p[9]    # b
+# p[10]   # bb
+# q <-> qbar used in Drell-Yan 
+    def q2qbar(self, p):
+        return np.copy(p[[0,2,1,4,3,6,5,8,7,10,9]])
+
+        
+        
+        
     #def pip2piz(self, pip):
     #    piz = np.copy(pip)
     #    u = pip[1]
