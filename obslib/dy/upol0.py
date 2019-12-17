@@ -45,28 +45,25 @@ def _get_FU1(xA,xB,Q2,qT,hadronA,hadronB,PDFA,PDFB,w_hadronA,w_hadronB):
 
     wAq,wAqb=w_hadronA,conf['aux'].q2qbar(w_hadronA)
     wBq,wBqb=w_hadronB,conf['aux'].q2qbar(w_hadronB)
-     
+    print hadronA,wAq
+    print hadronB,wBq 
     # FU1 equation (91)
-    wq1 = np.abs(wAq) + np.abs(wBqb)
-    gauss1 = np.exp(-qT**2 / wq1) / (np.pi * wq1)
+    wq = np.abs(wAq) + np.abs(wBqb)
+    gauss = np.exp(-qT**2 / wq) / (np.pi * wq)
 
-    wq2 = np.abs(wAqb) + np.abs(wBq)
-    gauss2 = np.exp(-qT**2 / wq2) / (np.pi * wq2)
-
-    return np.sum(e2*PDFAq*PDFBqb*gauss1) + np.sum(e2*PDFAqb*PDFBq*gauss2)   
+    return np.sum(e2*PDFAq*PDFBqb*gauss) #The sum takes into accoun the q <--> qbar term   
 
 def get_FU1(xA,xB,Q2,qT,hadronA,hadronB):
 
     
     # Set up unpolarized functions for hadron A
     if hadronA == 'p':  
-        PDFB = conf['pdf'].get_C(xA, Q2)
-        w_hadronB = conf['pdf'].get_widths(Q2)
+        PDFA = conf['pdf'].get_C(xA, Q2)
+        w_hadronA = conf['pdf'].get_widths(Q2)
     elif hadronA == 'n':  
         PDFA = conf['aux'].p2n(conf['sivers'].get_C(xA, Q2))
         w_hadronA = conf['aux'].p2n(conf['pdf'].get_widths(Q2))
     elif hadronA == 'pi-':  
-        #print xA,Q2
         PDFA = conf['pdfpi-'].get_C(xA, Q2)
         w_hadronA = conf['pdfpi-'].get_widths(Q2)
     else:

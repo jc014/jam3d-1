@@ -16,10 +16,8 @@ class PDF(CORE):
         self.aux = conf['aux']
         self.set_default_params(hadron)
         self.setup(hadron)
-        if hadron=='p':    table='CJ15lo_0000'
-        if hadron=='pi-':  table='JAM18PionPDFnlo_0000'
-
-        conf['cpdf']=INTERPOLATOR(table)
+        if hadron=='p': self.pdf=INTERPOLATOR('CJ15lo_0000')
+        if hadron=='pi-': self.pdf=INTERPOLATOR('JAM18PionPDFnlo_0000')
 
     def set_default_params(self,hadron):
 
@@ -68,7 +66,7 @@ class PDF(CORE):
                 else:        self.widths2[i] = self._widths2_sea
 
     def get_C(self, x, Q2):
-        return conf['cpdf'].get_f(x,Q2)
+        return self.pdf.get_f(x,Q2)
 
     def get_state(self):
         return self.widths1,self.widths2
@@ -90,19 +88,5 @@ if __name__ == '__main__':
     print conf['pdfpi-'].get_C(x, Q2)
     print conf['pdf'].get_C(x, Q2)
     print conf['aux'].q2qbar(conf['pdf'].get_C(x, Q2))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
