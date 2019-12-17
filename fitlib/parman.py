@@ -98,11 +98,8 @@ class dev_PARMAN:
         for k in conf['params'][parkind]:
             if conf['params'][parkind][k]['fixed'] == True:  continue
             if conf['params'][parkind][k]['fixed'] == False: continue
-            if parkind=='pdfpi-':
-                ref_par = conf['params'][parkind][k]['fixed']
-                if 'proton widths uv' in ref_par: conf['params']['pdfpi-']['widths1_ubv']['value'] = conf['params']['pdf']['widths1_uv']['value']
-                elif 'proton widths sea' in ref_par: conf['params']['pdfpi-']['widths1_sea']['value'] = conf['params']['pdf']['widths1_sea']['value']
-                else: conf['params'][parkind][k]['value'] = conf['params'][parkind][ref_par]['value']
+            if 'proton widths uv' in conf['params'][parkind][k]['fixed']: conf['params'][parkind][k]['value'] = conf['params']['pdf']['widths1_uv']['value']
+            if 'proton widths sea' in conf['params'][parkind][k]['fixed']: conf['params'][parkind][k]['value'] = conf['params']['pdf']['widths1_sea']['value']
             else:
                 ref_par = conf['params'][parkind][k]['fixed']
                 conf['params'][parkind][k]['value'] = conf['params'][parkind][ref_par]['value']
@@ -397,6 +394,8 @@ class PARMAN:
   
         if  initial:
             for k in conf['params']: semaphore[k]=1
+        
+        if semaphore['pdf']==1: semaphore['pdfpi-']=1 #This is needed so the pion widths get updated when they are set equal to the proton widths
   
         self.propagate_params(semaphore)
   
@@ -437,12 +436,11 @@ class PARMAN:
 
         for k in conf['params'][parkind]:
             if conf['params'][parkind][k]['fixed'] == True:  continue
-            if conf['params'][parkind][k]['fixed'] == False: continue
-            if parkind=='pdfpi-':
-                ref_par = conf['params'][parkind][k]['fixed']
-                if 'proton widths uv' in ref_par: conf['params']['pdfpi-']['widths1_ubv']['value'] = conf['params']['pdf']['widths1_uv']['value']
-                elif 'proton widths sea' in ref_par: conf['params']['pdfpi-']['widths1_sea']['value'] = conf['params']['pdf']['widths1_sea']['value'] 
-                else: conf['params'][parkind][k]['value'] = conf['params'][parkind][ref_par]['value']
+            elif conf['params'][parkind][k]['fixed'] == False: continue
+            elif 'proton widths uv' in conf['params'][parkind][k]['fixed']: 
+                conf['params'][parkind][k]['value'] = conf['params']['pdf']['widths1_uv']['value']
+            elif 'proton widths sea' in conf['params'][parkind][k]['fixed']:
+                conf['params'][parkind][k]['value'] = conf['params']['pdf']['widths1_sea']['value']
             else:
                 ref_par = conf['params'][parkind][k]['fixed']
                 conf['params'][parkind][k]['value'] = conf['params'][parkind][ref_par]['value']

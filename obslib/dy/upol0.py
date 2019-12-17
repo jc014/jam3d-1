@@ -45,8 +45,7 @@ def _get_FU1(xA,xB,Q2,qT,hadronA,hadronB,PDFA,PDFB,w_hadronA,w_hadronB):
 
     wAq,wAqb=w_hadronA,conf['aux'].q2qbar(w_hadronA)
     wBq,wBqb=w_hadronB,conf['aux'].q2qbar(w_hadronB)
-    print hadronA,wAq
-    print hadronB,wBq 
+    
     # FU1 equation (91)
     wq = np.abs(wAq) + np.abs(wBqb)
     gauss = np.exp(-qT**2 / wq) / (np.pi * wq)
