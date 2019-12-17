@@ -53,27 +53,19 @@ def _get_FUT(xA,xB,Q2,qT,hadronA,hadronB,TransversePolarizationA,TransversePolar
 
     if TransversePolarizationA: # hadronA is transversely polarised   
             # FTU1 asymmetry equation (95)
-            wq1 = np.abs(wAq) + np.abs(wBqb)
-            K1 = -2 * qT * MA / wq1
-            gauss1 = np.exp(-qT**2 / wq1) / (np.pi * wq1)
+            wq = np.abs(wAq) + np.abs(wBqb)
+            K = -2 * qT * MA / wq
+            gauss = np.exp(-qT**2 / wq) / (np.pi * wq)
 
-            wq2 = np.abs(wAqb) + np.abs(wBq)
-            K2 = -2 * qT * MA / wq2
-            gauss2 = np.exp(-qT**2 / wq2) / (np.pi * wq2)
-
-            return np.sum(e2*K1*PDFAq*PDFBqb*gauss1) + np.sum(e2*K2*PDFAqb*PDFBq*gauss2) 
+            return np.sum(e2*K*PDFAq*PDFBqb*gauss) #The sum takes into account the q <--> qbar term
     
     elif TransversePolarizationB: # hadronB is transversely polarised   
             # FUT1 asymmetry equation (98)
-            wq1 = np.abs(wAq) + np.abs(wBqb)
-            K1 = 2 * qT * MB / wq1
-            gauss1 = np.exp(-qT**2 / wq1) / (np.pi * wq1)
+            wq = np.abs(wAq) + np.abs(wBqb)
+            K = 2 * qT * MB / wq
+            gauss = np.exp(-qT**2 / wq) / (np.pi * wq)
 
-            wq2 = np.abs(wAqb) + np.abs(wBq)
-            K2 = 2 * qT * MB / wq2
-            gauss2 = np.exp(-qT**2 / wq2) / (np.pi * wq2)
-
-            return np.sum(e2*K1*PDFAq*PDFBqb*gauss1) + np.sum(e2*K2*PDFAqb*PDFBq*gauss2)    
+            return np.sum(e2*K*PDFAq*PDFBqb*gauss) #The sum takes into account the q <--> qbar term    
     
     else:     
         return 0 # cannot be any asymmetry if none of the particles is polarised
@@ -126,7 +118,7 @@ def get_FUT(xA,xB,Q2,qT,hadronA,hadronB,TransversePolarizationA,TransversePolari
         # Set up unpolarized functions for hadron A
         if hadronA == 'p':  
             PDFA = conf['pdf'].get_C(xA, Q2)
-            w_hadronB = conf['pdf'].get_widths(Q2)
+            w_hadronA = conf['pdf'].get_widths(Q2)
         elif hadronA == 'n':  
             PDFA = conf['aux'].p2n(conf['sivers'].get_C(xA, Q2))
             w_hadronA = conf['aux'].p2n(conf['pdf'].get_widths(Q2))
