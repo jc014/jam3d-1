@@ -14,6 +14,7 @@ class AUX:
         self.set_masses()
         self.set_couplings()
         self.set_evolution()
+        self.set_ckm()
 
     def set_constants(self):
 
@@ -56,6 +57,12 @@ class AUX:
         self.mW2 = self.mW**2
         self.M2 = self.M**2
         self.Mpi2 = self.Mpi**2
+        
+    def set_ckm(self): # CKM matrix
+        self.Vud = 0.97420 # CKM matrix element +- 0.00021
+        self.Vus = 0.2243  # CKM matrix element +- 0.0005
+        self.Vcd = 0.218   # CKM matrix element +- 0.004
+
 
     def set_couplings(self):
 
@@ -64,6 +71,16 @@ class AUX:
         self.s2wMZ = 0.23116
         self.alfa = 1 / 137.036
         self.alphaSMZ = 0.118
+        # axial couplings of quarks to Z boson
+        self.cauz = 0.5 
+        self.cacz = 0.5
+        self.cadz = -0.5
+        self.casz = -0.5
+        # vector couplings of quarks to Z boson
+        self.cvuz = self.cauz - 4./3.*self.s2w 
+        self.cvcz = self.cacz - 4./3.*self.s2w
+        self.cvdz = self.cadz + 2./3.*self.s2w
+        self.cvsz = self.casz + 2./3.*self.s2w
 
     def set_evolution(self):
         self.Q02=2.0
