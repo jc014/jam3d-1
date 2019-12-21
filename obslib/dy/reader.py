@@ -27,9 +27,6 @@ if __name__ == "__main__":
     conf['datasets']['dy']['xlsx'][1001] = '../../database/dy/expdata/1001.xlsx'
     conf['datasets']['dy']['xlsx'][1002] = '../../database/dy/expdata/1002.xlsx'
     conf['datasets']['dy']['xlsx'][1003] = '../../database/dy/expdata/1003.xlsx'
-    conf['datasets']['dy']['xlsx'][2000] = '../../database/dy/expdata/2000.xlsx'
-    conf['datasets']['dy']['xlsx'][2001] = '../../database/dy/expdata/2001.xlsx'
-    conf['datasets']['dy']['xlsx'][2002] = '../../database/dy/expdata/2002.xlsx'
 
     TAB = READER().load_data_sets('dy')
     print TAB

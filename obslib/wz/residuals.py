@@ -4,24 +4,21 @@ import os
 import numpy as np
 from tools.residuals import _RESIDUALS
 from tools.config import conf
-from obslib.dy import upol0 as upol
-from obslib.dy import sivers0 as sivers
+from obslib.wz import upol0 as upol
+from obslib.wz import sivers0 as sivers
 
 class RESIDUALS(_RESIDUALS):
 
     def __init__(self):
-        self.reaction = 'dy'
-        self.tabs = conf['dy tabs']
+        self.reaction = 'wz'
+        self.tabs = conf['wz tabs']
         self.setup()
 
     def _get_theory(self, entry):
         k, i = entry
-        xA = self.tabs[k]['xbeam'][i]
-        xB = self.tabs[k]['xtarget'][i]
-
-        Q = self.tabs[k]['M'][i]
-        Q2 = Q*Q
-        qT = self.tabs[k]['qT'][i]
+        y = self.tabs[k]['y'][i]
+        energy = self.tabs[k]['sqrtenergy'][i]**2
+        qT = self.tabs[k]['pT'][i]
 
         exp = self.tabs[k]['value'][i]
         hadronB = self.tabs[k]['target'][i]
@@ -31,19 +28,22 @@ class RESIDUALS(_RESIDUALS):
         obs = self.tabs[k]['obs'][i].strip()
         col = self.tabs[k]['col'][i].strip().upper()
 
-
+        if 'W+' in obs: boson = 'W+'
+        elif 'W-' in obs: boson = 'W-'
+        elif 'Z' in obs: boson = 'Z'
+        
         if obs == 'FU1':
 
-            thy = upol.get_FU1(xA,xB,Q2,qT,hadronA,hadronB)
+            thy = upol.get_FUWZY(y,qT,energy,hadronA,hadronB,boson)
 
 
-        elif obs == 'AUTsivers':
+        elif 'AN' in obs:
 
             # convention factor
             coeff = 1.
 
-            FUT = sivers.get_FUT(xA,xB,Q2,qT,hadronA,hadronB,TransversePolarizationA,TransversePolarizationB)
-            FU1 = upol.get_FU1(xA,xB,Q2,qT,hadronA,hadronB)
+            FUT = sivers.get_FUTWZY(y,qT,energy,hadronA,hadronB,boson,TransversePolarizationA,TransversePolarizationB)
+            FU1 = upol.get_FUWZY(y,qT,energy,hadronA,hadronB,boson)
             thy = coeff * FUT / FU1
 
         else:
@@ -64,8 +64,8 @@ class RESIDUALS(_RESIDUALS):
 
         L.append('reaction: %s' % self.reaction)
 
-        L.append('%7s %10s %10s %10s %10s %5s %10s %10s %10s %10s' % (
-            'idx', 'target', 'beam', 'col', 'obs', 'npts', 'chi2', 'chi2/npts','rchi2', 'nchi2'))
+        L.append('%7s %10s %10s %10s %10s  %5s %10s %10s %10s %10s' % (
+            'idx', 'target', 'beam', 'col', 'obs','npts', 'chi2', 'chi2/npts','rchi2', 'nchi2'))
         for k in self.tabs:
             #print k,len(self.tabs[k]['value'])
             if self.tabs[k]['value'].size == 0:
@@ -80,6 +80,8 @@ class RESIDUALS(_RESIDUALS):
             tar = self.tabs[k]['target'][0]
             col = self.tabs[k]['col'][0].split()[0]
             obs = self.tabs[k]['obs'][0].split()[0]
+            if 'W' in obs: obs='ANW+-'
+            if 'Z' in obs: obs='ANZ'
             had = self.tabs[k]['beam'][0].split()[0]
             npts = res.size
             L.append('%7d %10s %10s %10s %10s %5d %10.2f %10.2f %10.2f %10.2f' %
@@ -95,11 +97,8 @@ class RESIDUALS(_RESIDUALS):
             msg += 'obs=%7s,  '
             if 'dependence' in self.tabs[k]:
                 msg += 'dep=%7s,  '
-            msg += 'xtarget=%10.3e,  '
-            msg += 'xbeam=%10.3e,  '
-            msg += 'xF=%10.3e,  '
+            msg += 'y=%10.3e,  '
             msg += 'qT=%10.3e,  '
-            msg += 'Q=%10.3e,  '
             msg += 'exp=%10.3e,  '
             msg += 'alpha=%10.3e,  '
             msg += 'thy=%10.3e,  '
@@ -119,10 +118,8 @@ class RESIDUALS(_RESIDUALS):
                     row.append(self.tabs[k]['obs'][i])
                     if 'dependence' in self.tabs[k]:
                         row.append(self.tabs[k]['dependence'][i].strip())
-                    row.append(self.tabs[k]['xtarget'][i])
-                    row.append(self.tabs[k]['xbeam'][i])
+                    row.append(self.tabs[k]['y'][i])
                     row.append(self.tabs[k]['qT'][i])
-                    row.append(self.tabs[k]['Q'][i])
                     row.append(self.tabs[k]['value'][i])
                     row.append(self.tabs[k]['alpha'][i])
                     row.append(self.tabs[k]['thy'][i])
@@ -159,27 +156,23 @@ if __name__ == '__main__':
     conf['aux']    = AUX()
 
     conf['pdf']          = pdf0.PDF('p')
-    conf['pdfpi-']       = pdf0.PDF('pi-')
     conf['sivers']       = pdf1.PDF()
 
-
     conf['datasets']={}
-    conf['datasets']['dy']={}
+    conf['datasets']['wz']={}
 
-    conf['datasets']['dy']['xlsx']={}
+    conf['datasets']['wz']['xlsx']={}
 
-    # COMPASS Sivers
-    conf['datasets']['dy']['xlsx'][1000]='dy/expdata/1000.xlsx'  
-    conf['datasets']['dy']['xlsx'][1001]='dy/expdata/1001.xlsx'  
-    conf['datasets']['dy']['xlsx'][1002]='dy/expdata/1002.xlsx'  
-    conf['datasets']['dy']['xlsx'][1003]='dy/expdata/1003.xlsx'  
+    # STAR Sivers
+    conf['datasets']['wz']['xlsx'][2000]='wz/expdata/2000.xlsx'  
+    conf['datasets']['wz']['xlsx'][2001]='wz/expdata/2001.xlsx'  
+    conf['datasets']['wz']['xlsx'][2001]='wz/expdata/2002.xlsx'    
 
+    conf['datasets']['wz']['norm']={}
+    for k in conf['datasets']['wz']['xlsx']: conf['datasets']['wz']['norm'][k]={'value':1,'fixed':True,'min':0,'max':1}
+    conf['datasets']['wz']['filters']={}
 
-    conf['datasets']['dy']['norm']={}
-    for k in conf['datasets']['dy']['xlsx']: conf['datasets']['dy']['norm'][k]={'value':1,'fixed':True,'min':0,'max':1}
-    conf['datasets']['dy']['filters']={}
-
-    conf['dy tabs'] = READER().load_data_sets('dy')
+    conf['wz tabs'] = READER().load_data_sets('wz')
 
     conf['residuals']= RESIDUALS()
     print conf['residuals'].get_residuals()
