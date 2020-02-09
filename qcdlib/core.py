@@ -104,34 +104,23 @@ class CORE:
         return np.abs(self.widths1+s*self.widths2)
 
     # tmd
-    
+
     def get_tmd(self,x,Q2,kT,hadron,dist):
 
         col=self.get_C(x,Q2)
         widths=self.get_widths(Q2)
-        gauss=np.exp(-kT**2/widths)
+        if dist=='ffpi' or dist=='collinspi': gauss=np.exp(-x**2 * kT**2/widths)
+        else: gauss=np.exp(-kT**2/widths)
 
         if   hadron=='p' : M=conf['aux'].M
         elif hadron=='pi': M=conf['aux'].Mpi
         elif hadron=='k' : M=conf['aux'].Mk
 
         if   dist=='pdf':           norm=1/np.pi/widths
-        elif dist=='transversity':  norm=2*M**2/widths
-        elif dist=='sivers':        norm=2*M**2/widths
+        elif dist=='transversity':  norm=1/np.pi/widths
+        elif dist=='sivers':        norm=(2*M**2/widths) * (1/np.pi/widths)
 
         elif dist=='ffpi' :         norm=1/np.pi/widths
-        elif dist=='collinspi':     norm=2*x**2*M**2/widths
+        elif dist=='collinspi':     norm=2*x**2*M**2/widths * (1/np.pi/widths)
 
         return norm*col*gauss
-
-
-
-
-
-
-
-
-
-
-
-
