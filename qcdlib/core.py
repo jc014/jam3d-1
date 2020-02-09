@@ -62,12 +62,12 @@ class CORE:
     def get_dshape(self,x,Q2,p1,p2): #The normalization can only be used if c and d are zero
         s=self.get_s(Q2)
         dshape=self._get_dshape(x,p1,s)
-	shape=self._get_shape(x,p1,s)
-	dshape2=self._get_dshape(x,p2,s)
-	shape2=self._get_shape(x,p2,s)
+        shape=self._get_shape(x,p1,s)
+        dshape2=self._get_dshape(x,p2,s)
+        shape2=self._get_shape(x,p2,s)
         if p2[0]!=0: dshape = shape*dshape2 + (1+shape2)*dshape
-	n = self.beta(2+p1[1],p1[2]+1) + p2[0]*self.beta(2+p1[1]+p2[1],p1[2]+p2[2]+1)
-	dshape=dshape/n
+        n = self.beta(2+p1[1],p1[2]+1) + p2[0]*self.beta(2+p1[1]+p2[1],p1[2]+p2[2]+1)
+        dshape=dshape/n
         return dshape
 
     def get_dcollinear(self,x,Q2):
@@ -102,3 +102,19 @@ class CORE:
     def get_widths(self,Q2):
         s=np.log(Q2/conf['aux'].Q02 )
         return np.abs(self.widths1+s*self.widths2)
+    
+    def get_tmd(self,x,Q2,kT,flav,dist):
+        return 0
+
+
+
+
+
+
+
+
+
+
+
+
+
