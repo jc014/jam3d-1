@@ -105,9 +105,12 @@ class CORE:
 
     # tmd
     
-    def get_tmd(self,x,Q2,kT,hadron,dist):
+    def get_tmd(self,x,Q2,kT,hadron,dist,icol=False):
 
         col=self.get_C(x,Q2)
+
+        if icol: return col
+
         widths=self.get_widths(Q2)
         gauss=np.exp(-kT**2/widths)
 
