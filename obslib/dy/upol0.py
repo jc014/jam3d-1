@@ -60,7 +60,7 @@ def get_FU1(xA,xB,Q2,qT,hadronA,hadronB):
         PDFA = conf['pdf'].get_C(xA, Q2)
         w_hadronA = conf['pdf'].get_widths(Q2)
     elif hadronA == 'n':  
-        PDFA = conf['aux'].p2n(conf['sivers'].get_C(xA, Q2))
+        PDFA = conf['aux'].p2n(conf['pdf'].get_C(xA, Q2))
         w_hadronA = conf['aux'].p2n(conf['pdf'].get_widths(Q2))
     elif hadronA == 'pi-':  
         PDFA = conf['pdfpi-'].get_C(xA, Q2)
@@ -75,7 +75,7 @@ def get_FU1(xA,xB,Q2,qT,hadronA,hadronB):
         PDFB = conf['pdf'].get_C(xB, Q2)
         w_hadronB = conf['pdf'].get_widths(Q2)
     elif hadronB == 'n':  
-        PDFB = conf['aux'].p2n(conf['sivers'].get_C(xB, Q2))
+        PDFB = conf['aux'].p2n(conf['pdf'].get_C(xB, Q2))
         w_hadronB = conf['aux'].p2n(conf['pdf'].get_widths(Q2))
     elif hadronB == 'pi-':  
         PDFB = conf['pdfpi-'].get_C(xB, Q2)

@@ -52,6 +52,8 @@ class dev_PARMAN:
             for k in conf['params']:
                 semaphore[k] = 1
 
+        if semaphore['pdf']==1: semaphore['pdfpi-']=1 #This is needed so the pion widths get updated when they are set equal to the proton widths
+
         self.propagate_params(semaphore)
 
     def gen_report(self):
@@ -97,13 +99,15 @@ class dev_PARMAN:
 
         for k in conf['params'][parkind]:
             if conf['params'][parkind][k]['fixed'] == True:  continue
-            if conf['params'][parkind][k]['fixed'] == False: continue
-            if 'proton widths uv' in conf['params'][parkind][k]['fixed']: conf['params'][parkind][k]['value'] = conf['params']['pdf']['widths1_uv']['value']
-            if 'proton widths sea' in conf['params'][parkind][k]['fixed']: conf['params'][parkind][k]['value'] = conf['params']['pdf']['widths1_sea']['value']
+            elif conf['params'][parkind][k]['fixed'] == False: continue
+            elif 'proton widths uv' in conf['params'][parkind][k]['fixed']:
+                conf['params'][parkind][k]['value'] = conf['params']['pdf']['widths1_uv']['value']
+            elif 'proton widths sea' in conf['params'][parkind][k]['fixed']:
+                conf['params'][parkind][k]['value'] = conf['params']['pdf']['widths1_sea']['value']
             else:
                 ref_par = conf['params'][parkind][k]['fixed']
                 conf['params'][parkind][k]['value'] = conf['params'][parkind][ref_par]['value']
-
+        
     def set_pdf_params(self):
         self.set_constraits('pdf')
         hadron='p'
