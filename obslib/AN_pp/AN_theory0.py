@@ -596,7 +596,7 @@ def get_dsigST(x, z, xF, pT, rs, tar, had):
   #return ffcs
   #return  QScs
 
-def get_sig(xF, pT, rs, tar, had, mode='gauss', nx=10, nz=10):
+def get_sig(xF, pT, rs, tar, had, mode='gauss', nx=25, nz=25):
     xT = 2. * pT / rs
     xF2 = xF * xF
     xT2 = xT * xT
