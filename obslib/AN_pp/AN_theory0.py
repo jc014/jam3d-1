@@ -178,8 +178,14 @@ def get_Hxxpz(z, Q2, had, m, s, t, u):
   HTffa = get_HTffa(m, s, t, u)
   HTffb = get_HTffb(m, s, t, u)
 
-  H1p = get_H1p(z, Q2, 'pi+')
-  H = get_H(z, Q2, 'pi+')
+  if had=='jet':
+      #These are dummy formulas so we don't get a runtime warning
+      #We set the frag cross section to zero for jet
+      H1p=np.ones(11)
+      H=np.ones(11)
+  else:
+      H1p = get_H1p(z, Q2, 'pi+')
+      H = get_H(z, Q2, 'pi+')
 
   if had.endswith('-'):
       H1p = conf['aux'].charge_conj(H1p)
@@ -240,7 +246,7 @@ def get_dsig(x, z, xF, pT, rs, tar, had):
   Mh['pi0'] = conf['aux'].Mpi
   Mh['k+'] = conf['aux'].Mk
   Mh['k-'] = conf['aux'].Mk
-
+  Mh['jet']=1 #This is a dummy formula so we don't get a runtime error
 
   if pT > 1.:
     Q = pT
@@ -289,9 +295,12 @@ def get_dsig(x, z, xF, pT, rs, tar, had):
   Hupol14 = Hupol[14]
 
   # Get arrays of the nonperturbative functions
+  #print x,xp
   f = get_f(x, Q2)
   ft = get_ft(xp, Q2)
-  d = get_d(z, Q2, 'pi+')
+
+  if had=='jet': d=np.ones(11)
+  else: d = get_d(z, Q2, 'pi+')
 
   if had.endswith('-'):
       d = conf['aux'].charge_conj(d)
@@ -391,6 +400,7 @@ def get_dsigST(x, z, xF, pT, rs, tar, had):
   Mh['pi0'] = conf['aux'].Mpi
   Mh['k+'] = conf['aux'].Mk
   Mh['k-'] = conf['aux'].Mk
+  Mh['jet']= 1 #This is a dummy formula so we don't get a runtime error
 
   Mh = Mh[had]
 
@@ -430,7 +440,9 @@ def get_dsigST(x, z, xF, pT, rs, tar, had):
   h = get_h(x, Q2)
   f1Tp = get_f1Tp(x, Q2)
   Hxxpz = get_Hxxpz(z, Q2, had, m, s, t, u)
-  d = get_d(z, Q2, 'pi+')
+
+  if had=='jet': d=np.ones(11)
+  else: d = get_d(z, Q2, 'pi+')
 
   if had.endswith('-'):
       d = conf['aux'].charge_conj(d)
@@ -547,6 +559,8 @@ def get_dsigST(x, z, xF, pT, rs, tar, had):
 
   ffcs = 2. * Mh * pT * numfac * ffcs
 
+  if had=='jet': ffcs=0.0
+
 
   #Qiu-Sterman term
 
@@ -611,15 +625,18 @@ def get_sig(xF, pT, rs, tar, had, mode='gauss', nx=10, nz=10):
 
     def xmin(z): return -uu / (z * ss + tt)
 
-    if mode == 'gauss':
-        dsigdzdx = np.vectorize(
-            lambda x, z: get_dsig(x, z, xF, pT, rs, tar, had))
-        dsigdz = np.vectorize(lambda z: fixed_quad(
-            lambda x: dsigdzdx(x, z), xmin(z), 1, n=nx)[0])
-        sig = fixed_quad(dsigdz, zmin, 1, n=nz)[0]
-    elif mode == 'quad':
-        sig = dblquad(lambda x, z: get_dsig(
-            x, z, xF, pT, rs, tar, had), zmin, 1., xmin, lambda x: 1.)[0]
+    if had=='jet':
+        z = 1.0
+        xmin = -uu / (ss + tt)
+        dsig = np.vectorize(lambda x: get_dsig(x, z, xF, pT, rs, tar, had))
+        sig = fixed_quad(dsig, xmin, 1, n=nx)[0]
+    else:
+        if mode == 'gauss':
+            dsigdzdx = np.vectorize(lambda x, z: get_dsig(x, z, xF, pT, rs, tar, had))
+            dsigdz = np.vectorize(lambda z: fixed_quad(lambda x: dsigdzdx(x, z), xmin(z), 1, n=nx)[0])
+            sig = fixed_quad(dsigdz, zmin, 1, n=nz)[0]
+        elif mode == 'quad':
+            sig = dblquad(lambda x, z: get_dsig(x, z, xF, pT, rs, tar, had), zmin, 1., xmin, lambda x: 1.)[0]
     return sig
 
 def get_sigST(xF, pT, rs, tar, had, mode='gauss', nx=10, nz=10):
@@ -637,15 +654,18 @@ def get_sigST(xF, pT, rs, tar, had, mode='gauss', nx=10, nz=10):
 
     def xmin(z): return -uu / (z * ss + tt)
 
-    if mode == 'gauss':
-      dsigdzdx = np.vectorize(
-        lambda x, z: get_dsigST(x, z, xF, pT, rs, tar, had))
-      dsigdz = np.vectorize(lambda z: fixed_quad(
-        lambda x: dsigdzdx(x, z), xmin(z), 1, n=nx)[0])
-      sig = fixed_quad(dsigdz, zmin, 1, n=nz)[0]
-    elif mode == 'quad':
-      sig = dblquad(lambda x, z: get_dsigST(
-        x, z, xF, pT, rs, tar, had), zmin, 1., xmin, lambda x: 1.)[0]
+    if had=='jet':
+        z = 1.0
+        xmin = -uu / (ss + tt)
+        dsig=np.vectorize(lambda x: get_dsigST(x, z, xF, pT, rs, tar, had))
+        sig = fixed_quad(dsig, xmin, 1, n=nx)[0]
+    else:
+        if mode == 'gauss':
+            dsigdzdx = np.vectorize(lambda x, z: get_dsigST(x, z, xF, pT, rs, tar, had))
+            dsigdz = np.vectorize(lambda z: fixed_quad(lambda x: dsigdzdx(x, z), xmin(z), 1, n=nx)[0])
+            sig = fixed_quad(dsigdz, zmin, 1, n=nz)[0]
+        elif mode == 'quad':
+            sig = dblquad(lambda x, z: get_dsigST(x, z, xF, pT, rs, tar, had), zmin, 1., xmin, lambda x: 1.)[0]
 
     #print had,sig
     return sig
@@ -671,30 +691,23 @@ if __name__ == '__main__':
 
   rs = 200.
   tar = 'p'
-  had = 'pi+'
+  #had = 'pi+'
+  had='jet'
   pT = 3.0
   xF = 0.2375
   xT = 2. * pT / rs
   xF2 = xF * xF
   xT2 = xT * xT
 
-  # Mandelstam variables at the hadron level
-  ss = rs * rs
-  tt = -0.5 * ss * (np.sqrt(xF2 + xT2) - xF)
-  uu = -0.5 * ss * (np.sqrt(xF2 + xT2) + xF)
-
-  # Lower limits of the z and x integrations
-  zmin = np.sqrt(xF2 + xT2)
-
-  def xmin(z): return -uu / (z * ss + tt)
-
   def test():
-    den = get_sig(xF, pT, rs, tar, had, mode='gauss', nx=100, nz=100)
+    den = get_sig(xF, pT, rs, tar, had, mode='gauss', nx=10, nz=10)
     num = get_sigST(xF, pT, rs, tar, had,
-               mode='gauss', nx=100, nz=100)
+               mode='gauss', nx=10, nz=10)
 
     AN = num / den
     print AN
+
+  test()
 
 # from timeit import Timer
 # t = Timer("test()", "from __main__ import test")
@@ -716,10 +729,10 @@ if __name__ == '__main__':
 # end = time.time()
 # print 'time=',(end-start)
 
-  start = time.time()
-  test()
-  end = time.time()
-  print 'time=', (end - start)
+#  start = time.time()
+#  test()
+#  end = time.time()
+#  print 'time=', (end - start)
 
   # Integration of the numerator from xmin to 1 and from zmin to 1 (the values for xmin and zmin are above)
 
