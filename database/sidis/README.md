@@ -82,7 +82,6 @@
 | 2515  | [link][AUT_COMPASS_2014]     | proton   | pi-    | AUTsivers        | compass    | x                    |
 | 2516  | [link][AUT_COMPASS_2014]     | proton   | pi-    | AUTsivers        | compass    | z                    |
 | 2517  | [link][AUT_COMPASS_2014]     | proton   | pi-    | AUTsivers        | compass    | pt                   |
-
 | 3000  | [link][Collins_HERMES_2010]  | proton   | pi+    | AUTcollins       | hermes     | x                    |
 | 3003  | [link][Collins_HERMES_2010]  | proton   | pi+    | AUTcollins       | hermes     | z                    |
 | 3026  | [link][Collins_HERMES_2010]  | proton   | pi+    | AUTcollins       | hermes     | pt                   |
