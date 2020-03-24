@@ -401,7 +401,7 @@ class PARMAN:
         
         #--This is needed so the pion widths get updated 
         #--when they are set equal to the proton widths
-        #if semaphore['pdf']==1: semaphore['pdfpi-']=1 
+        if semaphore['pdf']==1 and 'pdfp1-' in conf['params']: semaphore['pdfpi-']=1 
   
         self.propagate_params(semaphore)
   
