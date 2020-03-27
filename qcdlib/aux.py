@@ -63,7 +63,6 @@ class AUX:
         self.Vus = 0.2243  # CKM matrix element +- 0.0005
         self.Vcd = 0.218   # CKM matrix element +- 0.004
 
-
     def set_couplings(self):
 
         self.c2w = self.mW2 / self.mZ2
@@ -92,33 +91,46 @@ class AUX:
     def charge_conj(self,p):
         return np.copy(p[[0,2,1,4,3,6,5,8,7,10,9]])
 
-# distributions p
-# p[0]    # g
-# p[1]    # u
-# p[2]    # ub
-# p[3]    # d
-# p[4]    # db
-# p[5]    # s
-# p[6]    # sb
-# p[7]    # c
-# p[8]    # cb
-# p[9]    # b
-# p[10]   # bb
-# q <-> qbar used in Drell-Yan 
     def q2qbar(self, p):
+        """
+        distributions p
+        p[0]    # g
+        p[1]    # u
+        p[2]    # ub
+        p[3]    # d
+        p[4]    # db
+        p[5]    # s
+        p[6]    # sb
+        p[7]    # c
+        p[8]    # cb
+        p[9]    # b
+        p[10]   # bb
+        q <-> qbar used in Drell-Yan 
+        """
         return np.copy(p[[0,2,1,4,3,6,5,8,7,10,9]])
 
-        
-        
-        
-    #def pip2piz(self, pip):
-    #    piz = np.copy(pip)
-    #    u = pip[1]
-    #    ub = pip[2]
-    #    d = pip[3]
-    #    db = pip[4]
-    #    piz[1] = 0.5 * (u + ub)
-    #    piz[2] = 0.5 * (u + ub)
-    #    piz[3] = 0.5 * (d + db)
-    #    piz[4] = 0.5 * (d + db)
-    #    return piz
+    def _pip2piz(self, pip):
+        """
+        deprecated ??
+        """
+        piz = np.copy(pip)
+        u = pip[1]
+        ub = pip[2]
+        d = pip[3]
+        db = pip[4]
+        piz[1] = 0.5 * (u + ub)
+        piz[2] = 0.5 * (u + ub)
+        piz[3] = 0.5 * (d + db)
+        piz[4] = 0.5 * (d + db)
+        return piz
+  
+    def _get_psi(self,i,N):
+        return fp.psi(i,complex(N.real,N.imag))
+
+    def get_psi(self,i,N):
+        return np.array([self._get_psi(i,n) for n in N],dtype=complex)
+
+    def beta(self,a,b):
+        return gamma(a)*gamma(b)/gamma(a+b)
+
+

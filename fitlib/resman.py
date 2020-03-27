@@ -5,10 +5,12 @@ import numpy as np
 
 #--from qcdlib
 import qcdlib
-from   qcdlib import pdf0,ff0,pdf1,ff1
+from   qcdlib import pdf0,ff0,pdf1,ff1,pdf2,ff2
 import qcdlib.aux
 import qcdlib.alphaS
 import qcdlib.interpolator
+import qcdlib.alphaS
+import qcdlib.mellin
 
 #--from obslib
 import obslib.sidis.residuals
@@ -54,18 +56,31 @@ class RESMAN:
     def setup_core(self):
 
         conf['aux'] = qcdlib.aux.AUX()
+        conf['mellin']= qcdlib.mellin.MELLIN(npts=4)
+        conf['alphaS']= qcdlib.alphaS.ALPHAS()
 
-        if 'pdf'          in conf['params']: conf['pdf']          = pdf0.PDF()
-        if 'pdfpi-'       in conf['params']: conf['pdfpi-']       = pdf0.PDF('pi-')
-        if 'transversity' in conf['params']: conf['transversity'] = pdf1.PDF()
-        if 'sivers'       in conf['params']: conf['sivers']       = pdf1.PDF()
-        if 'boermulders'  in conf['params']: conf['boermulders']  = pdf1.PDF()
-        if 'ffpi'         in conf['params']: conf['ffpi']         = ff0.FF('pi')
-        if 'ffk'          in conf['params']: conf['ffk']          = ff0.FF('k')
-        if 'collinspi'    in conf['params']: conf['collinspi']    = ff1.FF('pi')
-        if 'collinsk'     in conf['params']: conf['collinsk']     = ff1.FF('k')
-        if 'Htildepi'     in conf['params']: conf['Htildepi']     = ff1.FF('pi')
-        if 'Htildek'      in conf['params']: conf['Htildek']      = ff1.FF('k')
+        if 'pdf parametrization' in conf:
+
+            if conf['pdf parametrization']==0: conf['pdf']= pdf0.PDF()
+            if conf['pdf parametrization']==1: conf['pdf']= pdf1.PDF()
+            if conf['pdf parametrization']==2: conf['pdf']= pdf2.PDF()
+            if conf['pdf parametrization']==3: conf['pdf']= pdf3.PDF()
+
+        if 'pdf'           in conf['params']: conf['pdf']          = pdf0.PDF()
+        #if 'pdfpi-'        in conf['params']: conf['pdfpi-']       = pdf0.PDF('pi-')
+        if 'transversity'  in conf['params']: conf['transversity'] = pdf1.PDF()
+        if 'sivers'        in conf['params']: conf['sivers']       = pdf1.PDF()
+        if 'boermulders'   in conf['params']: conf['boermulders']  = pdf1.PDF()
+        if 'ffpi'          in conf['params']: conf['ffpi']         = ff0.FF('pi')
+        if 'ffk'           in conf['params']: conf['ffk']          = ff0.FF('k')
+        if 'collinspi'     in conf['params']: conf['collinspi']    = ff1.FF('pi')
+        if 'collinsk'      in conf['params']: conf['collinsk']     = ff1.FF('k')
+        if 'Htildepi'      in conf['params']: conf['Htildepi']     = ff1.FF('pi')
+        if 'Htildek'       in conf['params']: conf['Htildek']      = ff1.FF('k')
+
+        if 'transversity+' in conf['params']: conf['transversity'] = pdf2.PDF('h1') # Modify this one
+        if 'collinspi+'    in conf['params']: conf['collinspi']    = ff2.FF('H1')   # Modify this one
+        # add Sivers as well
 
     def setup_sidis(self):
         conf['sidis tabs']    = obslib.sidis.reader.READER().load_data_sets('sidis')
@@ -82,6 +97,7 @@ class RESMAN:
     def setup_dy(self):
         conf['dy tabs']   = obslib.dy.reader.READER().load_data_sets('dy')
         self.dyres = obslib.dy.residuals.RESIDUALS()
+
     def setup_wz(self):
         conf['wz tabs']   = obslib.wz.reader.READER().load_data_sets('wz')
         self.wzres = obslib.wz.residuals.RESIDUALS()
@@ -250,8 +266,8 @@ class RESMAN:
 
 if __name__=='__main__':
 
-    load_config('input.py')
-    nworkers=20
+    load_config('input_dglap.py')
+    nworkers=3
     resman=RESMAN(nworkers)
     resman.test()
     resman.shutdown()

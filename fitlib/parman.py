@@ -399,7 +399,9 @@ class PARMAN:
         if  initial:
             for k in conf['params']: semaphore[k]=1
         
-        if semaphore['pdf']==1: semaphore['pdfpi-']=1 #This is needed so the pion widths get updated when they are set equal to the proton widths
+        #--This is needed so the pion widths get updated 
+        #--when they are set equal to the proton widths
+        if semaphore['pdf']==1 and 'pdfp1-' in conf['params']: semaphore['pdfpi-']=1 
   
         self.propagate_params(semaphore)
   
@@ -470,7 +472,6 @@ class PARMAN:
         conf['pdfpi-']._widths2_dv  = conf['params']['pdfpi-']['widths2_dv' ]['value']
         conf['pdfpi-']._widths2_sea = conf['params']['pdfpi-']['widths2_sea']['value']
         conf['pdfpi-'].setup(hadron)
-
 
     def set_transversity_params(self):
         self.set_constraits('transversity')
@@ -633,5 +634,68 @@ class PARMAN:
                     if '%s %s 2'%(flav,par) in conf['params']['Htildek']:
                         conf['Htildek'].shape2[iflav][ipar] = conf['params']['Htildek']['%s %s 2'%(flav,par)]['value']
             conf['Htildek'].setup()
+
+    #--from here stuff with DGLAP
+
+    def set_params(self,dist,FLAV,PAR):
+
+        #--setup the constraints
+        for flav in FLAV:
+            for par in PAR:
+                if flav+' '+par not in conf['params'][dist]: continue
+                if conf['params'][dist][flav+' '+par]['fixed']==True: continue
+                if conf['params'][dist][flav+' '+par]['fixed']==False: continue
+                reference_flav=conf['params'][dist][flav+' '+par]['fixed']
+                conf['params'][dist][flav+' '+par]['value']=conf['params'][dist][reference_flav]['value']
+  
+        #--update values at the class
+        for flav in FLAV:
+            idx=0
+            for par in PAR:
+                if  flav+' '+par in conf['params'][dist]:
+                    conf[dist].params[flav][idx]=conf['params'][dist][flav+' '+par]['value'] 
+                else:
+                    conf[dist].params[flav][idx]=0
+                idx+=1
+  
+        conf[dist].setup()
+  
+        #--update values at conf
+        for flav in FLAV:
+            idx=0
+            for par in PAR:
+                if  flav+' '+par in conf['params'][dist]:
+                    conf['params'][dist][flav+' '+par]['value']= conf[dist].params[flav][idx] 
+                idx+=1
+
+    def set_transversityp_params(self):
+        self.set_constraits('transversity')
+
+        conf['transversity+']._widths1_uv  = conf['params']['transversity+']['widths1_uv']['value']
+        conf['transversity+']._widths1_dv  = conf['params']['transversity+']['widths1_dv']['value']
+        conf['transversity+']._widths1_sea = conf['params']['transversity+']['widths1_sea']['value']
+
+        conf['transversity+']._widths2_uv  = conf['params']['transversity+']['widths2_uv']['value']
+        conf['transversity+']._widths2_dv  = conf['params']['transversity+']['widths2_dv']['value']
+        conf['transversity+']._widths2_sea = conf['params']['transversity+']['widths2_sea']['value']
+
+        FLAV=['g1','uv1','dv1','sea1','sea2','db1','ub1','s1','sb1']
+        PAR=['N','a','b','c','d']
+        self.set_params('transversity+',FLAV,PAR)
+
+    def set_collinspip_params(self):
+        self.set_constraits('collinspi+')
+        conf['collinspi+']._widths1_fav  = conf['params']['collinspi+']['widths1_fav']['value']
+        conf['collinspi+']._widths1_ufav = conf['params']['collinspi+']['widths1_ufav']['value']
+        conf['collinspi+']._widths2_fav  = conf['params']['collinspi+']['widths2_fav']['value']
+        conf['collinspi+']._widths2_ufav = conf['params']['collinspi+']['widths2_ufav']['value']
+        FLAV=['g1','u1','d1','s1','c1','b1']
+        FLAV.extend(['ub1','db1','sb1','cb1','bb1'])
+        PAR=['N','a','b','c','d']
+        self.set_params('collinspi+',FLAV,PAR)
+
+
+
+
 
 
