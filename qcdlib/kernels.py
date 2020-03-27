@@ -15,10 +15,14 @@ class KERNELS:
         self.LO_unpolarized_splitting_functions()
         self.LO_polarized_splitting_functions()
         self.LO_unpol_timelike_splitting_functions()
+        self.LO_transversity_splitting_functions()
+        self.LO_Collins_timelike_splitting_functions()
 
         if   Type=='f1' : self.load_f1_spl()
         elif Type=='g1' : self.load_g1_spl()
         elif Type=='d1' : self.load_d1_spl()
+        elif Type=='h1' : self.load_h1_spl()
+        elif Type=='H1' : self.load_H1_spl()
 
     def set_abbreviations(self):
         D=self.D
@@ -33,6 +37,34 @@ class KERNELS:
         S2f = lambda _N: zeta2 - psi(1,_N+1)
         S1 = np.array([S1f(n) for n in N])
         D['S1']=S1
+        
+        # Add def LO_transversity_splitting_functions(self):
+        # Add def load_h1_spl(self):  as well  
+
+
+    def LO_transversity_splitting_functions(self):
+
+        D=self.D
+        D['TR0QQ']=np.zeros((D['nflav'],D['Nsize']),dtype=complex)
+        D['TR0QG']=np.zeros((D['nflav'],D['Nsize']),dtype=complex)
+        D['TR0GQ']=np.zeros((D['nflav'],D['Nsize']),dtype=complex)
+        D['TR0GG']=np.zeros((D['nflav'],D['Nsize']),dtype=complex)  
+        D['TR0'] = np.zeros((D['nflav'],2,2,D['Nsize']),dtype=complex)
+
+        N=D['N']
+        S1=D['S1']
+        for Nf in range(3,D['nflav']):
+
+            D['TR0QQ'][Nf]=4.0/3.0*(-2.0*S1+3.0/2.0)
+            D['TR0QG'][Nf]=0.0
+            D['TR0GQ'][Nf]=0.0
+            D['TR0GG'][Nf]=0.0
+
+            D['TR0'][Nf,0,0] = D['TR0QQ'][Nf] 
+            D['TR0'][Nf,0,1] = D['TR0QG'][Nf]
+            D['TR0'][Nf,1,0] = D['TR0GQ'][Nf]
+            D['TR0'][Nf,1,1] = D['TR0GG'][Nf]
+
 
     def LO_unpolarized_splitting_functions(self):
 
@@ -111,6 +143,76 @@ class KERNELS:
             D['PT0'][Nf,0,1] = D['PT0GQ'][Nf]
             D['PT0'][Nf,1,0] = D['PT0QG'][Nf]
             D['PT0'][Nf,1,1] = D['PT0GG'][Nf]
+
+
+    def LO_Collins_timelike_splitting_functions(self):
+      
+        D=self.D
+        D['COT0QQ']=np.zeros((D['nflav'],D['Nsize']),dtype=complex) 
+        D['COT0GQ']=np.zeros((D['nflav'],D['Nsize']),dtype=complex) 
+        D['COT0QG']=np.zeros((D['nflav'],D['Nsize']),dtype=complex) 
+        D['COT0GG']=np.zeros((D['nflav'],D['Nsize']),dtype=complex) 
+        D['COT0'] = np.zeros((D['nflav'],2,2,D['Nsize']),dtype=complex)
+
+        N=D['N']
+        S1=D['S1']
+        for Nf in range(3,D['nflav']):
+
+            D['TR0QQ'][Nf]=4.0/3.0*(-2.0*S1+3.0/2.0)
+            D['TR0QG'][Nf]=0.0
+            D['TR0GQ'][Nf]=0.0
+            D['TR0GG'][Nf]=0.0
+
+            D['COT0QQ'][Nf]=D['TR0QQ'][Nf]
+            D['COT0QG'][Nf]=D['TR0QG'][Nf]/2./Nf
+            D['COT0GQ'][Nf]=D['TR0GQ'][Nf]*2.*Nf
+            D['COT0GG'][Nf]=D['TR0GG'][Nf]
+        
+            D['COT0'][Nf,0,0] = D['COT0QQ'][Nf]
+            D['COT0'][Nf,0,1] = D['COT0GQ'][Nf]
+            D['COT0'][Nf,1,0] = D['COT0QG'][Nf]
+            D['COT0'][Nf,1,1] = D['COT0GG'][Nf]
+
+    def load_H1_spl(self):   # Collins
+      
+        D=self.D
+        Nsize=D['N'].size
+        nflav=D['nflav']
+        norder=D['norder']
+ 
+        # initialize flav composed splitting functions arrays
+        self.PNSP=np.zeros((nflav,norder,Nsize),dtype=complex)
+        self.PNSM=np.zeros((nflav,norder,Nsize),dtype=complex)
+        self.PNSV=np.zeros((nflav,norder,Nsize),dtype=complex)
+        self.P   =np.zeros((nflav,norder,2,2,Nsize),dtype=complex)
+
+        for Nf in range(3,nflav):
+ 
+            # LO unpolarized
+            self.PNSP[Nf,0] = D['COT0QQ'][Nf] 
+            self.PNSM[Nf,0] = D['COT0QQ'][Nf] 
+            self.PNSV[Nf,0] = D['COT0QQ'][Nf] 
+            self.P[Nf,0]    = D['COT0'][Nf]
+
+
+    def load_h1_spl(self): # Transversity
+        D=self.D
+        Nsize=D['N'].size
+        nflav=D['nflav']
+        norder=D['norder']
+ 
+        # initialize flav composed splitting functions arrays
+        self.PNSP=np.zeros((nflav,norder,Nsize),dtype=complex)
+        self.PNSM=np.zeros((nflav,norder,Nsize),dtype=complex)
+        self.PNSV=np.zeros((nflav,norder,Nsize),dtype=complex)
+        self.P   =np.zeros((nflav,norder,2,2,Nsize),dtype=complex)
+
+        for Nf in range(3,nflav):
+            self.PNSP[Nf,0] = D['TR0QQ'][Nf] 
+            self.PNSM[Nf,0] = D['TR0QQ'][Nf] 
+            self.PNSV[Nf,0] = D['TR0QQ'][Nf] 
+            self.P[Nf,0]    = D['TR0'][Nf]
+
 
     def load_f1_spl(self):
         D=self.D

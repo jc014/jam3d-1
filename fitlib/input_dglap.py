@@ -107,15 +107,15 @@ conf['params']['transversity+']['widths2_uv']  ={'value':    0.00000e+00, 'min':
 conf['params']['transversity+']['widths2_dv']  ={'value':    0.00000e+00, 'min':0, 'max':1, 'fixed': 'widths2_uv'}
 conf['params']['transversity+']['widths2_sea'] ={'value':    0.00000e+00, 'min':0, 'max':1, 'fixed': 'widths2_uv'}
 
-conf['params']['transversity+']['g1 N']    ={'value':    3.87592e-01, 'min':  None, 'max':  None, 'fixed': False }
+conf['params']['transversity+']['g1 N']    ={'value':    3.87592e-01, 'min':  -10, 'max':  10, 'fixed': False }
 conf['params']['transversity+']['g1 a']    ={'value':   -6.23068169e-01, 'min':  -1.9, 'max':     1, 'fixed': False}
 conf['params']['transversity+']['g1 b']    ={'value':    9.25741583e+00, 'min':     0, 'max':    10, 'fixed': False}
 
-conf['params']['transversity+']['uv1 N']   ={'value':    3.47549e-01, 'min':  None, 'max':  None, 'fixed': False }
+conf['params']['transversity+']['uv1 N']   ={'value':    3.47549e-01, 'min':  -10, 'max': 10, 'fixed': False }
 conf['params']['transversity+']['uv1 a']   ={'value':   -1.21835956e-01, 'min':  -0.5, 'max':     1, 'fixed': False}
 conf['params']['transversity+']['uv1 b']   ={'value':    3.20766744e+00, 'min':     0, 'max':    10, 'fixed': False}
 
-conf['params']['transversity+']['dv1 N']   ={'value':    1.52089e-01, 'min':  None, 'max':  None, 'fixed': False }
+conf['params']['transversity+']['dv1 N']   ={'value':    1.52089e-01, 'min':  -10, 'max':  10, 'fixed': False }
 conf['params']['transversity+']['dv1 a']   ={'value':   -2.39874967e-01, 'min':  -0.5, 'max':     1, 'fixed': False}
 conf['params']['transversity+']['dv1 b']   ={'value':    3.83902620e+00, 'min':     0, 'max':    10, 'fixed': False}
 
