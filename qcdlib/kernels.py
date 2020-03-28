@@ -55,7 +55,7 @@ class KERNELS:
         S1=D['S1']
         for Nf in range(3,D['nflav']):
 
-            D['TR0QQ'][Nf]=4.0/3.0*(-2.0*S1+3.0/2.0)
+            D['TR0QQ'][Nf]=4.0/3.0*(-4.0*S1+3.0)
             D['TR0QG'][Nf]=0.0
             D['TR0GQ'][Nf]=0.0
             D['TR0GG'][Nf]=0.0
@@ -158,7 +158,7 @@ class KERNELS:
         S1=D['S1']
         for Nf in range(3,D['nflav']):
 
-            D['TR0QQ'][Nf]=4.0/3.0*(-2.0*S1+3.0/2.0)
+            D['TR0QQ'][Nf]=4.0/3.0*(-4.0*S1+3.0)
             D['TR0QG'][Nf]=0.0
             D['TR0GQ'][Nf]=0.0
             D['TR0GG'][Nf]=0.0
