@@ -81,6 +81,7 @@ class RESMAN:
         if 'transversity+' in conf['params']: conf['transversity'] = pdf2.PDF('h1') # Modify this one
         if 'collinspi+'    in conf['params']: conf['collinspi']    = ff2.FF('H1')   # Modify this one
         # add Sivers as well
+        if 'sivers+'       in conf['params']: conf['sivers']    = ff2.PDF('Siv')   # Modify this one
 
     def setup_sidis(self):
         conf['sidis tabs']    = obslib.sidis.reader.READER().load_data_sets('sidis')

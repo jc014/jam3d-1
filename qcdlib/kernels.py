@@ -16,6 +16,7 @@ class KERNELS:
         self.LO_polarized_splitting_functions()
         self.LO_unpol_timelike_splitting_functions()
         self.LO_transversity_splitting_functions()
+        self.LO_Sivers_splitting_functions()
         self.LO_Collins_timelike_splitting_functions()
 
         if   Type=='f1' : self.load_f1_spl()
@@ -23,6 +24,7 @@ class KERNELS:
         elif Type=='d1' : self.load_d1_spl()
         elif Type=='h1' : self.load_h1_spl()
         elif Type=='H1' : self.load_H1_spl()
+        elif Type=='Siv' : self.load_Siv_spl()
 
     def set_abbreviations(self):
         D=self.D
@@ -42,6 +44,30 @@ class KERNELS:
         # Add def load_h1_spl(self):  as well  
 
 
+    def LO_Sivers_splitting_functions(self):
+
+        D=self.D
+        D['S0QQ']=np.zeros((D['nflav'],D['Nsize']),dtype=complex)
+        D['S0QG']=np.zeros((D['nflav'],D['Nsize']),dtype=complex)
+        D['S0GQ']=np.zeros((D['nflav'],D['Nsize']),dtype=complex)
+        D['S0GG']=np.zeros((D['nflav'],D['Nsize']),dtype=complex)  
+        D['S0'] = np.zeros((D['nflav'],2,2,D['Nsize']),dtype=complex)
+
+        N=D['N']
+        S1=D['S1']
+        for Nf in range(3,D['nflav']):
+
+            D['S0QQ'][Nf]=4.0/3.0*(-4.0*S1+3.0)-2.0*3
+            D['S0QG'][Nf]=0.0
+            D['S0GQ'][Nf]=0.0
+            D['S0GG'][Nf]=0.0
+
+            D['S0'][Nf,0,0] = D['S0QQ'][Nf] 
+            D['S0'][Nf,0,1] = D['S0QG'][Nf]
+            D['S0'][Nf,1,0] = D['S0GQ'][Nf]
+            D['S0'][Nf,1,1] = D['S0GG'][Nf]
+
+
     def LO_transversity_splitting_functions(self):
 
         D=self.D
@@ -55,7 +81,7 @@ class KERNELS:
         S1=D['S1']
         for Nf in range(3,D['nflav']):
 
-            D['TR0QQ'][Nf]=4.0/3.0*(-2.0*S1+3.0/2.0)
+            D['TR0QQ'][Nf]=4.0/3.0*(-4.0*S1+3.0)
             D['TR0QG'][Nf]=0.0
             D['TR0GQ'][Nf]=0.0
             D['TR0GG'][Nf]=0.0
@@ -158,7 +184,7 @@ class KERNELS:
         S1=D['S1']
         for Nf in range(3,D['nflav']):
 
-            D['TR0QQ'][Nf]=4.0/3.0*(-2.0*S1+3.0/2.0)
+            D['TR0QQ'][Nf]=4.0/3.0*(-4.0*S1+3.0)
             D['TR0QG'][Nf]=0.0
             D['TR0GQ'][Nf]=0.0
             D['TR0GG'][Nf]=0.0
@@ -212,6 +238,24 @@ class KERNELS:
             self.PNSM[Nf,0] = D['TR0QQ'][Nf] 
             self.PNSV[Nf,0] = D['TR0QQ'][Nf] 
             self.P[Nf,0]    = D['TR0'][Nf]
+
+    def load_Siv_spl(self): # Sivers
+        D=self.D
+        Nsize=D['N'].size
+        nflav=D['nflav']
+        norder=D['norder']
+ 
+        # initialize flav composed splitting functions arrays
+        self.PNSP=np.zeros((nflav,norder,Nsize),dtype=complex)
+        self.PNSM=np.zeros((nflav,norder,Nsize),dtype=complex)
+        self.PNSV=np.zeros((nflav,norder,Nsize),dtype=complex)
+        self.P   =np.zeros((nflav,norder,2,2,Nsize),dtype=complex)
+
+        for Nf in range(3,nflav):
+            self.PNSP[Nf,0] = D['S0QQ'][Nf] 
+            self.PNSM[Nf,0] = D['S0QQ'][Nf] 
+            self.PNSV[Nf,0] = D['S0QQ'][Nf] 
+            self.P[Nf,0]    = D['S0'][Nf]
 
 
     def load_f1_spl(self):
