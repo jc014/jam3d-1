@@ -23,7 +23,7 @@ class KERNELS:
         elif Type=='g1' : self.load_g1_spl()
         elif Type=='d1' : self.load_d1_spl()
         elif Type=='h1' : self.load_h1_spl()
-        elif Type=='H1' : self.load_H1_spl()
+        elif Type=='Col' : self.load_Col_spl()
         elif Type=='Siv' : self.load_Siv_spl()
 
     def set_abbreviations(self):
@@ -199,7 +199,7 @@ class KERNELS:
             D['COT0'][Nf,1,0] = D['COT0QG'][Nf]
             D['COT0'][Nf,1,1] = D['COT0GG'][Nf]
 
-    def load_H1_spl(self):   # Collins
+    def load_Col_spl(self):   # Collins
       
         D=self.D
         Nsize=D['N'].size
