@@ -67,7 +67,7 @@ class RESMAN:
             if conf['pdf parametrization']==3: conf['pdf']= pdf3.PDF()
 
         if 'pdf'           in conf['params']: conf['pdf']          = pdf0.PDF()
-        #if 'pdfpi-'        in conf['params']: conf['pdfpi-']       = pdf0.PDF('pi-')
+        if 'pdfpi-'        in conf['params']: conf['pdfpi-']       = pdf0.PDF('pi-')
         if 'transversity'  in conf['params']: conf['transversity'] = pdf1.PDF()
         if 'sivers'        in conf['params']: conf['sivers']       = pdf1.PDF()
         if 'boermulders'   in conf['params']: conf['boermulders']  = pdf1.PDF()
@@ -80,7 +80,7 @@ class RESMAN:
 
         if 'transversity+' in conf['params']: conf['transversity'] = pdf2.PDF('h1') # Transversity  
         if 'collinspi+'    in conf['params']: conf['collinspi']    = ff2.FF('Col')  # Collins
-        if 'sivers+'       in conf['params']: conf['sivers']    = ff2.PDF('Siv')    # Sivers
+        if 'sivers+'       in conf['params']: conf['sivers']    = pdf2.PDF('Siv')    # Sivers
 
     def setup_sidis(self):
         conf['sidis tabs']    = obslib.sidis.reader.READER().load_data_sets('sidis')
