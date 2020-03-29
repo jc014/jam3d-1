@@ -78,10 +78,9 @@ class RESMAN:
         if 'Htildepi'      in conf['params']: conf['Htildepi']     = ff1.FF('pi')
         if 'Htildek'       in conf['params']: conf['Htildek']      = ff1.FF('k')
 
-        if 'transversity+' in conf['params']: conf['transversity'] = pdf2.PDF('h1') # Modify this one
-        if 'collinspi+'    in conf['params']: conf['collinspi']    = ff2.FF('H1')   # Modify this one
-        # add Sivers as well
-        if 'sivers+'       in conf['params']: conf['sivers']    = ff2.PDF('Siv')   # Modify this one
+        if 'transversity+' in conf['params']: conf['transversity'] = pdf2.PDF('h1') # Transversity  
+        if 'collinspi+'    in conf['params']: conf['collinspi']    = ff2.FF('Col')  # Collins
+        if 'sivers+'       in conf['params']: conf['sivers']    = ff2.PDF('Siv')    # Sivers
 
     def setup_sidis(self):
         conf['sidis tabs']    = obslib.sidis.reader.READER().load_data_sets('sidis')

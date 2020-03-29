@@ -277,7 +277,7 @@ if __name__ == '__main__':
     conf['aux']=AUX()
     conf['mellin']=MELLIN(npts=16)
     conf['alphaS']=ALPHAS()
-    conf['pdf']  = PDF('Siv')
+    conf['pdf']  = PDF('Col')
     
     
     x = 0.15
