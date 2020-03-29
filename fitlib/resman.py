@@ -67,7 +67,7 @@ class RESMAN:
             if conf['pdf parametrization']==3: conf['pdf']= pdf3.PDF()
 
         if 'pdf'           in conf['params']: conf['pdf']          = pdf0.PDF()
-        #if 'pdfpi-'        in conf['params']: conf['pdfpi-']       = pdf0.PDF('pi-')
+        if 'pdfpi-'        in conf['params']: conf['pdfpi-']       = pdf0.PDF('pi-')
         if 'transversity'  in conf['params']: conf['transversity'] = pdf1.PDF()
         if 'sivers'        in conf['params']: conf['sivers']       = pdf1.PDF()
         if 'boermulders'   in conf['params']: conf['boermulders']  = pdf1.PDF()
