@@ -21,8 +21,8 @@ class PDF(CORE):
     def set_default_params(self):
 
         # free parameters
-        self.shape1 = np.ones((11, 10)) #np.zeros((11, 10))
-        self.shape2 = np.ones((11, 10)) #np.zeros((11, 10))
+        self.shape1 = np.zeros((11, 10))
+        self.shape2 = np.zeros((11, 10))
         self._widths1_uv  = 0.3
         self._widths1_dv  = 0.3
         self._widths1_sea = 0.3

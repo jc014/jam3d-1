@@ -22,8 +22,8 @@ class FF(CORE):
     def set_default_params(self):
 
         # free parameters
-        self.shape1 = np.ones((11,10)) #np.zeros((11, 10))
-        self.shape2 = np.ones((11,10)) #np.zeros((11, 10))
+        self.shape1 = np.zeros((11, 10))
+        self.shape2 = np.zeros((11, 10))
         self._widths1_fav    = 0.12
         self._widths1_ufav  = 0.12
         self._widths2_fav    = 0
