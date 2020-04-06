@@ -516,8 +516,10 @@ class PARMAN:
                 ipar+=1
                 if '%s %s 1'%(flav,par) in conf['params']['sivers']:
                     conf['sivers'].shape1[iflav][ipar] = conf['params']['sivers']['%s %s 1'%(flav,par)]['value']
+                    conf['dsivers'].shape1[iflav][ipar] = conf['params']['sivers']['%s %s 1'%(flav,par)]['value']
                 if '%s %s 2'%(flav,par) in conf['params']['sivers']:
                     conf['sivers'].shape2[iflav][ipar] = conf['params']['sivers']['%s %s 2'%(flav,par)]['value']
+                    conf['dsivers'].shape2[iflav][ipar] = conf['params']['sivers']['%s %s 2'%(flav,par)]['value']
 
         conf['sivers'].setup()
 
@@ -576,8 +578,10 @@ class PARMAN:
                 ipar+=1
                 if '%s %s 1'%(flav,par) in conf['params']['collinspi']:
                     conf['collinspi'].shape1[iflav][ipar] = conf['params']['collinspi']['%s %s 1'%(flav,par)]['value']
+                    conf['dcollinspi'].shape1[iflav][ipar] = conf['params']['collinspi']['%s %s 1'%(flav,par)]['value']
                 if '%s %s 2'%(flav,par) in conf['params']['collinspi']:
                     conf['collinspi'].shape2[iflav][ipar] = conf['params']['collinspi']['%s %s 2'%(flav,par)]['value']
+                    conf['dcollinspi'].shape2[iflav][ipar] = conf['params']['collinspi']['%s %s 2'%(flav,par)]['value']
         conf['collinspi'].setup()
 
     def set_collinsk_params(self):
@@ -594,8 +598,10 @@ class PARMAN:
                 ipar+=1
                 if '%s %s 1'%(flav,par) in conf['params']['collinsk']:
                     conf['collinsk'].shape1[iflav][ipar] = conf['params']['collinsk']['%s %s 1'%(flav,par)]['value']
+                    conf['dcollinsk'].shape1[iflav][ipar] = conf['params']['collinsk']['%s %s 1'%(flav,par)]['value']
                 if '%s %s 2'%(flav,par) in conf['params']['collinsk']:
                     conf['collinsk'].shape2[iflav][ipar] = conf['params']['collinsk']['%s %s 2'%(flav,par)]['value']
+                    conf['dcollinsk'].shape2[iflav][ipar] = conf['params']['collinsk']['%s %s 2'%(flav,par)]['value']
         conf['collinsk'].setup()
 
     def set_Htildepi_params(self):

@@ -130,18 +130,12 @@ class RESMAN:
         if 'pdf'          in conf: state['pdf'         ]    = conf['pdf'          ].get_state()
         if 'pdfpi-'       in conf: state['pdfpi-'      ]    = conf['pdfpi-'       ].get_state()
         if 'transversity' in conf: state['transversity']    = conf['transversity' ].get_state()
-        if 'sivers'       in conf:
-            state['sivers'      ]    = conf['sivers'       ].get_state()
-            state['dsivers'      ]   = conf['dsivers'       ].get_state()
+        if 'sivers'       in conf: state['sivers'      ]    = conf['sivers'       ].get_state()
         if 'boermulders'  in conf: state['boermulders' ]    = conf['boermulders'  ].get_state()
         if 'ffpi'         in conf: state['ffpi'        ]    = conf['ffpi'         ].get_state()
         if 'ffk'          in conf: state['ffk'         ]    = conf['ffk'          ].get_state()
-        if 'collinspi'    in conf:
-            state['collinspi'   ]    = conf['collinspi'    ].get_state()
-            state['dcollinspi'   ]    = conf['dcollinspi'    ].get_state()
-        if 'collinsk'     in conf:
-            state['collinsk'    ]    = conf['collinsk'     ].get_state()
-            state['dcollinsk'    ]   = conf['dcollinsk'     ].get_state()
+        if 'collinspi'    in conf: state['collinspi'   ]    = conf['collinspi'    ].get_state()
+        if 'collinsk'     in conf: state['collinsk'    ]    = conf['collinsk'     ].get_state()
         if 'Htildepi'     in conf: state['Htildepi'    ]    = conf['Htildepi'     ].get_state()
         if 'Htildek'      in conf: state['Htildek'     ]    = conf['Htildek'      ].get_state()
         return state
@@ -150,18 +144,12 @@ class RESMAN:
         if 'pdf'          in conf: conf['pdf'         ].set_state(state['pdf'         ])
         if 'pdfpi-'       in conf: conf['pdfpi-'      ].set_state(state['pdfpi-'      ])
         if 'transversity' in conf: conf['transversity'].set_state(state['transversity'])
-        if 'sivers'       in conf:
-            conf['sivers'      ].set_state(state['sivers'      ])
-            conf['dsivers'     ].set_state(state['dsivers'      ])
+        if 'sivers'       in conf: conf['sivers'      ].set_state(state['sivers'      ])
         if 'boermulders'  in conf: conf['boermulders' ].set_state(state['boermulders' ])
         if 'ffpi'         in conf: conf['ffpi'        ].set_state(state['ffpi'        ])
         if 'ffk'          in conf: conf['ffk'         ].set_state(state['ffk'         ])
-        if 'collinspi'    in conf:
-            conf['collinspi'   ].set_state(state['collinspi'   ])
-            conf['dcollinspi'  ].set_state(state['dcollinspi'   ])
-        if 'collinsk'     in conf:
-            conf['collinsk'    ].set_state(state['collinsk'    ])
-            conf['dcollinsk'   ].set_state(state['dcollinsk'    ])
+        if 'collinspi'    in conf: conf['collinspi'   ].set_state(state['collinspi'   ])
+        if 'collinsk'     in conf: conf['collinsk'    ].set_state(state['collinsk'    ])
         if 'Htildepi'     in conf: conf['Htildepi'    ].set_state(state['Htildepi'    ])
         if 'Htildek'      in conf: conf['Htildek'     ].set_state(state['Htildek'     ])
 
