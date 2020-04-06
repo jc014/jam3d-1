@@ -107,7 +107,7 @@ class dev_PARMAN:
             else:
                 ref_par = conf['params'][parkind][k]['fixed']
                 conf['params'][parkind][k]['value'] = conf['params'][parkind][ref_par]['value']
-        
+
     def set_pdf_params(self):
         self.set_constraits('pdf')
         hadron='p'
@@ -127,7 +127,7 @@ class dev_PARMAN:
         conf['pdfpi-']._widths1_sea = conf['params']['pdfpi-']['widths1_sea']['value']
         conf['pdfpi-']._widths2_ubv = conf['params']['pdfpi-']['widths2_ubv' ]['value']
         conf['pdfpi-']._widths2_dv  = conf['params']['pdfpi-']['widths2_dv' ]['value']
-        conf['pdfpi-']._widths2_sea = conf['params']['pdfpi-']['widths2_sea']['value']       
+        conf['pdfpi-']._widths2_sea = conf['params']['pdfpi-']['widths2_sea']['value']
         conf['pdfpi-'].setup(hadron)
 
     def set_transversity_params(self):
@@ -296,15 +296,15 @@ class PARMAN:
 
     def __init__(self):
         self.get_ordered_free_params()
-  
+
     def get_ordered_free_params(self):
         self.par=[]
         self.order=[]
         self.pmin=[]
         self.pmax=[]
-     
+
         if 'check lims' not in conf: conf['check lims']=False
-  
+
         for k in conf['params']:
             for kk in conf['params'][k]:
                 if  conf['params'][k][kk]['fixed']==False:
@@ -313,12 +313,12 @@ class PARMAN:
                     pmax=conf['params'][k][kk]['max']
                     self.pmin.append(pmin)
                     self.pmax.append(pmax)
-                    if p<pmin or p>pmax: 
+                    if p<pmin or p>pmax:
                        if conf['check lims']: raise ValueError('par limits are not consistend with central: %s %s'%(k,kk))
-  
+
                     self.par.append(p)
                     self.order.append([1,k,kk])
-  
+
         if 'datasets' in conf:
             for k in conf['datasets']:
                 for kk in conf['datasets'][k]['norm']:
@@ -328,43 +328,43 @@ class PARMAN:
                         pmax=conf['datasets'][k]['norm'][kk]['max']
                         self.pmin.append(pmin)
                         self.pmax.append(pmax)
-                        if p<pmin or p>pmax: 
+                        if p<pmin or p>pmax:
                            if conf['check lims']: raise ValueError('par limits are not consistend with central: %s %s'%(k,kk))
                         self.par.append(p)
                         self.order.append([2,k,kk])
-  
+
         self.pmin=np.array(self.pmin)
         self.pmax=np.array(self.pmax)
         self.par=np.array(self.par)
         self.set_new_params(self.par,initial=True)
-  
+
     def gen_flat(self,setup=True):
         r=uniform(0,1,len(self.par))
         par=self.pmin + r * (self.pmax-self.pmin)
-        if setup: self.set_new_params(par,initial=True)        
+        if setup: self.set_new_params(par,initial=True)
         return par
         #while 1:
         #  r=uniform(0,1,len(self.par))
         #  par=self.pmin + r * (self.pmax-self.pmin)
-        #  self.set_new_params(par,initial=True)        
+        #  self.set_new_params(par,initial=True)
         #  flag=False
         #  if 'pdf' in conf and conf['pdf'].params['g1'][0]<0: flag=True
         #  if 'pdf' in conf and conf['pdf'].params['s1'][0]<0: flag=True
         #  if flag==False: break
         #return par
-  
+
     def check_lims(self):
-        flag=True    
+        flag=True
         for k in conf['params']:
             for kk in conf['params'][k]:
                 if  conf['params'][k][kk]['fixed']==False:
                     p=conf['params'][k][kk]['value']
                     pmin=conf['params'][k][kk]['min']
                     pmax=conf['params'][k][kk]['max']
-                    if  p<pmin or p>pmax: 
+                    if  p<pmin or p>pmax:
                         print k,kk, p,pmin,pmax
                         flag=False
-  
+
         if  'datasets' in conf:
             for k in conf['datasets']:
                 for kk in conf['datasets'][k]['norm']:
@@ -375,16 +375,16 @@ class PARMAN:
                         if p<pmin or p>pmax:
                           flag=False
                           print k,kk, p,pmin,pmax
-  
+
         return flag
-  
+
     def set_new_params(self,parnew,initial=False):
         self.par=parnew
         self.shifts=0
         semaphore={}
-  
+
         for i in range(len(self.order)):
-            ii,k,kk=self.order[i]  
+            ii,k,kk=self.order[i]
             if  ii==1:
                 if k not in semaphore: semaphore[k]=0
                 if conf['params'][k][kk]['value']!=parnew[i]:
@@ -395,35 +395,35 @@ class PARMAN:
                 if conf['datasets'][k]['norm'][kk]['value']!=parnew[i]:
                   conf['datasets'][k]['norm'][kk]['value']=parnew[i]
                   self.shifts+=1
-  
+
         if  initial:
             for k in conf['params']: semaphore[k]=1
-        
-        #--This is needed so the pion widths get updated 
+
+        #--This is needed so the pion widths get updated
         #--when they are set equal to the proton widths
-        if semaphore['pdf']==1 and 'pdfp1-' in conf['params']: semaphore['pdfpi-']=1 
-  
+        if semaphore['pdf']==1 and 'pdfp1-' in conf['params']: semaphore['pdfpi-']=1
+
         self.propagate_params(semaphore)
-  
+
     def gen_report(self):
         L=[]
         cnt=0
         for k in conf['params']:
             for kk in sorted(conf['params'][k]):
-                if  conf['params'][k][kk]['fixed']==False: 
+                if  conf['params'][k][kk]['fixed']==False:
                     cnt+=1
                     if  conf['params'][k][kk]['value']<0:
                         L.append('%d %10s  %10s  %10.5e'%(cnt,k,kk,conf['params'][k][kk]['value']))
                     else:
                         L.append('%d %10s  %10s   %10.5e'%(cnt,k,kk,conf['params'][k][kk]['value']))
-  
+
         for k in conf['datasets']:
             for kk in conf['datasets'][k]['norm']:
-                if  conf['datasets'][k]['norm'][kk]['fixed']==False: 
+                if  conf['datasets'][k]['norm'][kk]['fixed']==False:
                     cnt+=1
                     L.append('%d %10s %10s %10d  %10.5e'%(cnt,'norm',k,kk,conf['datasets'][k]['norm'][kk]['value']))
         return L
- 
+
     def propagate_params(self,semaphore):
       flag=False
       if 'pdf'          in semaphore and semaphore['pdf']          == 1: self.set_pdf_params()
@@ -443,7 +443,7 @@ class PARMAN:
         for k in conf['params'][parkind]:
             if conf['params'][parkind][k]['fixed'] == True:  continue
             elif conf['params'][parkind][k]['fixed'] == False: continue
-            elif 'proton widths uv' in conf['params'][parkind][k]['fixed']: 
+            elif 'proton widths uv' in conf['params'][parkind][k]['fixed']:
                 conf['params'][parkind][k]['value'] = conf['params']['pdf']['widths1_uv']['value']
             elif 'proton widths sea' in conf['params'][parkind][k]['fixed']:
                 conf['params'][parkind][k]['value'] = conf['params']['pdf']['widths1_sea']['value']
@@ -647,30 +647,29 @@ class PARMAN:
                 if conf['params'][dist][flav+' '+par]['fixed']==False: continue
                 reference_flav=conf['params'][dist][flav+' '+par]['fixed']
                 conf['params'][dist][flav+' '+par]['value']=conf['params'][dist][reference_flav]['value']
-  
+
         #--update values at the class
         for flav in FLAV:
             idx=0
             for par in PAR:
                 if  flav+' '+par in conf['params'][dist]:
-                    conf[dist].params[flav][idx]=conf['params'][dist][flav+' '+par]['value'] 
+                    conf[dist].params[flav][idx]=conf['params'][dist][flav+' '+par]['value']
                 else:
                     conf[dist].params[flav][idx]=0
                 idx+=1
-  
+
         conf[dist].setup()
-  
+
         #--update values at conf
         for flav in FLAV:
             idx=0
             for par in PAR:
                 if  flav+' '+par in conf['params'][dist]:
-                    conf['params'][dist][flav+' '+par]['value']= conf[dist].params[flav][idx] 
+                    conf['params'][dist][flav+' '+par]['value']= conf[dist].params[flav][idx]
                 idx+=1
 
     def set_transversityp_params(self):
-        self.set_constraits('transversity')
-
+        self.set_constraits('transversity+')
         conf['transversity+']._widths1_uv  = conf['params']['transversity+']['widths1_uv']['value']
         conf['transversity+']._widths1_dv  = conf['params']['transversity+']['widths1_dv']['value']
         conf['transversity+']._widths1_sea = conf['params']['transversity+']['widths1_sea']['value']
@@ -680,8 +679,22 @@ class PARMAN:
         conf['transversity+']._widths2_sea = conf['params']['transversity+']['widths2_sea']['value']
 
         FLAV=['g1','uv1','dv1','sea1','sea2','db1','ub1','s1','sb1']
-        PAR=['N','a','b','c','d']
+        PAR=['N1','a1','b1','c1','d1','N2','a2','b2','c2','d2']
         self.set_params('transversity+',FLAV,PAR)
+
+    def set_siversp_params(self):
+        self.set_constraits('sivers+')
+        conf['sivers+']._widths1_uv  = conf['params']['sivers+']['widths1_uv']['value']
+        conf['sivers+']._widths1_dv  = conf['params']['sivers+']['widths1_dv']['value']
+        conf['sivers+']._widths1_sea = conf['params']['sivers+']['widths1_sea']['value']
+
+        conf['sivers+']._widths2_uv  = conf['params']['sivers+']['widths2_uv']['value']
+        conf['sivers+']._widths2_dv  = conf['params']['sivers+']['widths2_dv']['value']
+        conf['sivers+']._widths2_sea = conf['params']['sivers+']['widths2_sea']['value']
+
+        FLAV=['g1','uv1','dv1','sea1','sea2','db1','ub1','s1','sb1']
+        PAR=['N1','a1','b1','c1','d1','N2','a2','b2','c2','d2']
+        self.set_params('sivers+',FLAV,PAR)
 
     def set_collinspip_params(self):
         self.set_constraits('collinspi+')
@@ -691,11 +704,38 @@ class PARMAN:
         conf['collinspi+']._widths2_ufav = conf['params']['collinspi+']['widths2_ufav']['value']
         FLAV=['g1','u1','d1','s1','c1','b1']
         FLAV.extend(['ub1','db1','sb1','cb1','bb1'])
-        PAR=['N','a','b','c','d']
+        PAR=['N1','a1','b1','c1','d1','N2','a2','b2','c2','d2']
         self.set_params('collinspi+',FLAV,PAR)
 
+    def set_collinskp_params(self):
+        self.set_constraits('collinsk+')
+        conf['collinsk+']._widths1_fav  = conf['params']['collinsk+']['widths1_fav']['value']
+        conf['collinsk+']._widths1_ufav = conf['params']['collinsk+']['widths1_ufav']['value']
+        conf['collinsk+']._widths2_fav  = conf['params']['collinsk+']['widths2_fav']['value']
+        conf['collinsk+']._widths2_ufav = conf['params']['collinsk+']['widths2_ufav']['value']
+        FLAV=['g1','u1','d1','s1','c1','b1']
+        FLAV.extend(['ub1','db1','sb1','cb1','bb1'])
+        PAR=['N1','a1','b1','c1','d1','N2','a2','b2','c2','d2']
+        self.set_params('collinsk+',FLAV,PAR)
 
+    def set_Htildepip_params(self):
+        self.set_constraits('Htildepi+')
+        conf['Htildepi+']._widths1_fav  = conf['params']['Htildepi+']['widths1_fav']['value']
+        conf['Htildepi+']._widths1_ufav = conf['params']['Htildepi+']['widths1_ufav']['value']
+        conf['Htildepi+']._widths2_fav  = conf['params']['Htildepi+']['widths2_fav']['value']
+        conf['Htildepi+']._widths2_ufav = conf['params']['Htildepi+']['widths2_ufav']['value']
+        FLAV=['g1','u1','d1','s1','c1','b1']
+        FLAV.extend(['ub1','db1','sb1','cb1','bb1'])
+        PAR=['N1','a1','b1','c1','d1','N2','a2','b2','c2','d2']
+        self.set_params('Htildepi+',FLAV,PAR)
 
-
-
-
+    def set_Htildekp_params(self):
+        self.set_constraits('Htildek+')
+        conf['Htildek+']._widths1_fav  = conf['params']['Htildek+']['widths1_fav']['value']
+        conf['Htildek+']._widths1_ufav = conf['params']['Htildek+']['widths1_ufav']['value']
+        conf['Htildek+']._widths2_fav  = conf['params']['Htildek+']['widths2_fav']['value']
+        conf['Htildek+']._widths2_ufav = conf['params']['Htildek+']['widths2_ufav']['value']
+        FLAV=['g1','u1','d1','s1','c1','b1']
+        FLAV.extend(['ub1','db1','sb1','cb1','bb1'])
+        PAR=['N1','a1','b1','c1','d1','N2','a2','b2','c2','d2']
+        self.set_params('Htildek+',FLAV,PAR)

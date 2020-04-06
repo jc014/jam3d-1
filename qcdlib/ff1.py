@@ -12,7 +12,8 @@ class FF(CORE):
     FF for positive pi,k. Use charge conj to get negative FF
     """
 
-    def __init__(self,hadron):
+    def __init__(self,hadron,shape='nderiv'):
+        self.shape = shape
         self.hadron=hadron
         self.aux = conf['aux']
         self.set_default_params()
@@ -21,8 +22,8 @@ class FF(CORE):
     def set_default_params(self):
 
         # free parameters
-        self.shape1 = np.zeros((11, 10))
-        self.shape2 = np.zeros((11, 10))
+        self.shape1 = np.ones((11,10)) #np.zeros((11, 10))
+        self.shape2 = np.ones((11,10)) #np.zeros((11, 10))
         self._widths1_fav    = 0.12
         self._widths1_ufav  = 0.12
         self._widths2_fav    = 0
@@ -46,10 +47,11 @@ class FF(CORE):
             else:                self.widths2[i] = self._widths2_ufav
 
     def get_C(self, z, Q2):
-        return self.get_collinear(z,Q2)
+        if self.shape=='nderiv': return self.get_collinear(z,Q2)
+        elif self.shape=='deriv': return self.get_dcollinear(z,Q2)
 
-    def get_dC(self, z, Q2):
-        return self.get_dcollinear(z,Q2)
+    #def get_dC(self, z, Q2):
+    #    return self.get_dcollinear(z,Q2)
 
     def get_state(self):
         return (self.widths1,self.widths2,self.shape1, self.shape2)

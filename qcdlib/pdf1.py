@@ -9,10 +9,11 @@ from tools.config import conf
 
 class PDF(CORE):
     """
-    PDF for proton. Use SU2 symetry to get for n
+    PDF for proton. Use SU2 symetry to get for n.
     """
 
-    def __init__(self):
+    def __init__(self,shape='nderiv'):
+        self.shape = shape
         self.aux = conf['aux']
         self.set_default_params()
         self.setup()
@@ -44,10 +45,11 @@ class PDF(CORE):
             else:        self.widths2[i] = self._widths2_sea
 
     def get_C(self, x, Q2):
-        return self.get_collinear(x, Q2)
+        if self.shape=='nderiv': return self.get_collinear(x, Q2)
+        elif self.shape=='deriv': return self.get_dcollinear(x,Q2)
 
-    def get_dC(self, x, Q2):
-        return self.get_dcollinear(x,Q2)
+    #def get_dC(self, x, Q2):
+    #    return self.get_dcollinear(x,Q2)
 
     def get_state(self):
         return (self.widths1,self.widths2, self.shape1,self.shape2)
