@@ -26,15 +26,20 @@ class CORE:
         b=p[2] + p[7] * s
         c=p[3] + p[8] * s
         d=p[4] + p[9] * s
-        n= 1 #self.beta(2+p[1],p[2]+1)# + p[3]*self.beta(1+p[1]+1,p[2] + 1) + p[4]*self.beta(1+p[1]+2,p[2] + 1)
+        n= 1
         return self.__get_shape(x,[N/n,a,b,c,d])
 
-    def get_shape(self,x,Q2,p1,p2): #The normalization can only be used if c and d are zero
+    def get_shape(self,x,Q2,p1,p2):
         s=self.get_s(Q2)
         shape=self._get_shape(x,p1,s)
         shape2=self._get_shape(x,p2,s)
         if p2[0]!=0: shape=shape*(1+shape2)
-        n = self.beta(2+p1[1],p1[2]+1) + p2[0]*self.beta(2+p1[1]+p2[1],p1[2]+p2[2]+1)
+        n1 = self.beta(p1[1]+2,p1[2]+1) + p1[3]*self.beta(p1[1]+3,p1[2]+1) + p1[4]*self.beta(p1[1]+4,p1[2]+1)
+        n2 = p2[0] * (self.beta(p1[1]+p2[1]+2,p1[2]+p2[2]+1) + p1[4]*p2[4]*self.beta(p1[1]+p2[1]+6,p1[2]+p2[2]+1))
+        n3 = p2[0] * (p1[3]+p2[3])*self.beta(p1[1]+p2[1]+3,p1[2]+p2[2]+1)
+        n4 = p2[0] * (p1[3]*p2[4]+p2[3]*p1[4])*self.beta(p1[1]+p2[1]+5,p1[2]+p2[2]+1)
+        n5 = p2[0] * (p1[3]*p2[3]+p1[4]+p2[4])*self.beta(p1[1]+p2[1]+4,p1[2]+p2[2]+1)
+        n=n1+n2+n3+n4+n5
         shape=shape/n
         return shape
 
@@ -50,23 +55,27 @@ class CORE:
         return p[0]*x**p[1]*(1-x)**p[2]*(p[3]+2*p[4]*x+(1+p[3]*x+p[4]*x**2)*(p[1]/x-p[2]/(1-x)))
 
     def _get_dshape(self,x,p,s):
-        # NS: needs to check normalization
         N=p[0] + p[5] * s
         a=p[1] + p[6] * s
         b=p[2] + p[7] * s
         c=p[3] + p[8] * s
         d=p[4] + p[9] * s
-        n=1 #self.beta(2+p[1],p[2]+1)# + c*self.beta(1+a+1,b + 1) + d*self.beta(1+a+1,b + 1)
+        n=1
         return self.__get_dshape(x,[N/n,a,b,c,d])
 
-    def get_dshape(self,x,Q2,p1,p2): #The normalization can only be used if c and d are zero
+    def get_dshape(self,x,Q2,p1,p2):
         s=self.get_s(Q2)
         dshape=self._get_dshape(x,p1,s)
         shape=self._get_shape(x,p1,s)
         dshape2=self._get_dshape(x,p2,s)
         shape2=self._get_shape(x,p2,s)
         if p2[0]!=0: dshape = shape*dshape2 + (1+shape2)*dshape
-        n = self.beta(2+p1[1],p1[2]+1) + p2[0]*self.beta(2+p1[1]+p2[1],p1[2]+p2[2]+1)
+        n1 = self.beta(p1[1]+2,p1[2]+1) + p1[3]*self.beta(p1[1]+3,p1[2]+1) + p1[4]*self.beta(p1[1]+4,p1[2]+1)
+        n2 = p2[0] * (self.beta(p1[1]+p2[1]+2,p1[2]+p2[2]+1) + p1[4]*p2[4]*self.beta(p1[1]+p2[1]+6,p1[2]+p2[2]+1))
+        n3 = p2[0] * (p1[3]+p2[3])*self.beta(p1[1]+p2[1]+3,p1[2]+p2[2]+1)
+        n4 = p2[0] * (p1[3]*p2[4]+p2[3]*p1[4])*self.beta(p1[1]+p2[1]+5,p1[2]+p2[2]+1)
+        n5 = p2[0] * (p1[3]*p2[3]+p1[4]+p2[4])*self.beta(p1[1]+p2[1]+4,p1[2]+p2[2]+1)
+        n=n1+n2+n3+n4+n5
         dshape=dshape/n
         return dshape
 

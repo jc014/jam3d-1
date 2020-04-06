@@ -29,7 +29,7 @@ import obslib.wz.residuals
 #--from fitlib
 from fitlib.parman import PARMAN
 
-#--from tools 
+#--from tools
 from tools.tools    import checkdir
 from tools.config   import conf,load_config
 from tools.parallel import PARALLEL
@@ -52,7 +52,7 @@ class RESMAN:
         if  parallel:
             self.setup_parallel(nworkers)
             self.requests=self.get_requests()
-   
+
     def setup_core(self):
 
         conf['aux'] = qcdlib.aux.AUX()
@@ -69,18 +69,33 @@ class RESMAN:
         if 'pdf'           in conf['params']: conf['pdf']          = pdf0.PDF()
         if 'pdfpi-'        in conf['params']: conf['pdfpi-']       = pdf0.PDF('pi-')
         if 'transversity'  in conf['params']: conf['transversity'] = pdf1.PDF()
-        if 'sivers'        in conf['params']: conf['sivers']       = pdf1.PDF()
+        if 'sivers'        in conf['params']:
+            conf['sivers']       = pdf1.PDF()
+            conf['dsivers']      = pdf1.PDF('deriv')
         if 'boermulders'   in conf['params']: conf['boermulders']  = pdf1.PDF()
         if 'ffpi'          in conf['params']: conf['ffpi']         = ff0.FF('pi')
         if 'ffk'           in conf['params']: conf['ffk']          = ff0.FF('k')
-        if 'collinspi'     in conf['params']: conf['collinspi']    = ff1.FF('pi')
-        if 'collinsk'      in conf['params']: conf['collinsk']     = ff1.FF('k')
+        if 'collinspi'     in conf['params']:
+            conf['collinspi']    = ff1.FF('pi')
+            conf['dcollinspi']   = ff1.FF('pi','deriv')
+        if 'collinsk'      in conf['params']:
+            conf['collinsk']     = ff1.FF('k')
+            conf['dcollinsk']    = ff1.FF('k','deriv')
         if 'Htildepi'      in conf['params']: conf['Htildepi']     = ff1.FF('pi')
         if 'Htildek'       in conf['params']: conf['Htildek']      = ff1.FF('k')
 
-        if 'transversity+' in conf['params']: conf['transversity'] = pdf2.PDF('h1') # Transversity  
-        if 'collinspi+'    in conf['params']: conf['collinspi']    = ff2.FF('Col')  # Collins
-        if 'sivers+'       in conf['params']: conf['sivers']    = pdf2.PDF('Siv')    # Sivers
+        if 'transversity+' in conf['params']: conf['transversity'] = pdf2.PDF('h1') # Transversity
+        if 'collinspi+'    in conf['params']:
+            conf['collinspi']    = ff2.FF('Col','pi')  # Collins
+            conf['dcollinspi']   = ff2.FF('Col','pi','deriv')  # dCollins
+        if 'collinsk+'     in conf['params']:
+            conf['collinsk']     = ff2.FF('Col','k')  # Collins
+            conf['dcollinsk']    = ff2.FF('Col','k','deriv')  # dCollins
+        if 'sivers+'       in conf['params']:
+            conf['sivers']       = pdf2.PDF('Siv')    # Sivers
+            conf['dsivers']      = pdf2.PDF('Siv','deriv')    # dSivers
+        if 'Htildepi+'    in conf['params']: conf['Htildepi']    = ff2.FF('Col','pi')  # Htilde (using same splitting functions as Collins)
+        if 'Htildek+'     in conf['params']: conf['Htildek']     = ff2.FF('Col','k')  # Htilde (using same splitting functions as Collins)
 
     def setup_sidis(self):
         conf['sidis tabs']    = obslib.sidis.reader.READER().load_data_sets('sidis')
@@ -93,7 +108,7 @@ class RESMAN:
     def setup_AN(self):
         conf['AN tabs']   = obslib.AN_pp.reader.READER().load_data_sets('AN')
         self.ANres = obslib.AN_pp.residuals.RESIDUALS()
-    
+
     def setup_dy(self):
         conf['dy tabs']   = obslib.dy.reader.READER().load_data_sets('dy')
         self.dyres = obslib.dy.residuals.RESIDUALS()
@@ -137,7 +152,7 @@ class RESMAN:
         if 'collinsk'     in conf: conf['collinsk'    ].set_state(state['collinsk'    ])
         if 'Htildepi'     in conf: conf['Htildepi'    ].set_state(state['Htildepi'    ])
         if 'Htildek'      in conf: conf['Htildek'     ].set_state(state['Htildek'     ])
-  
+
     def distribute_requests(self,container,requests):
         cnt=0
         for request in requests:
@@ -147,9 +162,9 @@ class RESMAN:
 
     def get_requests(self):
         container=[[] for _ in range(self.nworkers)]
-        if 'sidis'  in conf['datasets']:  self.distribute_requests(container,self.sidisres.requests) 
-        if 'sia'    in conf['datasets']:  self.distribute_requests(container,self.siares.requests) 
-        if 'AN'     in conf['datasets']:  self.distribute_requests(container,self.ANres.requests) 
+        if 'sidis'  in conf['datasets']:  self.distribute_requests(container,self.sidisres.requests)
+        if 'sia'    in conf['datasets']:  self.distribute_requests(container,self.siares.requests)
+        if 'AN'     in conf['datasets']:  self.distribute_requests(container,self.ANres.requests)
         if 'dy'     in conf['datasets']:  self.distribute_requests(container,self.dyres.requests)
         if 'wz'     in conf['datasets']:  self.distribute_requests(container,self.wzres.requests)
         return container
@@ -162,7 +177,7 @@ class RESMAN:
             if  request[i]['reaction']=='dy'    :  self.dyres.process_request(request[i])
             if  request[i]['reaction']=='wz'    :  self.wzres.process_request(request[i])
         return request
- 
+
     def get_residuals(self,par):
         self.parman.set_new_params(par)
         state=self.get_state()
@@ -247,17 +262,17 @@ class RESMAN:
         return data
 
     def test(self,ntasks=10):
-        #--loop over states 
+        #--loop over states
         print '='*20
-        t=time.time() 
-        for _ in range(ntasks): 
+        t=time.time()
+        for _ in range(ntasks):
             par=self.parman.par
             par*=(1+0.01*np.random.randn(par.size))
             res,rres,nres=self.get_residuals(par)
             chi2=np.sum(res**2)
-            print '(%d/%d) chi2=%f'%(_,ntasks,chi2) 
+            print '(%d/%d) chi2=%f'%(_,ntasks,chi2)
         print '='*20
-        elapsed_time=time.time()-t 
+        elapsed_time=time.time()-t
         print 'elapsed time :%f'%elapsed_time
         return elapsed_time
 
@@ -271,7 +286,3 @@ if __name__=='__main__':
     resman=RESMAN(nworkers)
     resman.test()
     resman.shutdown()
-
-
-
-

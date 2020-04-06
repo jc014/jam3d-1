@@ -100,11 +100,11 @@ if __name__ == '__main__':
     conf['ffpi']=FF('pi')
     conf['ffk']=FF('k')
 
-    x = 0.25
-    z = 0.5
-    Q2 = 2.4
+    x = 0.186
+    z = 0.379
+    Q2 = 4.321
     mu2 = Q2
-    pT = 0.3
+    pT = 0.339
     tar = 'p'
     had = 'pi+'
 
