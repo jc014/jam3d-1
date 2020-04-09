@@ -39,17 +39,17 @@ class FF(CORE):
 
         #--f(x) = norm * x**a * (1-x)**b * (1+c*x**0.5+d*x)
         params={}
-        params['g1']   = np.array([0,-0.5,3,0,0,0,0,0,0,0])
-        params['u1']   = np.array([1,-0.5,3,0,0,0,0,0,0,0])
-        params['d1']   = np.array([1,-0.5,3,0,0,0,0,0,0,0])
-        params['s1']   = np.array([1,-0.5,3,0,0,0,0,0,0,0])
-        params['c1']   = np.array([1,-0.5,3,0,0,0,0,0,0,0])
-        params['b1']   = np.array([1,-0.5,3,0,0,0,0,0,0,0])
-        params['ub1']  = np.array([1,-0.5,3,0,0,0,0,0,0,0])
-        params['db1']  = np.array([1,-0.5,3,0,0,0,0,0,0,0])
-        params['sb1']  = np.array([1,-0.5,3,0,0,0,0,0,0,0])
-        params['cb1']  = np.array([1,-0.5,3,0,0,0,0,0,0,0])
-        params['bb1']  = np.array([1,-0.5,3,0,0,0,0,0,0,0])
+        params['g1']   = np.array([0,0,0,0,0,0,0,0,0,0])
+        params['u1']   = np.array([0,0,0,0,0,0,0,0,0,0])
+        params['d1']   = np.array([0,0,0,0,0,0,0,0,0,0])
+        params['s1']   = np.array([0,0,0,0,0,0,0,0,0,0])
+        params['c1']   = np.array([0,0,0,0,0,0,0,0,0,0])
+        params['b1']   = np.array([0,0,0,0,0,0,0,0,0,0])
+        params['ub1']  = np.array([0,0,0,0,0,0,0,0,0,0])
+        params['db1']  = np.array([0,0,0,0,0,0,0,0,0,0])
+        params['sb1']  = np.array([0,0,0,0,0,0,0,0,0,0])
+        params['cb1']  = np.array([0,0,0,0,0,0,0,0,0,0])
+        params['bb1']  = np.array([0,0,0,0,0,0,0,0,0,0])
         self.params=params
 
         #--widths
