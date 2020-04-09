@@ -66,36 +66,48 @@ class RESMAN:
             if conf['pdf parametrization']==2: conf['pdf']= pdf2.PDF()
             if conf['pdf parametrization']==3: conf['pdf']= pdf3.PDF()
 
+        if 'version' in conf: version=conf['version']
+        else: version=0 #--for back compatibility
+
         if 'pdf'           in conf['params']: conf['pdf']          = pdf0.PDF()
         if 'pdfpi-'        in conf['params']: conf['pdfpi-']       = pdf0.PDF('pi-')
-        if 'transversity'  in conf['params']: conf['transversity'] = pdf1.PDF()
+        if 'transversity'  in conf['params']:
+            if version == 0:  conf['transversity'] = pdf1.PDF()
+            if version == 'JAM20+':  conf['transversity'] = pdf2.PDF('h1')
         if 'sivers'        in conf['params']:
-            conf['sivers']       = pdf1.PDF()
-            conf['dsivers']      = pdf1.PDF('deriv')
+            if version == 0:
+                conf['sivers']       = pdf1.PDF()
+                conf['dsivers']      = pdf1.PDF('deriv')
+            if version == 'JAM20+':
+                conf['sivers']       = pdf2.PDF('Siv')
+                conf['dsivers']      = pdf2.PDF('Siv','deriv')
         if 'boermulders'   in conf['params']: conf['boermulders']  = pdf1.PDF()
         if 'ffpi'          in conf['params']: conf['ffpi']         = ff0.FF('pi')
         if 'ffk'           in conf['params']: conf['ffk']          = ff0.FF('k')
         if 'collinspi'     in conf['params']:
-            conf['collinspi']    = ff1.FF('pi')
-            conf['dcollinspi']   = ff1.FF('pi','deriv')
+            if version == 0:
+                conf['collinspi']    = ff1.FF('pi')
+                conf['dcollinspi']   = ff1.FF('pi','deriv')
+            if version == 'JAM20+':
+                conf['collinspi']    = ff2.FF('Col','pi')
+                conf['dcollinspi']   = ff2.FF('Col','pi','deriv')
         if 'collinsk'      in conf['params']:
-            conf['collinsk']     = ff1.FF('k')
-            conf['dcollinsk']    = ff1.FF('k','deriv')
-        if 'Htildepi'      in conf['params']: conf['Htildepi']     = ff1.FF('pi')
-        if 'Htildek'       in conf['params']: conf['Htildek']      = ff1.FF('k')
-
-        if 'transversity+' in conf['params']: conf['transversity'] = pdf2.PDF('h1') # Transversity
-        if 'collinspi+'    in conf['params']:
-            conf['collinspi']    = ff2.FF('Col','pi')  # Collins
-            conf['dcollinspi']   = ff2.FF('Col','pi','deriv')  # dCollins
-        if 'collinsk+'     in conf['params']:
-            conf['collinsk']     = ff2.FF('Col','k')  # Collins
-            conf['dcollinsk']    = ff2.FF('Col','k','deriv')  # dCollins
-        if 'sivers+'       in conf['params']:
-            conf['sivers']       = pdf2.PDF('Siv')    # Sivers
-            conf['dsivers']      = pdf2.PDF('Siv','deriv')    # dSivers
-        if 'Htildepi+'    in conf['params']: conf['Htildepi']    = ff2.FF('Col','pi')  # Htilde (using same splitting functions as Collins)
-        if 'Htildek+'     in conf['params']: conf['Htildek']     = ff2.FF('Col','k')  # Htilde (using same splitting functions as Collins)
+            if version == 0:
+                conf['collinsk']     = ff1.FF('k')
+                conf['dcollinsk']    = ff1.FF('k','deriv')
+            if version == 'JAM20+':
+                conf['collinsk']     = ff2.FF('Col','k')
+                conf['dcollinsk']    = ff2.FF('Col','k','deriv')
+        if 'Htildepi'      in conf['params']:
+            if version == 0:
+                conf['Htildepi']     = ff1.FF('pi')
+            if version == 'JAM20+':
+                conf['Htildepi']    = ff2.FF('Col','pi')  # Htilde (using same splitting functions as Collins)
+        if 'Htildek'       in conf['params']:
+            if version == 0:
+                conf['Htildek']      = ff1.FF('k')
+            if version == 'JAM20+':
+                conf['Htildek']     = ff2.FF('Col','k')  # Htilde (using same splitting functions as Collins)
 
     def setup_sidis(self):
         conf['sidis tabs']    = obslib.sidis.reader.READER().load_data_sets('sidis')

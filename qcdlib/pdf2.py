@@ -39,15 +39,15 @@ class PDF(CORE):
         #--f(x) = norm * x**a1 * (1-x)**b1 * (1+c1*x+d1*x**2) * (1+ N2 * x**a2 * (1-x)**b2 * (1+c2*x+d2*x**2))
         params={}
         # first shapes
-        params['g1']    =np.array([1,-0.5,3,0,0,0,0,0,0,0])
-        params['uv1']   =np.array([1, 0.5,3,0,0,0,0,0,0,0])
-        params['dv1']   =np.array([1, 0.5,4,0,0,0,0,0,0,0])
-        params['sea1']  =np.array([1,-1.19,4,0,0,0,0,0,0,0])
-        params['sea2']  =np.array([1,-1.19,4,0,0,0,0,0,0,0])
-        params['db1']   =np.array([1,-0.5,6,0,0,0,0,0,0,0])
-        params['ub1']   =np.array([1,-0.5,6,0,0,0,0,0,0,0])
-        params['s1']    =np.array([ 0.02117505,-0.7834729,5.94912366,0.,0.,0,0,0,0,0])
-        params['sb1']   =np.array([ 0.03185304,-0.4761831,10.,0.,0.,0,0,0,0,0])
+        params['g1']    =np.array([0,0,0,0,0,0,0,0,0,0])
+        params['uv1']   =np.array([0,0,0,0,0,0,0,0,0,0])
+        params['dv1']   =np.array([0,0,0,0,0,0,0,0,0,0])
+        params['sea1']  =np.array([0,0,0,0,0,0,0,0,0,0])
+        params['sea2']  =np.array([0,0,0,0,0,0,0,0,0,0])
+        params['db1']   =np.array([0,0,0,0,0,0,0,0,0,0])
+        params['ub1']   =np.array([0,0,0,0,0,0,0,0,0,0])
+        params['s1']    =np.array([0,0,0,0,0,0,0,0,0,0])
+        params['sb1']   =np.array([0,0,0,0,0,0,0,0,0,0])
         self.params=params
 
         #--widthds
