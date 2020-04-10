@@ -156,7 +156,7 @@ class PARMAN:
       if 'Htildepi'     in semaphore and semaphore['Htildepi']     == 1: self.set_Htildepi_params(version)
       if 'Htildek'      in semaphore and semaphore['Htildek']      == 1: self.set_Htildek_params(version)
 
-    def set_constraits(self,dist,FLAV,PAR,version):
+    def set_constraits(self,dist,FLAV=None,PAR=None,version=0):
 
         if (dist in ['pdf','pdfpi-','ffpi','ffk']) or (version==0):
             parkind=dist
