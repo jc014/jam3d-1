@@ -246,7 +246,7 @@ class PARMAN:
         conf['pdfpi-'].setup(hadron)
 
     def set_transversity_params(self,version):
-
+        self.set_constraits('transversity')
         conf['transversity']._widths1_uv  = conf['params']['transversity']['widths1_uv']['value']
         conf['transversity']._widths1_dv  = conf['params']['transversity']['widths1_dv']['value']
         conf['transversity']._widths1_sea = conf['params']['transversity']['widths1_sea']['value']
@@ -270,7 +270,7 @@ class PARMAN:
             self.set_params(dist,FLAV,PAR,version)
 
     def set_sivers_params(self,version):
-
+        self.set_constraits('sivers')
         conf['sivers']._widths1_uv  = conf['params']['sivers']['widths1_uv']['value']
         conf['sivers']._widths1_dv  = conf['params']['sivers']['widths1_dv']['value']
         conf['sivers']._widths1_sea = conf['params']['sivers']['widths1_sea']['value']
@@ -333,7 +333,7 @@ class PARMAN:
         conf['ffk'].setup()
 
     def set_collinspi_params(self,version):
-
+        self.set_constraits('collinspi')
         conf['collinspi']._widths1_fav  = conf['params']['collinspi']['widths1_fav']['value']
         conf['collinspi']._widths1_ufav = conf['params']['collinspi']['widths1_ufav']['value']
         conf['collinspi']._widths2_fav  = conf['params']['collinspi']['widths2_fav']['value']
@@ -354,7 +354,7 @@ class PARMAN:
             self.set_params(dist,FLAV,PAR,version)
 
     def set_collinsk_params(self):
-
+        self.set_constraits('collinsk')
         conf['collinsk']._widths1_fav   = conf['params']['collinsk']['widths1_fav']['value']
         conf['collinsk']._widths1_ufav  = conf['params']['collinsk']['widths1_ufav']['value']
         conf['collinsk']._widths2_fav   = conf['params']['collinsk']['widths2_fav']['value']
@@ -375,7 +375,7 @@ class PARMAN:
             self.set_params(dist,FLAV,PAR,version)
 
     def set_Htildepi_params(self,version):
-
+        self.set_constraits('Htildepi')
         conf['Htildepi']._widths1_fav  = conf['params']['Htildepi']['widths1_fav']['value']
         conf['Htildepi']._widths1_ufav = conf['params']['Htildepi']['widths1_ufav']['value']
         conf['Htildepi']._widths2_fav  = conf['params']['Htildepi']['widths2_fav']['value']
@@ -396,7 +396,7 @@ class PARMAN:
             self.set_params(dist,FLAV,PAR,version)
 
     def set_Htildek_params(self,version):
-
+        self.set_constraits('Htildek')
         conf['Htildek']._widths1_fav   = conf['params']['Htildek']['widths1_fav']['value']
         conf['Htildek']._widths1_ufav  = conf['params']['Htildek']['widths1_ufav']['value']
         conf['Htildek']._widths2_fav   = conf['params']['Htildek']['widths2_fav']['value']
