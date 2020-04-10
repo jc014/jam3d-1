@@ -263,7 +263,7 @@ class RESMAN:
             out=self.dyres.get_residuals(calc=False)
             reaction.extend(['dy' for _ in out[0]])
         if 'wz' in conf['datasets']:
-            out=self.dyres.get_residuals(calc=False)
+            out=self.wzres.get_residuals(calc=False)
             reaction.extend(['wz' for _ in out[0]])
         return reaction
 
