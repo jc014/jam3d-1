@@ -38,7 +38,7 @@ class PDF(CORE):
 
         #--f(x) = norm * x**a1 * (1-x)**b1 * (1+c1*x+d1*x**2) * (1+ N2 * x**a2 * (1-x)**b2 * (1+c2*x+d2*x**2))
         params={}
-        # first shapes
+
         params['g1']    =np.array([0,0,0,0,0,0,0,0,0,0])
         params['uv1']   =np.array([0,0,0,0,0,0,0,0,0,0])
         params['dv1']   =np.array([0,0,0,0,0,0,0,0,0,0])
@@ -136,7 +136,7 @@ class PDF(CORE):
 
     def get_moments(self,flav,N=None):
         """
-        if N==None: then parametrization is to be use to compute moments along mellin contour
+        if N==None: then parametrization is to be used to compute moments along mellin contour
         else the Nth moment is returned
         """
         if N==None: N=self.mellin.N
