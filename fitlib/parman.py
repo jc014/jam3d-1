@@ -115,7 +115,7 @@ class PARMAN:
 
         #--This is needed so the pion widths get updated
         #--when they are set equal to the proton widths
-        if semaphore['pdf']==1 and 'pdfp1-' in conf['params']: semaphore['pdfpi-']=1
+        if semaphore['pdf']==1 and 'pdfpi-' in conf['params']: semaphore['pdfpi-']=1
 
         self.propagate_params(semaphore)
 
@@ -156,7 +156,7 @@ class PARMAN:
       if 'Htildepi'     in semaphore and semaphore['Htildepi']     == 1: self.set_Htildepi_params(version)
       if 'Htildek'      in semaphore and semaphore['Htildek']      == 1: self.set_Htildek_params(version)
 
-    def set_constraits(self,dist,FLAV=None,PAR=None,version=0):
+    def set_constraits(self,dist,FLAV,PAR,version):
 
         if (dist in ['pdf','pdfpi-','ffpi','ffk']) or (version==0):
             parkind=dist
@@ -180,6 +180,48 @@ class PARMAN:
                         if conf['params'][dist][flav+' '+par+' '+s]['fixed']==False: continue
                         reference_flav=conf['params'][dist][flav+' '+par+' '+s]['fixed']
                         conf['params'][dist][flav+' '+par+' '+s]['value']=conf['params'][dist][reference_flav]['value']
+
+    def set_params(self,dist,FLAV,PAR,version):
+
+        if version==0:
+            iflav=0
+            for flav in FLAV:
+                iflav+=1
+                ipar=-1
+                for par in PAR:
+                    ipar+=1
+                    if '%s %s 1'%(flav,par) in conf['params'][dist]:
+                        conf[dist].shape1[iflav][ipar] = conf['params'][dist]['%s %s 1'%(flav,par)]['value']
+                        if 'd'+dist in conf: conf['d'+dist].shape1[iflav][ipar] = conf['params'][dist]['%s %s 1'%(flav,par)]['value']
+                    if '%s %s 2'%(flav,par) in conf['params'][dist]:
+                        conf[dist].shape2[iflav][ipar] = conf['params'][dist]['%s %s 2'%(flav,par)]['value']
+                        if 'd'+dist in conf: conf['d'+dist].shape2[iflav][ipar] = conf['params'][dist]['%s %s 2'%(flav,par)]['value']
+
+            conf[dist].setup()
+
+        elif version=='JAM20+':
+            #--update values at the class
+            for flav in FLAV:
+                idx=0
+                for par in PAR:
+                    if  flav+' '+par in conf['params'][dist]:
+                        conf[dist].params[flav][idx]=conf['params'][dist][flav+' '+par]['value']
+                        if 'd'+dist in conf: conf['d'+dist].params[flav][idx]=conf['params'][dist][flav+' '+par]['value']
+                    else:
+                        conf[dist].params[flav][idx]=0
+                        if 'd'+dist in conf: conf['d'+dist].params[flav][idx]=0
+                    idx+=1
+
+            conf[dist].setup()
+
+            #--update values at conf
+            for flav in FLAV:
+                idx=0
+                for par in PAR:
+                    if  flav+' '+par in conf['params'][dist]:
+                        conf['params'][dist][flav+' '+par]['value']= conf[dist].params[flav][idx]
+                    idx+=1
+
 
     def set_pdf_params(self):
         self.set_constraits('pdf')
@@ -216,43 +258,16 @@ class PARMAN:
         if version == 0:
             FLAV = ['u','ub','d','db','s','sb']
             PAR = ['N0','a0','b0','c0','d0','N1','a1','b1','c1','d1']
-            self.set_constraits('transversity',FLAV,PAR,version)
-            iflav=0
-            for flav in FLAV:
-                iflav+=1
-                ipar=-1
-                for par in PAR:
-                    ipar+=1
-                    if '%s %s 1'%(flav,par) in conf['params']['transversity']:
-                        conf['transversity'].shape1[iflav][ipar] = conf['params']['transversity']['%s %s 1'%(flav,par)]['value']
-                    if '%s %s 2'%(flav,par) in conf['params']['transversity']:
-                        conf['transversity'].shape2[iflav][ipar] = conf['params']['transversity']['%s %s 2'%(flav,par)]['value']
-
-            conf['transversity'].setup()
+            dist='transversity'
+            self.set_constraits(dist,FLAV,PAR,version)
+            self.set_params(dist,FLAV,PAR,version)
 
         if version == 'JAM20+':
             FLAV=['g1','uv1','dv1','sea1','sea2','db1','ub1','s1','sb1']
             PAR=['N','a','b','c','d']
             dist='transversity'
-            #--update values at the class
-            for flav in FLAV:
-                idx=0
-                for par in PAR:
-                    if  flav+' '+par in conf['params'][dist]:
-                        conf[dist].params[flav][idx]=conf['params'][dist][flav+' '+par]['value']
-                    else:
-                        conf[dist].params[flav][idx]=0
-                    idx+=1
-
-            conf[dist].setup()
-
-            #--update values at conf
-            for flav in FLAV:
-                idx=0
-                for par in PAR:
-                    if  flav+' '+par in conf['params'][dist]:
-                        conf['params'][dist][flav+' '+par]['value']= conf[dist].params[flav][idx]
-                    idx+=1
+            self.set_constraits(dist,FLAV,PAR,version)
+            self.set_params(dist,FLAV,PAR,version)
 
     def set_sivers_params(self,version):
 
@@ -267,47 +282,16 @@ class PARMAN:
         if version == 0:
             FLAV = ['u','ub','d','db','s','sb']
             PAR = ['N0','a0','b0','c0','d0','N1','a1','b1','c1','d1']
-            self.set_constraits('sivers',FLAV,PAR,version)
-            iflav=0
-            for flav in FLAV:
-                iflav+=1
-                ipar=-1
-                for par in PAR:
-                    ipar+=1
-                    if '%s %s 1'%(flav,par) in conf['params']['sivers']:
-                        conf['sivers'].shape1[iflav][ipar] = conf['params']['sivers']['%s %s 1'%(flav,par)]['value']
-                        conf['dsivers'].shape1[iflav][ipar] = conf['params']['sivers']['%s %s 1'%(flav,par)]['value']
-                    if '%s %s 2'%(flav,par) in conf['params']['sivers']:
-                        conf['sivers'].shape2[iflav][ipar] = conf['params']['sivers']['%s %s 2'%(flav,par)]['value']
-                        conf['dsivers'].shape2[iflav][ipar] = conf['params']['sivers']['%s %s 2'%(flav,par)]['value']
-
-            conf['sivers'].setup()
+            dist='sivers'
+            self.set_constraits(dist,FLAV,PAR,version)
+            self.set_params(dist,FLAV,PAR,version)
 
         if version == 'JAM20+':
             FLAV=['g1','uv1','dv1','sea1','sea2','db1','ub1','s1','sb1']
             PAR=['N','a','b','c','d']
-            FLAV=['g1','uv1','dv1','sea1','sea2','db1','ub1','s1','sb1']
-            PAR=['N','a','b','c','d']
             dist='sivers'
-            #--update values at the class
-            for flav in FLAV:
-                idx=0
-                for par in PAR:
-                    if  flav+' '+par in conf['params'][dist]:
-                        conf[dist].params[flav][idx]=conf['params'][dist][flav+' '+par]['value']
-                    else:
-                        conf[dist].params[flav][idx]=0
-                    idx+=1
-
-            conf[dist].setup()
-
-            #--update values at conf
-            for flav in FLAV:
-                idx=0
-                for par in PAR:
-                    if  flav+' '+par in conf['params'][dist]:
-                        conf['params'][dist][flav+' '+par]['value']= conf[dist].params[flav][idx]
-                    idx+=1
+            self.set_constraits(dist,FLAV,PAR,version)
+            self.set_params(dist,FLAV,PAR,version)
 
     def set_boermulders_params(self):
         self.set_constraits('boermulders')
@@ -358,44 +342,16 @@ class PARMAN:
         if version == 0:
             FLAV = ['u','ub','d','db','s','sb']
             PAR = ['N0','a0','b0','c0','d0','N1','a1','b1','c1','d1']
-            self.set_constraits('collinspi',FLAV,PAR,version)
-            iflav=0
-            for flav in FLAV:
-                iflav+=1
-                ipar=-1
-                for par in PAR:
-                    ipar+=1
-                    if '%s %s 1'%(flav,par) in conf['params']['collinspi']:
-                        conf['collinspi'].shape1[iflav][ipar] = conf['params']['collinspi']['%s %s 1'%(flav,par)]['value']
-                        conf['dcollinspi'].shape1[iflav][ipar] = conf['params']['collinspi']['%s %s 1'%(flav,par)]['value']
-                    if '%s %s 2'%(flav,par) in conf['params']['collinspi']:
-                        conf['collinspi'].shape2[iflav][ipar] = conf['params']['collinspi']['%s %s 2'%(flav,par)]['value']
-                        conf['dcollinspi'].shape2[iflav][ipar] = conf['params']['collinspi']['%s %s 2'%(flav,par)]['value']
-            conf['collinspi'].setup()
+            dist='collinspi'
+            self.set_constraits(dist,FLAV,PAR,version)
+            self.set_params(dist,FLAV,PAR,version)
 
         if version == 'JAM20+':
             FLAV=['g1','u1','d1','s1','c1','b1','ub1','db1','sb1','cb1','bb1']
             PAR=['N','a','b','c','d']
             dist='collinspi'
-            #--update values at the class
-            for flav in FLAV:
-                idx=0
-                for par in PAR:
-                    if  flav+' '+par in conf['params'][dist]:
-                        conf[dist].params[flav][idx]=conf['params'][dist][flav+' '+par]['value']
-                    else:
-                        conf[dist].params[flav][idx]=0
-                    idx+=1
-
-            conf[dist].setup()
-
-            #--update values at conf
-            for flav in FLAV:
-                idx=0
-                for par in PAR:
-                    if  flav+' '+par in conf['params'][dist]:
-                        conf['params'][dist][flav+' '+par]['value']= conf[dist].params[flav][idx]
-                    idx+=1
+            self.set_constraits(dist,FLAV,PAR,version)
+            self.set_params(dist,FLAV,PAR,version)
 
     def set_collinsk_params(self):
 
@@ -407,137 +363,55 @@ class PARMAN:
         if version == 0:
             FLAV = ['u','ub','d','db','s','sb']
             PAR = ['N0','a0','b0','c0','d0','N1','a1','b1','c1','d1']
-            self.set_constraits('collinsk',FLAV,PAR,version)
-            iflav=0
-            for flav in FLAV:
-                iflav+=1
-                ipar=-1
-                for par in PAR:
-                    ipar+=1
-                    if '%s %s 1'%(flav,par) in conf['params']['collinsk']:
-                        conf['collinsk'].shape1[iflav][ipar] = conf['params']['collinsk']['%s %s 1'%(flav,par)]['value']
-                        conf['dcollinsk'].shape1[iflav][ipar] = conf['params']['collinsk']['%s %s 1'%(flav,par)]['value']
-                    if '%s %s 2'%(flav,par) in conf['params']['collinsk']:
-                        conf['collinsk'].shape2[iflav][ipar] = conf['params']['collinsk']['%s %s 2'%(flav,par)]['value']
-                        conf['dcollinsk'].shape2[iflav][ipar] = conf['params']['collinsk']['%s %s 2'%(flav,par)]['value']
-            conf['collinsk'].setup()
+            dist='collinsk'
+            self.set_constraits(dist,FLAV,PAR,version)
+            self.set_params(dist,FLAV,PAR,version)
 
         if version == 'JAM20+':
             FLAV=['g1','u1','d1','s1','c1','b1','ub1','db1','sb1','cb1','bb1']
             PAR=['N','a','b','c','d']
             dist='collinsk'
-            #--update values at the class
-            for flav in FLAV:
-                idx=0
-                for par in PAR:
-                    if  flav+' '+par in conf['params'][dist]:
-                        conf[dist].params[flav][idx]=conf['params'][dist][flav+' '+par]['value']
-                    else:
-                        conf[dist].params[flav][idx]=0
-                    idx+=1
-
-            conf[dist].setup()
-
-            #--update values at conf
-            for flav in FLAV:
-                idx=0
-                for par in PAR:
-                    if  flav+' '+par in conf['params'][dist]:
-                        conf['params'][dist][flav+' '+par]['value']= conf[dist].params[flav][idx]
-                    idx+=1
+            self.set_constraits(dist,FLAV,PAR,version)
+            self.set_params(dist,FLAV,PAR,version)
 
     def set_Htildepi_params(self,version):
-            self.set_constraits('Htildepi')
-            conf['Htildepi']._widths1_fav  = conf['params']['Htildepi']['widths1_fav']['value']
-            conf['Htildepi']._widths1_ufav = conf['params']['Htildepi']['widths1_ufav']['value']
-            conf['Htildepi']._widths2_fav  = conf['params']['Htildepi']['widths2_fav']['value']
-            conf['Htildepi']._widths2_ufav = conf['params']['Htildepi']['widths2_ufav']['value']
 
-            if version == 0:
-                FLAV = ['u','ub','d','db','s','sb']
-                PAR = ['N0','a0','b0','c0','d0','N1','a1','b1','c1','d1']
-                self.set_constraits('Htildepi',FLAV,PAR,version)
+        conf['Htildepi']._widths1_fav  = conf['params']['Htildepi']['widths1_fav']['value']
+        conf['Htildepi']._widths1_ufav = conf['params']['Htildepi']['widths1_ufav']['value']
+        conf['Htildepi']._widths2_fav  = conf['params']['Htildepi']['widths2_fav']['value']
+        conf['Htildepi']._widths2_ufav = conf['params']['Htildepi']['widths2_ufav']['value']
 
-                iflav=0
-                for flav in FLAV:
-                    iflav+=1
-                    ipar=-1
-                    for par in PAR:
-                        ipar+=1
-                        if '%s %s 1'%(flav,par) in conf['params']['Htildepi']:
-                            conf['Htildepi'].shape1[iflav][ipar] = conf['params']['Htildepi']['%s %s 1'%(flav,par)]['value']
-                        if '%s %s 2'%(flav,par) in conf['params']['Htildepi']:
-                            conf['Htildepi'].shape2[iflav][ipar] = conf['params']['Htildepi']['%s %s 2'%(flav,par)]['value']
-                conf['Htildepi'].setup()
+        if version == 0:
+            FLAV = ['u','ub','d','db','s','sb']
+            PAR = ['N0','a0','b0','c0','d0','N1','a1','b1','c1','d1']
+            dist='Htildepi'
+            self.set_constraits(dist,FLAV,PAR,version)
+            self.set_params(dist,FLAV,PAR,version)
 
-            if version == 'JAM20+':
-                FLAV=['g1','u1','d1','s1','c1','b1','ub1','db1','sb1','cb1','bb1']
-                PAR=['N','a','b','c','d']
-                dist='Htildepi'
-                #--update values at the class
-                for flav in FLAV:
-                    idx=0
-                    for par in PAR:
-                        if  flav+' '+par in conf['params'][dist]:
-                            conf[dist].params[flav][idx]=conf['params'][dist][flav+' '+par]['value']
-                        else:
-                            conf[dist].params[flav][idx]=0
-                        idx+=1
-
-                conf[dist].setup()
-
-                #--update values at conf
-                for flav in FLAV:
-                    idx=0
-                    for par in PAR:
-                        if  flav+' '+par in conf['params'][dist]:
-                            conf['params'][dist][flav+' '+par]['value']= conf[dist].params[flav][idx]
-                        idx+=1
+        if version == 'JAM20+':
+            FLAV=['g1','u1','d1','s1','c1','b1','ub1','db1','sb1','cb1','bb1']
+            PAR=['N','a','b','c','d']
+            dist='Htildepi'
+            self.set_constraits(dist,FLAV,PAR,version)
+            self.set_params(dist,FLAV,PAR,version)
 
     def set_Htildek_params(self,version):
-            self.set_constraits('Htildek')
-            conf['Htildek']._widths1_fav   = conf['params']['Htildek']['widths1_fav']['value']
-            conf['Htildek']._widths1_ufav  = conf['params']['Htildek']['widths1_ufav']['value']
-            conf['Htildek']._widths2_fav   = conf['params']['Htildek']['widths2_fav']['value']
-            conf['Htildek']._widths2_ufav  = conf['params']['Htildek']['widths2_ufav']['value']
 
-            if version == 0:
-                FLAV = ['u','ub','d','db','s','sb']
-                PAR = ['N0','a0','b0','c0','d0','N1','a1','b1','c1','d1']
-                self.set_constraits('Htildek',FLAV,PAR,version)
+        conf['Htildek']._widths1_fav   = conf['params']['Htildek']['widths1_fav']['value']
+        conf['Htildek']._widths1_ufav  = conf['params']['Htildek']['widths1_ufav']['value']
+        conf['Htildek']._widths2_fav   = conf['params']['Htildek']['widths2_fav']['value']
+        conf['Htildek']._widths2_ufav  = conf['params']['Htildek']['widths2_ufav']['value']
 
-                iflav=0
-                for flav in FLAV:
-                    iflav+=1
-                    ipar=-1
-                    for par in PAR:
-                        ipar+=1
-                        if '%s %s 1'%(flav,par) in conf['params']['Htildek']:
-                            conf['Htildek'].shape1[iflav][ipar] = conf['params']['Htildek']['%s %s 1'%(flav,par)]['value']
-                        if '%s %s 2'%(flav,par) in conf['params']['Htildek']:
-                            conf['Htildek'].shape2[iflav][ipar] = conf['params']['Htildek']['%s %s 2'%(flav,par)]['value']
-                conf['Htildek'].setup()
+        if version == 0:
+            FLAV = ['u','ub','d','db','s','sb']
+            PAR = ['N0','a0','b0','c0','d0','N1','a1','b1','c1','d1']
+            dist='Htildek'
+            self.set_constraits(dist,FLAV,PAR,version)
+            self.set_params(dist,FLAV,PAR,version)
 
-            if version == 'JAM20+':
-                FLAV=['g1','u1','d1','s1','c1','b1','ub1','db1','sb1','cb1','bb1']
-                PAR=['N','a','b','c','d']
-                dist='Htildek'
-                #--update values at the class
-                for flav in FLAV:
-                    idx=0
-                    for par in PAR:
-                        if  flav+' '+par in conf['params'][dist]:
-                            conf[dist].params[flav][idx]=conf['params'][dist][flav+' '+par]['value']
-                        else:
-                            conf[dist].params[flav][idx]=0
-                        idx+=1
-
-                conf[dist].setup()
-
-                #--update values at conf
-                for flav in FLAV:
-                    idx=0
-                    for par in PAR:
-                        if  flav+' '+par in conf['params'][dist]:
-                            conf['params'][dist][flav+' '+par]['value']= conf[dist].params[flav][idx]
-                        idx+=1
+        if version == 'JAM20+':
+            FLAV=['g1','u1','d1','s1','c1','b1','ub1','db1','sb1','cb1','bb1']
+            PAR=['N','a','b','c','d']
+            dist='Htildek'
+            self.set_constraits(dist,FLAV,PAR,version)
+            self.set_params(dist,FLAV,PAR,version)
