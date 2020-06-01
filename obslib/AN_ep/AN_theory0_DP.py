@@ -61,9 +61,9 @@ def get_h(x, Q2): # Collinear transversity
 # (H_1^{\perp(1)}(z) - z*dH_1^{\perp(1)}(z)/dz)
 def get_H1p(z, Q2, had):
   if 'pi' in had:
-      return conf['collinspi'].get_C(z, Q2) - z * conf['collinspi'].get_dC(z, Q2)
+      return conf['collinspi'].get_C(z, Q2) - z * conf['dcollinspi'].get_C(z, Q2)
   elif 'k' in had:
-      return conf['collinsk'].get_C(z, Q2) - z * conf['collinsk'].get_dC(z, Q2)
+      return conf['collinsk'].get_C(z, Q2) - z * conf['dcollinsk'].get_C(z, Q2)
 
 def get_H(z, Q2, had): # -2*z*H_1^{\perp(1)}(z)+\tilde{H}(z)
   if 'pi' in had:
@@ -72,7 +72,7 @@ def get_H(z, Q2, had): # -2*z*H_1^{\perp(1)}(z)+\tilde{H}(z)
       return -2. * z * conf['collinsk'].get_C(z,Q2) + conf['Htildek'].get_C(z, Q2)
 
 def get_f1Tp(x, Q2): # (f_1T^{\perp(1)}(x) - x*df_1T^{\perp(1)}(x)/dx)
-    return conf['sivers'].get_C(x, Q2) - x * conf['sivers'].get_dC(x, Q2)
+    return conf['sivers'].get_C(x, Q2) - x * conf['dsivers'].get_C(x, Q2)
 
 def get_Hupol(s, t, u):
   # Hard parts for the unpolarized cross section
@@ -319,9 +319,12 @@ if __name__ == '__main__':
     conf['aux']= AUX()
     conf['pdf']=PDF0()
     conf['collinspi']=FF1('pi')
+    conf['dcollinspi']=FF1('pi','deriv')
+    conf['dcollinsk']=FF1('k','deriv')
     conf['Htildepi']=FF1('pi')
     conf['transversity']=PDF1()
     conf['sivers']=PDF1()
+    conf['dsivers']=PDF1('deriv')
     conf['ffpi']=FF0('pi')
 
     rs = 7.25
