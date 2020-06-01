@@ -40,8 +40,8 @@ class PDF(CORE):
         params={}
 
         params['g1']    =np.array([0,0,0,0,0,0,0,0,0,0])
-        params['uv1']   =np.array([0,0,0,0,0,0,0,0,0,0])
-        params['dv1']   =np.array([0,0,0,0,0,0,0,0,0,0])
+        params['uv1']   =np.array([0.25,0,4.5,0,0,0,0,0,0,0])
+        params['dv1']   =np.array([-0.15,0,6.0,0,0,0,0,0,0,0])
         params['sea1']  =np.array([0,0,0,0,0,0,0,0,0,0])
         params['sea2']  =np.array([0,0,0,0,0,0,0,0,0,0])
         params['db1']   =np.array([0,0,0,0,0,0,0,0,0,0])
@@ -50,7 +50,7 @@ class PDF(CORE):
         params['sb1']   =np.array([0,0,0,0,0,0,0,0,0,0])
         self.params=params
 
-        #--widthds
+        #--widths
         self._widths1_uv  = 0.3
         self._widths1_dv  = 0.3
         self._widths1_sea = 0.3

@@ -214,13 +214,13 @@ class PARMAN:
             conf[dist].setup()
 
             #--update values at conf
-            #for flav in FLAV:
-            #    idx=0
-            #    for s in ['1','2']:
-            #        for par in PAR:
-            #            if  flav+' '+par+' '+s in conf['params'][dist]:
-            #                conf['params'][dist][flav+' '+par+' '+s]['value']= conf[dist].params[flav][idx]
-            #            idx+=1
+            for flav in FLAV:
+                idx=0
+                for s in ['1','2']:
+                    for par in PAR:
+                        if  flav+' '+par+' '+s in conf['params'][dist]:
+                            conf['params'][dist][flav+' '+par+' '+s]['value']= conf[dist].params[flav][idx]
+                        idx+=1
 
 
     def set_pdf_params(self):
