@@ -30,11 +30,11 @@ class PDF(CORE):
         self.kernel=KERNELS(self.mellin,spl)
         self.dglap=DGLAP(self.mellin,conf['alphaS'],self.kernel,'truncated','LO')
 
-        self.set_params()
+        self.set_default_params()
         self.setup()
         self.ford=['g','u','ub','d','db','s','sb','c','cb','b','bb']
 
-    def set_params(self):
+    def set_default_params(self):
 
         #--f(x) = norm * x**a1 * (1-x)**b1 * (1+c1*x+d1*x**2) * (1+ N2 * x**a2 * (1-x)**b2 * (1+c2*x+d2*x**2))
         params={}
@@ -125,7 +125,7 @@ class PDF(CORE):
             else:        self.widths2[i] = self._widths2_sea
 
     def setup(self):
-        if self.shape=='nderiv': self.set_sumrules()
+        #self.set_sumrules()
         self.set_moms()
         self.set_widths()
         #--store moments of a given Q2 that has been already calculated
