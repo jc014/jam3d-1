@@ -8,7 +8,7 @@ import pandas as pd
 import time
 from tools.residuals import _RESIDUALS
 from reader import READER
-from obslib.AN_ep import AN_theory0 as AN_theory
+from obslib.AN_ep import AN_theory0 as ANep_theory
 from qcdlib.aux import AUX
 from qcdlib.alphaS import ALPHAS
 from tools.config import conf
@@ -31,8 +31,10 @@ class RESIDUALS(_RESIDUALS):
         obs = self.tabs[k]['obs'][i].strip()
         col = self.tabs[k]['col'][i].strip().upper()
 
-        if obs == 'AN':
-            thy = AN_theory.get_AN(xF, pT, rs, target, hadron)
+        if col=='HERMES': xF=-xF
+
+        if obs == 'ANep':
+            thy = ANep_theory.get_AN(xF, pT, rs, target, hadron)
 
             #print hadron,pT,thy
 
