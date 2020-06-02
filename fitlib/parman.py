@@ -203,8 +203,8 @@ class PARMAN:
             #--update values at the class
             for flav in FLAV:
                 idx=0
-                for par in PAR:
-                    for s in ['1','2']:
+                for s in ['1','2']:
+                    for par in PAR:
                         if  flav+' '+par+' '+s in conf['params'][dist]:
                             conf[dist].params[flav][idx]=conf['params'][dist][flav+' '+par+' '+s]['value']
                         else:
@@ -216,8 +216,8 @@ class PARMAN:
             #--update values at conf
             for flav in FLAV:
                 idx=0
-                for par in PAR:
-                    for s in ['1','2']:
+                for s in ['1','2']:
+                    for par in PAR:
                         if  flav+' '+par+' '+s in conf['params'][dist]:
                             conf['params'][dist][flav+' '+par+' '+s]['value']= conf[dist].params[flav][idx]
                         idx+=1

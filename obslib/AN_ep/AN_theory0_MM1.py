@@ -128,6 +128,7 @@ def get_frag(z, xF, pT, rs, tar, had):#Code for fragmentation of polarized cross
         H = 0.5 * (plusH + minusH)
 
     return (1/(z**3)) * (1/CV.x_value(z)) * ((-1 * 4 * pT) / (CV.S_value(rs) + (CV.T_value(rs, pT, xF)/z))) * np.sum(e2 * ((conf['aux'].Mpi / CV.tt_value(z)) * h * (H1p * ((CV.ss_value(z)*CV.uu_value(z))/(CV.tt_value(z)**2)) + (1/z)*H * ((CV.ss_value(z)/(CV.tt_value(z)**2))*(CV.uu_value(z)-CV.ss_value(z))))))
+    
 #Code for generic values for AN
 #Code to create equation for unpolarized cross-section
 def get_unp(z, xF, pT, rs, tar, had):
