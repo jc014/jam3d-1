@@ -31,11 +31,11 @@ class FF(CORE):
         self.kernel=KERNELS(self.mellin,spl)
         self.dglap=DGLAP(self.mellin,conf['alphaS'],self.kernel,'truncated','LO')
 
-        self.set_params()
+        self.set_default_params()
         self.setup()
         self.ford=['g','u','ub','d','db','s','sb','c','cb','b','bb']
 
-    def set_params(self):
+    def set_default_params(self):
 
         #--f(x) = norm * x**a * (1-x)**b * (1+c*x**0.5+d*x)
         params={}

@@ -59,9 +59,9 @@ def get_h(x, Q2): # Collinear transversity
 
 def get_H1p(z, Q2, had): # (H_1^{\perp(1)}(z) - z*dH_1^{\perp(1)}(z)/dz)
   if 'pi' in had:
-      return conf['collinspi'].get_C(z, Q2) - z * conf['collinspi'].get_dC(z, Q2)
+      return conf['collinspi'].get_C(z, Q2) - z * conf['dcollinspi'].get_C(z, Q2)
   elif 'k' in had:
-      return conf['collinsk'].get_C(z, Q2) - z * conf['collinsk'].get_dC(z, Q2)
+      return conf['collinsk'].get_C(z, Q2) - z * conf['dcollinsk'].get_C(z, Q2)
 
 def get_H(z, Q2, had): # -2*z*H_1^{\perp(1)}(z)+\tilde{H}(z)
   if 'pi' in had:
@@ -70,213 +70,172 @@ def get_H(z, Q2, had): # -2*z*H_1^{\perp(1)}(z)+\tilde{H}(z)
       return -2. * z * conf['collinsk'].get_C(z,Q2) + conf['Htildek'].get_C(z, Q2)
 
 def get_f1Tp(x, Q2): # (f_1T^{\perp(1)}(x) - x*df_1T^{\perp(1)}(x)/dx)
-    return conf['sivers'].get_C(x, Q2) - x * conf['sivers'].get_dC(x, Q2)
+    return conf['sivers'].get_C(x, Q2) - x * conf['dsivers'].get_C(x, Q2)
 
+class Class_Variables():    #Declaring all the class methods that are referenced throughout
+    @classmethod
+    def S_value(cls, rs):
+        return rs**2
+    @classmethod
+    def T_value(cls, rs, pT, xF):
+        return (-1 * rs) * math.sqrt((pT**2) + (xF**2 * 0.25 * CV.S_value(rs))) + (0.5 * xF * CV.S_value(rs))
+    @classmethod
+    def U_value(cls, rs, pT, xF):
+        return (-1 * rs) * math.sqrt((pT**2) + (xF**2 * 0.25 * CV.S_value(rs))) - (0.5 * xF * CV.S_value(rs))
+    @classmethod
+    def Q2_value(cls, pT):
+        return pT**2
+    @classmethod
+    def zmin_value(cls):
+        return (-1 * (CV.T_value(rs, pT, xF) + CV.U_value(rs, pT, xF))) / CV.S_value(rs)
+    @classmethod
+    def x_value(cls, z):
+        return (-1 * CV.U_value(rs, pT, xF) / z) / (CV.S_value(rs) + (CV.T_value(rs, pT, xF) / z))
+    @classmethod
+    def ss_value(cls, z):
+        return CV.x_value(z)*CV.S_value(rs)
+    @classmethod
+    def tt_value(cls, z):
+        return (CV.x_value(z) * CV.T_value(rs, pT, xF)) / z
+    @classmethod
+    def uu_value(cls, z):
+        return CV.U_value(rs, pT, xF) / z
 
+CV = Class_Variables() #declare Class Frag_Pol as a variable in order to utilize class methods
+
+def get_frag(z, xF, pT, rs, tar, had):#Code for fragmentation of polarized cross-section equation
+    if tar == 'p':
+        h = get_h(CV.x_value(z), CV.Q2_value(pT))
+    elif tar == 'n':
+        h = conf['aux'].p2n(get_h(CV.x_value(z), CV.Q2_value(pT)))
+
+    if had.endswith('+'):
+        had = had.strip('+')
+        H1p = get_H1p(z, CV.Q2_value(pT), had)
+        H = get_H(z, CV.Q2_value(pT), had)
+    elif had.endswith('-'):
+        had = had.strip('-')
+        H1p = conf['aux'].charge_conj(get_H1p(z, CV.Q2_value(pT), had))
+        H = conf['aux'].charge_conj(get_H(z, CV.Q2_value(pT), had))
+    elif had.endswith('0'):
+        had = had.strip('0')
+        plusH1p = get_H1p(z, CV.Q2_value(pT), had)
+        minusH1p = conf['aux'].charge_conj(get_H1p(z, CV.Q2_value(pT), had))
+        H1p = 0.5 * (plusH1p + minusH1p)
+
+        plusH = get_H(z, CV.Q2_value(pT), had)
+        minusH = conf['aux'].charge_conj(get_H(z, CV.Q2_value(pT), had))
+        H = 0.5 * (plusH + minusH)
+
+    return (1/(z**3)) * (1/CV.x_value(z)) * ((-1 * 4 * pT) / (CV.S_value(rs) + (CV.T_value(rs, pT, xF)/z))) * np.sum(e2 * ((conf['aux'].Mpi / CV.tt_value(z)) * h * (H1p * ((CV.ss_value(z)*CV.uu_value(z))/(CV.tt_value(z)**2)) + (1/z)*H * ((CV.ss_value(z)/(CV.tt_value(z)**2))*(CV.uu_value(z)-CV.ss_value(z))))))
+    
 #Code for generic values for AN
 #Code to create equation for unpolarized cross-section
 def get_unp(z, xF, pT, rs, tar, had):
-    S = rs**2
-    T = (-1 * rs) * math.sqrt((pT**2) + (xF**2 * 0.25 * S)) + (0.5 * xF * S)
-    U = (-1 * rs) * math.sqrt((pT**2) + (xF**2 * 0.25 * S)) - (0.5 * xF * S)
-    Q2 = pT**2
-    x = (-1 * U / z) / (S + (T / z))
-    s = x*S
-    t = (x * T) / z
-    u = U / z
-
     if tar == 'p':
-        f = get_f(x, Q2)
+        f = get_f(CV.x_value(z), CV.Q2_value(pT))
     elif tar == 'n':
-        f = conf['aux'].p2n(get_f(x, Q2))
+        f = conf['aux'].p2n(get_f(CV.x_value(z), CV.Q2_value(pT)))
 
     if had.endswith('+'):
         had = had.strip('+')
-        d = get_d(z, Q2, had)
+        d = get_d(z, CV.Q2_value(pT), had)
     elif had.endswith('-'):
         had = had.strip('-')
-        d = conf['aux'].charge_conj(get_d(z, Q2, had))
+        d = conf['aux'].charge_conj(get_d(z, CV.Q2_value(pT), had))
     elif had.endswith('0'):
         had = had.strip('0')
-        plus = get_d(z, Q2, had)
-        minus = conf['aux'].charge_conj(get_d(z, Q2, had))
+        plus = get_d(z, CV.Q2_value(pT), had)
+        minus = conf['aux'].charge_conj(get_d(z, CV.Q2_value(pT), had))
         d = 0.5 * (plus + minus)
 
-    return (1/(z**2)) * (1/x) * (1/(S + (T/z))) * np.sum(e2 * f * d * ((s**2 + u**2) / (t**2)))
+    return (1/(z**2)) * (1/CV.x_value(z)) * (1/(CV.S_value(rs) + (CV.T_value(rs, pT, xF)/z))) * np.sum(e2 * f * d * ((CV.ss_value(z)**2 + CV.uu_value(z)**2) / (CV.tt_value(z)**2)))
 
 #z-integration for unpolarized cross-section
 def get_denom(xF, pT, rs, tar, had):
-    S = rs*rs
-    T = (-1 * rs) * math.sqrt((pT**2) + (xF**2 * 0.25 * S)) + (0.5 * xF * S)
-    U = (-1 * rs) * math.sqrt((pT**2) + (xF**2 * 0.25 * S)) - (0.5 * xF * S)
-    zmin = (-1 * (T + U)) / S
-
-    return quad(lambda z: get_unp(z, xF, pT, rs, tar, had), zmin, 1)[0]
+    return quad(lambda z: get_unp(z, xF, pT, rs, tar, had), CV.zmin_value(), 1)[0]
 
 #Code to create eqation for polarized cross-section
 def get_pol(z, xF, pT, rs, tar, had):
-    S = rs**2
-    T = (-1 * rs) * math.sqrt((pT**2) + (xF**2 * 0.25 * S)) + (0.5 * xF * S)
-    U = (-1 * rs) * math.sqrt((pT**2) + (xF**2 * 0.25 * S)) - (0.5 * xF * S)
-    Q2 = pT**2
-    x = (-1 * U / z) / (S + (T / z))
-    s = x*S
-    t = (x * T) / z
-    u = U / z
-
     if tar == 'p':
-        f = get_f(x, Q2)
-        f1Tp = get_f1Tp(x, Q2)
-        h = get_h(x, Q2)
+        f = get_f(CV.x_value(z), CV.Q2_value(pT))
+        f1Tp = get_f1Tp(CV.x_value(z), CV.Q2_value(pT))
+        h = get_h(CV.x_value(z), CV.Q2_value(pT))
     elif tar == 'n':
-        f = conf['aux'].p2n(get_f(x, Q2))
-        f1Tp = conf['aux'].p2n(get_f1Tp(x, Q2))
-        h = conf['aux'].p2n(get_h(x, Q2))
-
+        f = conf['aux'].p2n(get_f(CV.x_value(z), CV.Q2_value(pT)))
+        f1Tp = conf['aux'].p2n(get_f1Tp(CV.x_value(z), CV.Q2_value(pT)))
+        h = conf['aux'].p2n(get_h(CV.x_value(z), CV.Q2_value(pT)))
 
     if had.endswith('+'):
         had = had.strip('+')
-        d = get_d(z, Q2, had)
-        H1p = get_H1p(z, Q2, had)
-        H = get_H(z, Q2, had)
-
+        d = get_d(z, CV.Q2_value(pT), had)
+        H1p = get_H1p(z, CV.Q2_value(pT), had)
+        H = get_H(z, CV.Q2_value(pT), had)
     elif had.endswith('-'):
         had = had.strip('-')
-        d = conf['aux'].charge_conj(get_d(z, Q2, had))
-        H1p = conf['aux'].charge_conj(get_H1p(z, Q2, had))
-        H = conf['aux'].charge_conj(get_H(z, Q2, had))
-
+        d = conf['aux'].charge_conj(get_d(z, CV.Q2_value(pT), had))
+        H1p = conf['aux'].charge_conj(get_H1p(z, CV.Q2_value(pT), had))
+        H = conf['aux'].charge_conj(get_H(z, CV.Q2_value(pT), had))
     elif had.endswith('0'):
         had = had.strip('0')
-        plusd = get_d(z, Q2, had)
-        minusd = conf['aux'].charge_conj(get_d(z, Q2, had))
+        plusd = get_d(z, CV.Q2_value(pT), had)
+        minusd = conf['aux'].charge_conj(get_d(z, CV.Q2_value(pT), had))
         d = 0.5 * (plusd + minusd)
 
-        plusH1p = get_H1p(z, Q2, had)
-        minusH1p = conf['aux'].charge_conj(get_H1p(z, Q2, had))
+        plusH1p = get_H1p(z, CV.Q2_value(pT), had)
+        minusH1p = conf['aux'].charge_conj(get_H1p(z, CV.Q2_value(pT), had))
         H1p = 0.5 * (plusH1p + minusH1p)
 
-        plusH = get_H(z, Q2, had)
-        minusH = conf['aux'].charge_conj(get_H(z, Q2, had))
+        plusH = get_H(z, CV.Q2_value(pT), had)
+        minusH = conf['aux'].charge_conj(get_H(z, CV.Q2_value(pT), had))
         H = 0.5 * (plusH + minusH)
 
-    return (1/(z**3)) * (1/x) * ((-1 * 4 * pT) / (S + (T/z))) * np.sum(e2 * ((conf['aux'].M / u) * d * f1Tp * (0.5 * s *(s**2 + u**2) / (t**3)) + (conf['aux'].Mpi / t) * h * (H1p * ((s*u)/(t**2)) + (1/z)*H * ((s/(t**2))*(u-s)))))
+    return (1/(z**3)) * (1/CV.x_value(z)) * ((-1 * 4 * pT) / (CV.S_value(rs) + (CV.T_value(rs, pT, xF)/z))) * np.sum(e2 * ((conf['aux'].M / CV.uu_value(z)) * d * f1Tp * (0.5 * CV.ss_value(z) *(CV.ss_value(z)**2 + CV.uu_value(z)**2) / (CV.tt_value(z)**3)) + (conf['aux'].Mpi / CV.tt_value(z)) * h * (H1p * ((CV.ss_value(z)*CV.uu_value(z))/(CV.tt_value(z)**2)) + (1/z)*H * ((CV.ss_value(z)/(CV.tt_value(z)**2))*(CV.uu_value(z)-CV.ss_value(z))))))
 
 #z-integration of polarized cross-section
 def get_num(xF, pT, rs, tar, had):
-    S = rs*rs
-    T = (-1 * rs) * math.sqrt((pT**2) + (xF**2 * 0.25 * S)) + (0.5 * xF * S)
-    U = (-1 * rs) * math.sqrt((pT**2) + (xF**2 * 0.25 * S)) - (0.5 * xF * S)
-    zmin = (-1 * (T + U)) / S
-
-    return quad(lambda z: get_pol(z, xF, pT, rs, tar, had), zmin, 1)[0]
+    return quad(lambda z: get_pol(z, xF, pT, rs, tar, had), CV.zmin_value(), 1)[0]
 
 #Code for polarized cross-section Qiu-Sterman portion of equation
 def get_QS(z, xF, pT, rs, tar, had):
-    S = rs**2
-    T = (-1 * rs) * math.sqrt((pT**2) + (xF**2 * 0.25 * S)) + (0.5 * xF * S)
-    U = (-1 * rs) * math.sqrt((pT**2) + (xF**2 * 0.25 * S)) - (0.5 * xF * S)
-    Q2 = pT**2
-    x = (-1 * U / z) / (S + (T / z))
-    s = x*S
-    t = (x * T) / z
-    u = U / z
-
     if tar == 'p':
-        f1Tp = get_f1Tp(x, Q2)
+        f1Tp = get_f1Tp(CV.x_value(z), CV.Q2_value(pT))
     elif tar == 'n':
-        f1Tp = conf['aux'].p2n(get_f1Tp(x, Q2))
-
+        f1Tp = conf['aux'].p2n(get_f1Tp(CV.x_value(z), CV.Q2_value(pT)))
 
     if had.endswith('+'):
         had = had.strip('+')
-        d = get_d(z, Q2, had)
+        d = get_d(z, CV.Q2_value(pT), had)
     elif had.endswith('-'):
         had = had.strip('-')
-        d = conf['aux'].charge_conj(get_d(z, Q2, had))
+        d = conf['aux'].charge_conj(get_d(z, CV.Q2_value(pT), had))
     elif had.endswith('0'):
         had = had.strip('0')
 
-        plusd = get_d(z, Q2, had)
-        minusd = conf['aux'].charge_conj(get_d(z, Q2, had))
+        plusd = get_d(z, CV.Q2_value(pT), had)
+        minusd = conf['aux'].charge_conj(get_d(z, CV.Q2_value(pT), had))
         d = 0.5 * (plusd + minusd)
-    return (1/(z**3)) * (1/x) * ((-1 * 4 * pT) / (S + (T/z))) * np.sum(e2 * ((conf['aux'].M / u) * d * f1Tp * (0.5 * s *(s**2 + u**2) / (t**3))))
+    return (1/(z**3)) * (1/CV.x_value(z)) * ((-1 * 4 * pT) / (CV.S_value(rs) + (CV.T_value(rs, pT, xF)/z))) * np.sum(e2 * ((conf['aux'].M / CV.uu_value(z)) * d * f1Tp * (0.5 * CV.ss_value(z) *(CV.ss_value(z)**2 + CV.uu_value(z)**2) / (CV.tt_value(z)**3))))
 
 #z-integration of Qiu-Sterman polarized cross-section
 def get_numQS(xF, pT, rs, tar, had):
-    S = rs*rs
-    T = (-1 * rs) * math.sqrt((pT**2) + (xF**2 * 0.25 * S)) + (0.5 * xF * S)
-    U = (-1 * rs) * math.sqrt((pT**2) + (xF**2 * 0.25 * S)) - (0.5 * xF * S)
-    zmin = (-1 * (T + U)) / S
-
-    return quad(lambda z: get_QS(z, xF, pT, rs, tar, had), zmin, 1)[0]
-
-#Code for fragmentation of polarized cross-section equation
-def get_frag(z, xF, pT, rs, tar, had):
-    S = rs**2
-    T = (-1 * rs) * math.sqrt((pT**2) + (xF**2 * 0.25 * S)) + (0.5 * xF * S)
-    U = (-1 * rs) * math.sqrt((pT**2) + (xF**2 * 0.25 * S)) - (0.5 * xF * S)
-    Q2 = pT**2
-    x = (-1 * U / z) / (S + (T / z))
-    s = x*S
-    t = (x * T) / z
-    u = U / z
-
-    if tar == 'p':
-        h = get_h(x, Q2)
-    elif tar == 'n':
-        h = conf['aux'].p2n(get_h(x, Q2))
-
-    if had.endswith('+'):
-        had = had.strip('+')
-        H1p = get_H1p(z, Q2, had)
-        H = get_H(z, Q2, had)
-    elif had.endswith('-'):
-        had = had.strip('-')
-        H1p = conf['aux'].charge_conj(get_H1p(z, Q2, had))
-        H = conf['aux'].charge_conj(get_H(z, Q2, had))
-    elif had.endswith('0'):
-        had = had.strip('0')
-        plusH1p = get_H1p(z, Q2, had)
-        minusH1p = conf['aux'].charge_conj(get_H1p(z, Q2, had))
-        H1p = 0.5 * (plusH1p + minusH1p)
-
-        plusH = get_H(z, Q2, had)
-        minusH = conf['aux'].charge_conj(get_H(z, Q2, had))
-        H = 0.5 * (plusH + minusH)
-
-    return (1/(z**3)) * (1/x) * ((-1 * 4 * pT) / (S + (T/z))) * np.sum(e2 * ((conf['aux'].Mpi / t) * h * (H1p * ((s*u)/(t**2)) + (1/z)*H * ((s/(t**2))*(u-s)))))
+    return quad(lambda z: get_QS(z, xF, pT, rs, tar, had), CV.zmin_value(), 1)[0]
 
 #z-integration of fragmentation portion of polarized cross-section
 def get_numfrag(xF, pT, rs, tar, had):
-    S = rs*rs
-    T = (-1 * rs) * math.sqrt((pT**2) + (xF**2 * 0.25 * S)) + (0.5 * xF * S)
-    U = (-1 * rs) * math.sqrt((pT**2) + (xF**2 * 0.25 * S)) - (0.5 * xF * S)
-    zmin = (-1 * (T + U)) / S
-
-    return quad(lambda z: get_frag(z, xF, pT, rs, tar, had), zmin, 1)[0]
+    return quad(lambda z: get_frag(z, xF, pT, rs, tar, had), CV.zmin_value(), 1)[0]
 
 #Calculation of AN total
 def get_AN(xF, pT, rs, tar, had):
-    num = get_num(xF, pT, rs, tar, had)
-    denom = get_denom(xF, pT, rs, tar, had)
-
-    return num/denom
+    return get_num(xF, pT, rs, tar, had)/get_denom(xF, pT, rs, tar, had)
 
 #Calculation of AN fragmentation
 def get_ANfrag(xF, pT, rs, tar, had):
-    numfrag = get_numfrag(xF, pT, rs, tar, had)
-    denom = get_denom(xF, pT, rs, tar, had)
-
-    return numfrag/denom
+    return get_numfrag(xF, pT, rs, tar, had)/get_denom(xF, pT, rs, tar, had)
 
 #Calculation of AN Qiu-Sterman
 def get_ANQS(xF, pT, rs, tar, had):
-    numQS = get_numQS(xF, pT, rs, tar, had)
-    denom = get_denom(xF, pT, rs, tar, had)
-
-    return numQS/denom
-
+    return get_numQS(xF, pT, rs, tar, had)/get_denom(xF, pT, rs, tar, had)
 
 if __name__ == '__main__':
 
@@ -287,9 +246,12 @@ if __name__ == '__main__':
   conf['aux']= AUX()
   conf['pdf']=PDF0()
   conf['collinspi']=FF1('pi')
+  conf['dcollinspi']=FF1('pi','deriv')
+  conf['dcollinsk']=FF1('k','deriv')
   conf['Htildepi']=FF1('pi')
   conf['transversity']=PDF1()
   conf['sivers']=PDF1()
+  conf['dsivers']=PDF1('deriv')
   conf['ffpi']=FF0('pi')
 
   rs = 7.25

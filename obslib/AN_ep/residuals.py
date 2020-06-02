@@ -31,6 +31,7 @@ class RESIDUALS(_RESIDUALS):
         obs = self.tabs[k]['obs'][i].strip()
         col = self.tabs[k]['col'][i].strip().upper()
 
+
         if col=='HERMES': xF=-xF
 
         if obs == 'ANep':
