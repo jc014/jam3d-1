@@ -86,21 +86,21 @@ class Class_Variables():    #Declaring all the class methods that are referenced
     def Q2_value(cls, pT):
         return pT**2
     @classmethod
-    def zmin_value(cls):
+    def zmin_value(cls, rs, pT, xF): #zmin
         return (-1 * (CV.T_value(rs, pT, xF) + CV.U_value(rs, pT, xF))) / CV.S_value(rs)
     @classmethod
-    def x_value(cls, z):
+    def x_value(cls, z, rs, pT, xF): #x
         return (-1 * CV.U_value(rs, pT, xF) / z) / (CV.S_value(rs) + (CV.T_value(rs, pT, xF) / z))
     @classmethod
-    def ss_value(cls, z):
+    def ss_value(cls, z, rs, pT, xF): #s
         return CV.x_value(z)*CV.S_value(rs)
     @classmethod
-    def tt_value(cls, z):
+    def tt_value(cls, z, rs, pT, xF): #t
         return (CV.x_value(z) * CV.T_value(rs, pT, xF)) / z
     @classmethod
-    def uu_value(cls, z):
+    def uu_value(cls, z, rs, pT, xF): #u
         return CV.U_value(rs, pT, xF) / z
-
+        
 CV = Class_Variables() #declare Class Frag_Pol as a variable in order to utilize class methods
 
 def get_frag(z, xF, pT, rs, tar, had):#Code for fragmentation of polarized cross-section equation
@@ -128,7 +128,7 @@ def get_frag(z, xF, pT, rs, tar, had):#Code for fragmentation of polarized cross
         H = 0.5 * (plusH + minusH)
 
     return (1/(z**3)) * (1/CV.x_value(z)) * ((-1 * 4 * pT) / (CV.S_value(rs) + (CV.T_value(rs, pT, xF)/z))) * np.sum(e2 * ((conf['aux'].Mpi / CV.tt_value(z)) * h * (H1p * ((CV.ss_value(z)*CV.uu_value(z))/(CV.tt_value(z)**2)) + (1/z)*H * ((CV.ss_value(z)/(CV.tt_value(z)**2))*(CV.uu_value(z)-CV.ss_value(z))))))
-    
+
 #Code for generic values for AN
 #Code to create equation for unpolarized cross-section
 def get_unp(z, xF, pT, rs, tar, had):

@@ -74,34 +74,34 @@ def get_f1Tp(x, Q2): # (f_1T^{\perp(1)}(x) - x*df_1T^{\perp(1)}(x)/dx)
 
 class Class_Variables():    #Declaring all the class methods that are referenced throughout
     @classmethod
-    def S_value(cls, rs):
+    def S_value(cls, rs): #S
         return rs**2
     @classmethod
-    def T_value(cls, rs, pT, xF):
+    def T_value(cls, rs, pT, xF): #T
         return (-1 * rs) * math.sqrt((pT**2) + (xF**2 * 0.25 * CV.S_value(rs))) + (0.5 * xF * CV.S_value(rs))
     @classmethod
-    def U_value(cls, rs, pT, xF):
+    def U_value(cls, rs, pT, xF): #U
         return (-1 * rs) * math.sqrt((pT**2) + (xF**2 * 0.25 * CV.S_value(rs))) - (0.5 * xF * CV.S_value(rs))
     @classmethod
-    def Q2_value(cls, pT):
+    def Q2_value(cls, pT): #Q2
         return pT**2
     @classmethod
-    def zmin_value(cls):
+    def zmin_value(cls, rs, pT, xF): #zmin
         return (-1 * (CV.T_value(rs, pT, xF) + CV.U_value(rs, pT, xF))) / CV.S_value(rs)
     @classmethod
-    def x_value(cls, z):
+    def x_value(cls, z, rs, pT, xF): #x
         return (-1 * CV.U_value(rs, pT, xF) / z) / (CV.S_value(rs) + (CV.T_value(rs, pT, xF) / z))
     @classmethod
-    def ss_value(cls, z):
+    def ss_value(cls, z, rs, pT, xF): #s
         return CV.x_value(z)*CV.S_value(rs)
     @classmethod
-    def tt_value(cls, z):
+    def tt_value(cls, z, rs, pT, xF): #t
         return (CV.x_value(z) * CV.T_value(rs, pT, xF)) / z
     @classmethod
-    def uu_value(cls, z):
+    def uu_value(cls, z, rs, pT, xF): #u
         return CV.U_value(rs, pT, xF) / z
 
-CV = Class_Variables() #declare Class Frag_Pol as a variable in order to utilize class methods
+CV = Class_Variables() #declare Class Class_Variables as a variable in order to utilize class methods
 
 def get_frag(z, xF, pT, rs, tar, had):#Code for fragmentation of polarized cross-section equation
     if tar == 'p':
@@ -128,7 +128,6 @@ def get_frag(z, xF, pT, rs, tar, had):#Code for fragmentation of polarized cross
         H = 0.5 * (plusH + minusH)
 
     return (1/(z**3)) * (1/CV.x_value(z)) * ((-1 * 4 * pT) / (CV.S_value(rs) + (CV.T_value(rs, pT, xF)/z))) * np.sum(e2 * ((conf['aux'].Mpi / CV.tt_value(z)) * h * (H1p * ((CV.ss_value(z)*CV.uu_value(z))/(CV.tt_value(z)**2)) + (1/z)*H * ((CV.ss_value(z)/(CV.tt_value(z)**2))*(CV.uu_value(z)-CV.ss_value(z))))))
-    
 #Code for generic values for AN
 #Code to create equation for unpolarized cross-section
 def get_unp(z, xF, pT, rs, tar, had):
