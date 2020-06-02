@@ -37,9 +37,7 @@ class RESIDUALS(_RESIDUALS):
         if obs == 'ANep':
             thy = ANep_theory.get_AN(xF, pT, rs, target, hadron)
 
-            #print hadron,pT,thy
-
-        return k, i, thy
+        return thy
 
     def gen_report(self, verb=1, level=1):
         """
