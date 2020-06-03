@@ -74,16 +74,16 @@ def get_f1Tp(x, Q2): # (f_1T^{\perp(1)}(x) - x*df_1T^{\perp(1)}(x)/dx)
 
 class Class_Variables():    #Declaring all the class methods that are referenced throughout
     @classmethod
-    def S_value(cls, rs):
+    def S_value(cls, rs): #S
         return rs**2
     @classmethod
-    def T_value(cls, rs, pT, xF):
+    def T_value(cls, rs, pT, xF): #T
         return (-1 * rs) * math.sqrt((pT**2) + (xF**2 * 0.25 * CV.S_value(rs))) + (0.5 * xF * CV.S_value(rs))
     @classmethod
-    def U_value(cls, rs, pT, xF):
+    def U_value(cls, rs, pT, xF): #U
         return (-1 * rs) * math.sqrt((pT**2) + (xF**2 * 0.25 * CV.S_value(rs))) - (0.5 * xF * CV.S_value(rs))
     @classmethod
-    def Q2_value(cls, pT):
+    def Q2_value(cls, pT): #Q2
         return pT**2
     @classmethod
     def zmin_value(cls, rs, pT, xF): #zmin
@@ -93,21 +93,21 @@ class Class_Variables():    #Declaring all the class methods that are referenced
         return (-1 * CV.U_value(rs, pT, xF) / z) / (CV.S_value(rs) + (CV.T_value(rs, pT, xF) / z))
     @classmethod
     def ss_value(cls, z, rs, pT, xF): #s
-        return CV.x_value(z, rs, pT, xF)*CV.S_value(rs)
+        return CV.x_value(z)*CV.S_value(rs)
     @classmethod
     def tt_value(cls, z, rs, pT, xF): #t
-        return (CV.x_value(z, rs, pT, xF) * CV.T_value(rs, pT, xF)) / z
+        return (CV.x_value(z) * CV.T_value(rs, pT, xF)) / z
     @classmethod
     def uu_value(cls, z, rs, pT, xF): #u
         return CV.U_value(rs, pT, xF) / z
 
-CV = Class_Variables() #declare Class Frag_Pol as a variable in order to utilize class methods
+CV = Class_Variables() #declare Class Class_Variables as a variable in order to utilize class methods
 
 def get_frag(z, xF, pT, rs, tar, had):#Code for fragmentation of polarized cross-section equation
     if tar == 'p':
-        h = get_h(CV.x_value(z, rs, pT, xF), CV.Q2_value(pT))
+        h = get_h(CV.x_value(z), CV.Q2_value(pT))
     elif tar == 'n':
-        h = conf['aux'].p2n(get_h(CV.x_value(z, rs, pT, xF), CV.Q2_value(pT)))
+        h = conf['aux'].p2n(get_h(CV.x_value(z), CV.Q2_value(pT)))
 
     if had.endswith('+'):
         had = had.strip('+')
@@ -127,15 +127,14 @@ def get_frag(z, xF, pT, rs, tar, had):#Code for fragmentation of polarized cross
         minusH = conf['aux'].charge_conj(get_H(z, CV.Q2_value(pT), had))
         H = 0.5 * (plusH + minusH)
 
-    return (1/(z**3)) * (1/CV.x_value(z, rs, pT, xF)) * ((-1 * 4 * pT) / (CV.S_value(rs) + (CV.T_value(rs, pT, xF)/z))) * np.sum(e2 * ((conf['aux'].Mpi / CV.tt_value(z, rs, pT, xF)) * h * (H1p * ((CV.ss_value(z, rs, pT, xF)*CV.uu_value(z, rs, pT, xF))/(CV.tt_value(z, rs, pT, xF)**2)) + (1/z)*H * ((CV.ss_value(z, rs, pT, xF)/(CV.tt_value(z, rs, pT, xF)**2))*(CV.uu_value(z, rs, pT, xF)-CV.ss_value(z, rs, pT, xF))))))
-
+    return (1/(z**3)) * (1/CV.x_value(z)) * ((-1 * 4 * pT) / (CV.S_value(rs) + (CV.T_value(rs, pT, xF)/z))) * np.sum(e2 * ((conf['aux'].Mpi / CV.tt_value(z)) * h * (H1p * ((CV.ss_value(z)*CV.uu_value(z))/(CV.tt_value(z)**2)) + (1/z)*H * ((CV.ss_value(z)/(CV.tt_value(z)**2))*(CV.uu_value(z)-CV.ss_value(z))))))
 #Code for generic values for AN
 #Code to create equation for unpolarized cross-section
 def get_unp(z, xF, pT, rs, tar, had):
     if tar == 'p':
-        f = get_f(CV.x_value(z, rs, pT, xF), CV.Q2_value(pT))
+        f = get_f(CV.x_value(z), CV.Q2_value(pT))
     elif tar == 'n':
-        f = conf['aux'].p2n(get_f(CV.x_value(z, rs, pT, xF), CV.Q2_value(pT)))
+        f = conf['aux'].p2n(get_f(CV.x_value(z), CV.Q2_value(pT)))
 
     if had.endswith('+'):
         had = had.strip('+')
@@ -149,22 +148,22 @@ def get_unp(z, xF, pT, rs, tar, had):
         minus = conf['aux'].charge_conj(get_d(z, CV.Q2_value(pT), had))
         d = 0.5 * (plus + minus)
 
-    return (1/(z**2)) * (1/CV.x_value(z, rs, pT, xF)) * (1/(CV.S_value(rs) + (CV.T_value(rs, pT, xF)/z))) * np.sum(e2 * f * d * ((CV.ss_value(z, rs, pT, xF)**2 + CV.uu_value(z, rs, pT, xF)**2) / (CV.tt_value(z, rs, pT, xF)**2)))
+    return (1/(z**2)) * (1/CV.x_value(z)) * (1/(CV.S_value(rs) + (CV.T_value(rs, pT, xF)/z))) * np.sum(e2 * f * d * ((CV.ss_value(z)**2 + CV.uu_value(z)**2) / (CV.tt_value(z)**2)))
 
 #z-integration for unpolarized cross-section
 def get_denom(xF, pT, rs, tar, had):
-    return quad(lambda z: get_unp(z, xF, pT, rs, tar, had), CV.zmin_value(rs, pT, xF), 1)[0]
+    return quad(lambda z: get_unp(z, xF, pT, rs, tar, had), CV.zmin_value(), 1)[0]
 
 #Code to create eqation for polarized cross-section
 def get_pol(z, xF, pT, rs, tar, had):
     if tar == 'p':
-        f = get_f(CV.x_value(z, rs, pT, xF), CV.Q2_value(pT))
-        f1Tp = get_f1Tp(CV.x_value(z, rs, pT, xF), CV.Q2_value(pT))
-        h = get_h(CV.x_value(z, rs, pT, xF), CV.Q2_value(pT))
+        f = get_f(CV.x_value(z), CV.Q2_value(pT))
+        f1Tp = get_f1Tp(CV.x_value(z), CV.Q2_value(pT))
+        h = get_h(CV.x_value(z), CV.Q2_value(pT))
     elif tar == 'n':
-        f = conf['aux'].p2n(get_f(CV.x_value(z, rs, pT, xF), CV.Q2_value(pT)))
-        f1Tp = conf['aux'].p2n(get_f1Tp(CV.x_value(z, rs, pT, xF), CV.Q2_value(pT)))
-        h = conf['aux'].p2n(get_h(CV.x_value(z, rs, pT, xF), CV.Q2_value(pT)))
+        f = conf['aux'].p2n(get_f(CV.x_value(z), CV.Q2_value(pT)))
+        f1Tp = conf['aux'].p2n(get_f1Tp(CV.x_value(z), CV.Q2_value(pT)))
+        h = conf['aux'].p2n(get_h(CV.x_value(z), CV.Q2_value(pT)))
 
     if had.endswith('+'):
         had = had.strip('+')
@@ -190,18 +189,18 @@ def get_pol(z, xF, pT, rs, tar, had):
         minusH = conf['aux'].charge_conj(get_H(z, CV.Q2_value(pT), had))
         H = 0.5 * (plusH + minusH)
 
-    return (1/(z**3)) * (1/CV.x_value(z, rs, pT, xF)) * ((-1 * 4 * pT) / (CV.S_value(rs) + (CV.T_value(rs, pT, xF)/z))) * np.sum(e2 * ((conf['aux'].M / CV.uu_value(z, rs, pT, xF)) * d * f1Tp * (0.5 * CV.ss_value(z, rs, pT, xF) *(CV.ss_value(z, rs, pT, xF)**2 + CV.uu_value(z, rs, pT, xF)**2) / (CV.tt_value(z, rs, pT, xF)**3)) + (conf['aux'].Mpi / CV.tt_value(z, rs, pT, xF)) * h * (H1p * ((CV.ss_value(z, rs, pT, xF)*CV.uu_value(z, rs, pT, xF))/(CV.tt_value(z, rs, pT, xF)**2)) + (1/z)*H * ((CV.ss_value(z, rs, pT, xF)/(CV.tt_value(z, rs, pT, xF)**2))*(CV.uu_value(z, rs, pT, xF)-CV.ss_value(z, rs, pT, xF))))))
+    return (1/(z**3)) * (1/CV.x_value(z)) * ((-1 * 4 * pT) / (CV.S_value(rs) + (CV.T_value(rs, pT, xF)/z))) * np.sum(e2 * ((conf['aux'].M / CV.uu_value(z)) * d * f1Tp * (0.5 * CV.ss_value(z) *(CV.ss_value(z)**2 + CV.uu_value(z)**2) / (CV.tt_value(z)**3)) + (conf['aux'].Mpi / CV.tt_value(z)) * h * (H1p * ((CV.ss_value(z)*CV.uu_value(z))/(CV.tt_value(z)**2)) + (1/z)*H * ((CV.ss_value(z)/(CV.tt_value(z)**2))*(CV.uu_value(z)-CV.ss_value(z))))))
 
 #z-integration of polarized cross-section
 def get_num(xF, pT, rs, tar, had):
-    return quad(lambda z: get_pol(z, xF, pT, rs, tar, had), CV.zmin_value(rs, pT, xF), 1)[0]
+    return quad(lambda z: get_pol(z, xF, pT, rs, tar, had), CV.zmin_value(), 1)[0]
 
 #Code for polarized cross-section Qiu-Sterman portion of equation
 def get_QS(z, xF, pT, rs, tar, had):
     if tar == 'p':
-        f1Tp = get_f1Tp(CV.x_value(z, rs, pT, xF), CV.Q2_value(pT))
+        f1Tp = get_f1Tp(CV.x_value(z), CV.Q2_value(pT))
     elif tar == 'n':
-        f1Tp = conf['aux'].p2n(get_f1Tp(CV.x_value(z, rs, pT, xF), CV.Q2_value(pT)))
+        f1Tp = conf['aux'].p2n(get_f1Tp(CV.x_value(z), CV.Q2_value(pT)))
 
     if had.endswith('+'):
         had = had.strip('+')
@@ -215,15 +214,15 @@ def get_QS(z, xF, pT, rs, tar, had):
         plusd = get_d(z, CV.Q2_value(pT), had)
         minusd = conf['aux'].charge_conj(get_d(z, CV.Q2_value(pT), had))
         d = 0.5 * (plusd + minusd)
-    return (1/(z**3)) * (1/CV.x_value(z, rs, pT, xF)) * ((-1 * 4 * pT) / (CV.S_value(rs) + (CV.T_value(rs, pT, xF)/z))) * np.sum(e2 * ((conf['aux'].M / CV.uu_value(z, rs, pT, xF)) * d * f1Tp * (0.5 * CV.ss_value(z, rs, pT, xF) *(CV.ss_value(z, rs, pT, xF)**2 + CV.uu_value(z, rs, pT, xF)**2) / (CV.tt_value(z, rs, pT, xF)**3))))
+    return (1/(z**3)) * (1/CV.x_value(z)) * ((-1 * 4 * pT) / (CV.S_value(rs) + (CV.T_value(rs, pT, xF)/z))) * np.sum(e2 * ((conf['aux'].M / CV.uu_value(z)) * d * f1Tp * (0.5 * CV.ss_value(z) *(CV.ss_value(z)**2 + CV.uu_value(z)**2) / (CV.tt_value(z)**3))))
 
 #z-integration of Qiu-Sterman polarized cross-section
 def get_numQS(xF, pT, rs, tar, had):
-    return quad(lambda z: get_QS(z, xF, pT, rs, tar, had), CV.zmin_value(rs, pT, xF), 1)[0]
+    return quad(lambda z: get_QS(z, xF, pT, rs, tar, had), CV.zmin_value(), 1)[0]
 
 #z-integration of fragmentation portion of polarized cross-section
 def get_numfrag(xF, pT, rs, tar, had):
-    return quad(lambda z: get_frag(z, xF, pT, rs, tar, had), CV.zmin_value(rs, pT, xF), 1)[0]
+    return quad(lambda z: get_frag(z, xF, pT, rs, tar, had), CV.zmin_value(), 1)[0]
 
 #Calculation of AN total
 def get_AN(xF, pT, rs, tar, had):
