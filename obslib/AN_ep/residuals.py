@@ -35,8 +35,8 @@ class RESIDUALS(_RESIDUALS):
         if col=='HERMES': xF=-xF
 
         if obs == 'ANep':
-            #thy = ANep_theory.get_AN(xF, pT, rs, target, hadron)
             thy = ANep_theory.get_ANfrag(xF, pT, rs, target, hadron)
+            #thy = ANep_theory.get_ANfrag(xF, pT, rs, target, hadron)
 
             #print hadron,pT,thy
 
