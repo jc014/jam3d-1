@@ -11,6 +11,11 @@ from tools.config import conf
 from scipy.integrate import quad
 
 
+###########
+conf['tmc'] = True
+###########
+
+
 #AN_theory0.py - program to calculate A_N in ep -> hX (see 1407.5078, 1701.09170)
 
 flavor = ['g','u','ub','d','db','s','sb']
@@ -126,17 +131,21 @@ class Class_Variables_TMC():    #Declaring all the class methods that are refere
     @classmethod
     def tt_value(cls, z, rs, pT, xF): #t
         if CV.T_value > 0:
-            return (CV.x_value/(2*z))*(CV.T_value(rs, pT, xF) - (conf['aux'].M**2) - (conf['aux'].Mpi**2) + math.sqrt((conf['aux']**4) - ((2 * (conf['aux'].M**2)) * ((conf['aux'].Mpi**2) + (2 * pT * pT) + CV.T_value(rs, pT, xF))) + (((conf['aux'].Mpi**2) - CV.T_value(rs, pT, xF))**2)))
+            return (CV.x_value(z, rs, pT, xF)/(2*z))*(CV.T_value(rs, pT, xF) - (conf['aux'].M**2) - (conf['aux'].Mpi**2) + math.sqrt((conf['aux'].M**4) - ((2 * (conf['aux'].M**2)) * ((conf['aux'].Mpi**2) + (2 * pT * pT) + CV.T_value(rs, pT, xF))) + (((conf['aux'].Mpi**2) - CV.T_value(rs, pT, xF))**2)))
         elif CV.T_value < 0:
-            return (CV.x_value/(2*z))*(CV.T_value(rs, pT, xF) - (conf['aux'].M**2) - (conf['aux'].Mpi**2) - math.sqrt((conf['aux']**4) - ((2 * (conf['aux'].M**2)) * ((conf['aux'].Mpi**2) + (2 * pT * pT) + CV.T_value(rs, pT, xF))) + (((conf['aux'].Mpi**2) - CV.T_value(rs, pT, xF))**2)))
+            return (CV.x_value(z, rs, pT, xF)/(2*z))*(CV.T_value(rs, pT, xF) - (conf['aux'].M**2) - (conf['aux'].Mpi**2) - math.sqrt((conf['aux'].M**4) - ((2 * (conf['aux'].M**2)) * ((conf['aux'].Mpi**2) + (2 * pT * pT) + CV.T_value(rs, pT, xF))) + (((conf['aux'].Mpi**2) - CV.T_value(rs, pT, xF))**2)))
     @classmethod
     def uu_value(cls, z, rs, pT, xF): #u
         return ((pT**2)*(CV.U_value(rs, pT, xF) - (conf['aux'].Mpi**2))) / (z * ((conf['aux'].Mpi**2) + (pT**2)))
+
+
 
 if conf['tmc'] == False:
     CV = Class_Variables() #declare Class_Variables as a variable in order to utilize class methods
 elif conf['tmc'] == True:
     CV = Class_Variables_TMC()
+
+
 
 def get_frag(z, xF, pT, rs, tar, had):#Code for fragmentation of polarized cross-section equation
     if tar == 'p':
