@@ -112,28 +112,28 @@ class Class_Variables_TMC():    #Declaring all the class methods that are refere
         return rs**2
     @classmethod
     def T_value(cls, rs, pT, xF):
-        return (conf['aux'].Mpi**2) + (0.5 *(conf['aux'].M*(((-math.sqrt(4 * ((conf['aux'].Mpi**2) + (pT**2)) + (xF*xF*CV.S_value(rs))))/rs) - xF + 2))-(rs * math.sqrt(4*((conf['aux'].Mpi**2) + (pT**2)) + (xF*xF*CV.S_value(rs))) + (xF*CV.S_value(rs))))
+        return (conf['aux'].Mpi**2) + (0.5 *(conf['aux'].M*(((-math.sqrt(4.0 * ((conf['aux'].Mpi**2) + (pT**2)) + (xF*xF*CV.S_value(rs))))/rs) - xF + 2.0))-(rs * math.sqrt(4.0*((conf['aux'].Mpi**2) + (pT**2)) + (xF*xF*CV.S_value(rs))) + (xF*CV.S_value(rs))))
     @classmethod
     def U_value(cls, rs, pT, xF):
-        return (conf['aux'].Mpi**2) - (((CV.S_value(rs) - (conf['aux'].M**2))/(2 * rs)) * (math.sqrt(4 * ((conf['aux'].Mpi**2) + (pT**2)) + (xF*xF*CV.S_value(rs))) + (xF * rs)))
+        return (conf['aux'].Mpi**2) - (((CV.S_value(rs) - (conf['aux'].M**2))/(2.0 * rs)) * (math.sqrt(4.0 * ((conf['aux'].Mpi**2) + (pT**2)) + (xF*xF*CV.S_value(rs))) + (xF * rs)))
     @classmethod
     def Q2_value(cls, pT):
         return pT**2
     @classmethod
     def zmin_value(cls, rs, pT, xF): #zmin
-        return (-1 * (CV.T_value(rs, pT, xF) + CV.U_value(rs, pT, xF))) / CV.S_value(rs)
+        return (-1.0 * (CV.T_value(rs, pT, xF) + CV.U_value(rs, pT, xF))) / CV.S_value(rs)
     @classmethod
     def x_value(cls, z, rs, pT, xF): #x
-        return (-1 * CV.U_value(rs, pT, xF) / z) / (CV.S_value(rs) + (CV.T_value(rs, pT, xF) / z))
+        return (-1.0 * CV.U_value(rs, pT, xF) / z) / (CV.S_value(rs) + (CV.T_value(rs, pT, xF) / z))
     @classmethod
     def ss_value(cls, z, rs, pT, xF): #s
         return CV.x_value(z, rs, pT, xF)*(CV.S_value(rs)-(conf['aux'].M**2))
     @classmethod
     def tt_value(cls, z, rs, pT, xF): #t
         if CV.T_value > 0:
-            return (CV.x_value(z, rs, pT, xF)/(2*z))*(CV.T_value(rs, pT, xF) - (conf['aux'].M**2) - (conf['aux'].Mpi**2) + math.sqrt((conf['aux'].M**4) - ((2 * (conf['aux'].M**2)) * ((conf['aux'].Mpi**2) + (2 * pT * pT) + CV.T_value(rs, pT, xF))) + (((conf['aux'].Mpi**2) - CV.T_value(rs, pT, xF))**2)))
+            return (CV.x_value(z, rs, pT, xF)/(2*z))*(CV.T_value(rs, pT, xF) - (conf['aux'].M**2) - (conf['aux'].Mpi**2) + math.sqrt((conf['aux'].M**4) - ((2.0 * (conf['aux'].M**2)) * ((conf['aux'].Mpi**2) + (2.0 * pT * pT) + CV.T_value(rs, pT, xF))) + (((conf['aux'].Mpi**2) - CV.T_value(rs, pT, xF))**2)))
         elif CV.T_value < 0:
-            return (CV.x_value(z, rs, pT, xF)/(2*z))*(CV.T_value(rs, pT, xF) - (conf['aux'].M**2) - (conf['aux'].Mpi**2) - math.sqrt((conf['aux'].M**4) - ((2 * (conf['aux'].M**2)) * ((conf['aux'].Mpi**2) + (2 * pT * pT) + CV.T_value(rs, pT, xF))) + (((conf['aux'].Mpi**2) - CV.T_value(rs, pT, xF))**2)))
+            return (CV.x_value(z, rs, pT, xF)/(2*z))*(CV.T_value(rs, pT, xF) - (conf['aux'].M**2) - (conf['aux'].Mpi**2) - math.sqrt((conf['aux'].M**4) - ((2.0 * (conf['aux'].M**2)) * ((conf['aux'].Mpi**2) + (2.0 * pT * pT) + CV.T_value(rs, pT, xF))) + (((conf['aux'].Mpi**2) - CV.T_value(rs, pT, xF))**2)))
     @classmethod
     def uu_value(cls, z, rs, pT, xF): #u
         return ((pT**2)*(CV.U_value(rs, pT, xF) - (conf['aux'].Mpi**2))) / (z * ((conf['aux'].Mpi**2) + (pT**2)))
@@ -197,7 +197,7 @@ def get_unp(z, xF, pT, rs, tar, had):
 
 #z-integration for unpolarized cross-section
 def get_denom(xF, pT, rs, tar, had):
-    return quad(lambda z: get_unp(z, xF, pT, rs, tar, had), CV.zmin_value(rs, pT, xF), 1)[0]
+    return quad(lambda z: get_unp(z, xF, pT, rs, tar, had), CV.zmin_value(rs, pT, xF), 1, limit = 150)[0]
 
 #Code to create eqation for polarized cross-section
 def get_pol(z, xF, pT, rs, tar, had):
@@ -238,7 +238,7 @@ def get_pol(z, xF, pT, rs, tar, had):
 
 #z-integration of polarized cross-section
 def get_num(xF, pT, rs, tar, had):
-    return quad(lambda z: get_pol(z, xF, pT, rs, tar, had), CV.zmin_value(rs, pT, xF), 1)[0]
+    return quad(lambda z: get_pol(z, xF, pT, rs, tar, had), CV.zmin_value(rs, pT, xF), 1, limit = 150)[0]
 
 #Code for polarized cross-section Qiu-Sterman portion of equation
 def get_QS(z, xF, pT, rs, tar, had):
@@ -263,11 +263,11 @@ def get_QS(z, xF, pT, rs, tar, had):
 
 #z-integration of Qiu-Sterman polarized cross-section
 def get_numQS(xF, pT, rs, tar, had):
-    return quad(lambda z: get_QS(z, xF, pT, rs, tar, had), CV.zmin_value(rs, pT, xF), 1)[0]
+    return quad(lambda z: get_QS(z, xF, pT, rs, tar, had), CV.zmin_value(rs, pT, xF), 1, limit =150)[0]
 
 #z-integration of fragmentation portion of polarized cross-section
 def get_numfrag(xF, pT, rs, tar, had):
-    return quad(lambda z: get_frag(z, xF, pT, rs, tar, had), CV.zmin_value(rs, pT, xF), 1)[0]
+    return quad(lambda z: get_frag(z, xF, pT, rs, tar, had), CV.zmin_value(rs, pT, xF), 1, limit = 150)[0]
 
 #Calculation of AN total
 def get_AN(xF, pT, rs, tar, had):
