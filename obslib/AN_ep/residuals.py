@@ -32,11 +32,14 @@ class RESIDUALS(_RESIDUALS):
         col = self.tabs[k]['col'][i].strip().upper()
 
 
-        if col=='HERMES': xF=-xF
+        if col=='HERMES' or col=='COMPASS' or col=='JLAB12': xF=-xF
 
         if obs == 'ANep':
-            #thy = ANep_theory.get_AN(xF, pT, rs, target, hadron)
-            thy = ANep_theory.get_ANfrag(xF, pT, rs, target, hadron)
+
+            thy = ANep_theory.get_AN(xF, pT, rs, target, hadron)
+            #thy = ANep_theory.get_ANfrag(xF, pT, rs, target, hadron)
+
+            #print hadron,pT,thy
 
         return thy
 
