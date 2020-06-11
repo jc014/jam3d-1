@@ -12,7 +12,7 @@ from scipy.integrate import quad
 
 
 ###########
-conf['tmc'] = True
+conf['tmc'] = False
 ###########
 
 
@@ -112,7 +112,7 @@ class Class_Variables_TMC():    #Declaring all the class methods that are refere
         return rs**2
     @classmethod
     def T_value(cls, rs, pT, xF):
-        return (conf['aux'].Mpi**2) + 0.5 *(((conf['aux'].M**2)*(((-math.sqrt(4.0 * ((conf['aux'].Mpi**2) + (pT**2)) + (xF*xF*CV.S_value(rs))))/rs) - xF + 2.0))-(rs * math.sqrt(4.0*((conf['aux'].Mpi**2) + (pT**2)) + (xF*xF*CV.S_value(rs))) + (xF*CV.S_value(rs))))
+        return (conf['aux'].Mpi**2) + 0.5 *(((conf['aux'].M**2)*(((-math.sqrt(4.0 * ((conf['aux'].Mpi**2) + (pT**2)) + (xF*xF*CV.S_value(rs))))/rs) - xF + 2.0))-(rs * math.sqrt(4.0*((conf['aux'].Mpi**2) + (pT**2)) + (xF*xF*CV.S_value(rs)))) + (xF*CV.S_value(rs)))
     @classmethod
     def U_value(cls, rs, pT, xF):
         return (conf['aux'].Mpi**2) - (((CV.S_value(rs) - (conf['aux'].M**2))/(2.0 * rs)) * (math.sqrt(4.0 * ((conf['aux'].Mpi**2) + (pT**2)) + (xF*xF*CV.S_value(rs))) + (xF * rs)))
@@ -130,7 +130,7 @@ class Class_Variables_TMC():    #Declaring all the class methods that are refere
         return CV.x_value(z, rs, pT, xF)*(CV.S_value(rs)-(conf['aux'].M**2))
     @classmethod
     def tt_value(cls, z, rs, pT, xF): #t
-        if CV.T_value > 0:
+        if CV.T_value >= 0:
             return (CV.x_value(z, rs, pT, xF)/(2.0*z))*(CV.T_value(rs, pT, xF) - (conf['aux'].M**2) - (conf['aux'].Mpi**2) + math.sqrt((conf['aux'].M**4) - ((2.0 * (conf['aux'].M**2)) * ((conf['aux'].Mpi**2) + (2.0 * pT * pT) + CV.T_value(rs, pT, xF))) + (((conf['aux'].Mpi**2) - CV.T_value(rs, pT, xF))**2)))
         elif CV.T_value < 0:
             return (CV.x_value(z, rs, pT, xF)/(2.0*z))*(CV.T_value(rs, pT, xF) - (conf['aux'].M**2) - (conf['aux'].Mpi**2) - math.sqrt((conf['aux'].M**4) - ((2.0 * (conf['aux'].M**2)) * ((conf['aux'].Mpi**2) + (2.0 * pT * pT) + CV.T_value(rs, pT, xF))) + (((conf['aux'].Mpi**2) - CV.T_value(rs, pT, xF))**2)))
