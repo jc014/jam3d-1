@@ -130,9 +130,9 @@ class Class_Variables_TMC():    #Declaring all the class methods that are refere
         return CV.x_value(z, rs, pT, xF)*(CV.S_value(rs)-(conf['aux'].M**2))
     @classmethod
     def tt_value(cls, z, rs, pT, xF): #t
-        if CV.T_value >= 0:
+        if CV.T_value(rs, pT, xF) > 0:
             return (CV.x_value(z, rs, pT, xF)/(2.0*z))*(CV.T_value(rs, pT, xF) - (conf['aux'].M**2) - (conf['aux'].Mpi**2) + math.sqrt((conf['aux'].M**4) - ((2.0 * (conf['aux'].M**2)) * ((conf['aux'].Mpi**2) + (2.0 * pT * pT) + CV.T_value(rs, pT, xF))) + (((conf['aux'].Mpi**2) - CV.T_value(rs, pT, xF))**2)))
-        elif CV.T_value < 0:
+        elif CV.T_value(rs, pT, xF) < 0:
             return (CV.x_value(z, rs, pT, xF)/(2.0*z))*(CV.T_value(rs, pT, xF) - (conf['aux'].M**2) - (conf['aux'].Mpi**2) - math.sqrt((conf['aux'].M**4) - ((2.0 * (conf['aux'].M**2)) * ((conf['aux'].Mpi**2) + (2.0 * pT * pT) + CV.T_value(rs, pT, xF))) + (((conf['aux'].Mpi**2) - CV.T_value(rs, pT, xF))**2)))
     @classmethod
     def uu_value(cls, z, rs, pT, xF): #u
