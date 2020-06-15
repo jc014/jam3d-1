@@ -70,9 +70,9 @@ def get_H1p(z, Q2, had): # (H_1^{\perp(1)}(z) - z*dH_1^{\perp(1)}(z)/dz)
 
 def get_H(z, Q2, had): # -2*z*H_1^{\perp(1)}(z)+\tilde{H}(z)
   if 'pi' in had:
-      return -2. * z * conf['collinspi'].get_C(z,Q2) + conf['Htildepi'].get_C(z, Q2)
+      return -2. * z * conf['collinspi'].get_C(z,Q2) - conf['collinspi'].get_C(z, Q2)
   elif 'k' in had:
-      return -2. * z * conf['collinsk'].get_C(z,Q2) + conf['Htildek'].get_C(z, Q2)
+      return -2. * z * conf['collinsk'].get_C(z,Q2) - conf['collinsk'].get_C(z, Q2)
 
 def get_f1Tp(x, Q2): # (f_1T^{\perp(1)}(x) - x*df_1T^{\perp(1)}(x)/dx)
     return conf['sivers'].get_C(x, Q2) - x * conf['dsivers'].get_C(x, Q2)
