@@ -32,11 +32,10 @@ class RESIDUALS(_RESIDUALS):
         col = self.tabs[k]['col'][i].strip().upper()
 
 
-        if col=='HERMES': xF=-xF
+        if col=='HERMES' or col=='COMPASS' or col=='JLAB12': xF=-xF
 
         if obs == 'ANep':
             thy = ANep_theory.get_AN(xF, pT, rs, target, hadron)
-
         return thy
 
     def gen_report(self, verb=1, level=1):
