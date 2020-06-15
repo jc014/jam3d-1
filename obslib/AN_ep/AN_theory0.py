@@ -12,7 +12,7 @@ from scipy.integrate import quad
 
 
 ###########
-conf['tmc'] = True
+conf['tmc'] = False
 ###########
 
 

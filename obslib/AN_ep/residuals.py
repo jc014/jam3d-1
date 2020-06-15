@@ -35,7 +35,7 @@ class RESIDUALS(_RESIDUALS):
         if col=='HERMES' or col=='COMPASS' or col=='JLAB12': xF=-xF
 
         if obs == 'ANep':
-            thy = ANep_theory.get_AN(xF, pT, rs, target, hadron)
+            thy = ANep_theory.get_num(xF, pT, rs, target, hadron)
         return thy
 
     def gen_report(self, verb=1, level=1):
