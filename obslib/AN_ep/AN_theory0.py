@@ -64,9 +64,11 @@ def get_h(x, Q2): # Collinear transversity
 
 def get_H1p(z, Q2, had): # (H_1^{\perp(1)}(z) - z*dH_1^{\perp(1)}(z)/dz)
   if 'pi' in had:
-      return conf['collinspi'].get_C(z, Q2) #- z * conf['dcollinspi'].get_C(z, Q2)
+      return  - z * conf['dcollinspi'].get_C(z, Q2)
+      #return conf['collinspi'].get_C(z, Q2) - z * conf['dcollinspi'].get_C(z, Q2)
   elif 'k' in had:
-      return conf['collinsk'].get_C(z, Q2) #- z * conf['dcollinsk'].get_C(z, Q2)
+      return - z * conf['dcollinsk'].get_C(z, Q2)
+      #return conf['collinsk'].get_C(z, Q2) - z * conf['dcollinsk'].get_C(z, Q2)
 
 def get_H(z, Q2, had): # -2*z*H_1^{\perp(1)}(z)+\tilde{H}(z)
   if 'pi' in had:
