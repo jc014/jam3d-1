@@ -70,9 +70,9 @@ def get_H1p(z, Q2, had): # (H_1^{\perp(1)}(z) - z*dH_1^{\perp(1)}(z)/dz)
 
 def get_H(z, Q2, had): # -2*z*H_1^{\perp(1)}(z)+\tilde{H}(z)
   if 'pi' in had:
-      return 0 #-2. * z * conf['collinspi'].get_C(z,Q2) - conf['Htildepi'].get_C(z, Q2)
+      return 0.0 #-2. * z * conf['collinspi'].get_C(z,Q2) - conf['Htildepi'].get_C(z, Q2)
   elif 'k' in had:
-      return 0 #-2. * z * conf['collinsk'].get_C(z,Q2) - conf['Htildek'].get_C(z, Q2)
+      return 0.0 #-2. * z * conf['collinsk'].get_C(z,Q2) - conf['Htildek'].get_C(z, Q2)
 
 def get_f1Tp(x, Q2): # (f_1T^{\perp(1)}(x) - x*df_1T^{\perp(1)}(x)/dx)
     return conf['sivers'].get_C(x, Q2) - x * conf['dsivers'].get_C(x, Q2)
@@ -156,11 +156,11 @@ def get_frag(z, xF, pT, rs, tar, had):#Code for fragmentation of polarized cross
     if had.endswith('+'):
         had = had.strip('+')
         H1p = get_H1p(z, CV.Q2_value(pT), had)
-        H = get_H(z, CV.Q2_value(pT), had)
+        H = 0.0 #get_H(z, CV.Q2_value(pT), had)
     elif had.endswith('-'):
         had = had.strip('-')
         H1p = conf['aux'].charge_conj(get_H1p(z, CV.Q2_value(pT), had))
-        H = conf['aux'].charge_conj(get_H(z, CV.Q2_value(pT), had))
+        H = 0.0 #conf['aux'].charge_conj(get_H(z, CV.Q2_value(pT), had))
     elif had.endswith('0'):
         had = had.strip('0')
         plusH1p = get_H1p(z, CV.Q2_value(pT), had)
@@ -169,7 +169,7 @@ def get_frag(z, xF, pT, rs, tar, had):#Code for fragmentation of polarized cross
 
         plusH = get_H(z, CV.Q2_value(pT), had)
         minusH = conf['aux'].charge_conj(get_H(z, CV.Q2_value(pT), had))
-        H = 0.5 * (plusH + minusH)
+        H = 0.0 #0.5 * (plusH + minusH)
 
     return (1/(z**3)) * (1/CV.x_value(z, rs, pT, xF)) * ((-1 * 4 * pT) / (CV.S_value(rs) + (CV.T_value(rs, pT, xF)/z))) * np.sum(e2 * ((conf['aux'].Mpi / CV.tt_value(z, rs, pT, xF)) * h * (H1p * ((CV.ss_value(z, rs, pT, xF)*CV.uu_value(z, rs, pT, xF))/(CV.tt_value(z, rs, pT, xF)**2)) + (1/z)*H * ((CV.ss_value(z, rs, pT, xF)/(CV.tt_value(z, rs, pT, xF)**2))*(CV.uu_value(z, rs, pT, xF)-CV.ss_value(z, rs, pT, xF))))))
 
