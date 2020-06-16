@@ -12,7 +12,7 @@ from scipy.integrate import quad
 
 
 ###########
-conf['tmc'] = True
+conf['tmc'] = False
 ###########
 
 
@@ -64,15 +64,15 @@ def get_h(x, Q2): # Collinear transversity
 
 def get_H1p(z, Q2, had): # (H_1^{\perp(1)}(z) - z*dH_1^{\perp(1)}(z)/dz)
   if 'pi' in had:
-      return conf['collinspi'].get_C(z, Q2) - z * conf['dcollinspi'].get_C(z, Q2)
+      return 0.0 #conf['collinspi'].get_C(z, Q2) - z * conf['dcollinspi'].get_C(z, Q2)
   elif 'k' in had:
-      return conf['collinsk'].get_C(z, Q2) - z * conf['dcollinsk'].get_C(z, Q2)
+      return 0.0 #conf['collinsk'].get_C(z, Q2) - z * conf['dcollinsk'].get_C(z, Q2)
 
 def get_H(z, Q2, had): # -2*z*H_1^{\perp(1)}(z)+\tilde{H}(z)
   if 'pi' in had:
-      return -2. * z * conf['collinspi'].get_C(z,Q2) + conf['Htildepi'].get_C(z, Q2)
+      return -2. * z * conf['collinspi'].get_C(z,Q2) - conf['Htildepi'].get_C(z, Q2)
   elif 'k' in had:
-      return -2. * z * conf['collinsk'].get_C(z,Q2) + conf['Htildek'].get_C(z, Q2)
+      return -2. * z * conf['collinsk'].get_C(z,Q2) - conf['Htildek'].get_C(z, Q2)
 
 def get_f1Tp(x, Q2): # (f_1T^{\perp(1)}(x) - x*df_1T^{\perp(1)}(x)/dx)
     return conf['sivers'].get_C(x, Q2) - x * conf['dsivers'].get_C(x, Q2)
@@ -130,9 +130,9 @@ class Class_Variables_TMC():    #Declaring all the class methods that are refere
         return CV.x_value(z, rs, pT, xF)*(CV.S_value(rs)-(conf['aux'].M**2))
     @classmethod
     def tt_value(cls, z, rs, pT, xF): #t
-        if CV.T_value >= 0:
+        if CV.T_value(rs, pT, xF) > 0:
             return (CV.x_value(z, rs, pT, xF)/(2.0*z))*(CV.T_value(rs, pT, xF) - (conf['aux'].M**2) - (conf['aux'].Mpi**2) + math.sqrt((conf['aux'].M**4) - ((2.0 * (conf['aux'].M**2)) * ((conf['aux'].Mpi**2) + (2.0 * pT * pT) + CV.T_value(rs, pT, xF))) + (((conf['aux'].Mpi**2) - CV.T_value(rs, pT, xF))**2)))
-        elif CV.T_value < 0:
+        elif CV.T_value(rs, pT, xF) < 0:
             return (CV.x_value(z, rs, pT, xF)/(2.0*z))*(CV.T_value(rs, pT, xF) - (conf['aux'].M**2) - (conf['aux'].Mpi**2) - math.sqrt((conf['aux'].M**4) - ((2.0 * (conf['aux'].M**2)) * ((conf['aux'].Mpi**2) + (2.0 * pT * pT) + CV.T_value(rs, pT, xF))) + (((conf['aux'].Mpi**2) - CV.T_value(rs, pT, xF))**2)))
     @classmethod
     def uu_value(cls, z, rs, pT, xF): #u
@@ -159,12 +159,12 @@ def get_frag(z, xF, pT, rs, tar, had):#Code for fragmentation of polarized cross
         H = get_H(z, CV.Q2_value(pT), had)
     elif had.endswith('-'):
         had = had.strip('-')
-        H1p = conf['aux'].charge_conj(get_H1p(z, CV.Q2_value(pT), had))
+        H1p = 0.0 #conf['aux'].charge_conj(get_H1p(z, CV.Q2_value(pT), had))
         H = conf['aux'].charge_conj(get_H(z, CV.Q2_value(pT), had))
     elif had.endswith('0'):
         had = had.strip('0')
         plusH1p = get_H1p(z, CV.Q2_value(pT), had)
-        minusH1p = conf['aux'].charge_conj(get_H1p(z, CV.Q2_value(pT), had))
+        minusH1p = 0.0 #conf['aux'].charge_conj(get_H1p(z, CV.Q2_value(pT), had))
         H1p = 0.5 * (plusH1p + minusH1p)
 
         plusH = get_H(z, CV.Q2_value(pT), had)
