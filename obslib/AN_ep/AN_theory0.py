@@ -64,9 +64,9 @@ def get_h(x, Q2): # Collinear transversity
 
 def get_H1p(z, Q2, had): # (H_1^{\perp(1)}(z) - z*dH_1^{\perp(1)}(z)/dz)
   if 'pi' in had:
-      return 0.0 #conf['collinspi'].get_C(z, Q2) - z * conf['dcollinspi'].get_C(z, Q2)
+      return conf['collinspi'].get_C(z, Q2) - z * conf['dcollinspi'].get_C(z, Q2)
   elif 'k' in had:
-      return 0.0 #conf['collinsk'].get_C(z, Q2) - z * conf['dcollinsk'].get_C(z, Q2)
+      return conf['collinsk'].get_C(z, Q2) - z * conf['dcollinsk'].get_C(z, Q2)
 
 def get_H(z, Q2, had): # -2*z*H_1^{\perp(1)}(z)+\tilde{H}(z)
   if 'pi' in had:
@@ -159,12 +159,12 @@ def get_frag(z, xF, pT, rs, tar, had):#Code for fragmentation of polarized cross
         H = get_H(z, CV.Q2_value(pT), had)
     elif had.endswith('-'):
         had = had.strip('-')
-        H1p = 0.0 #conf['aux'].charge_conj(get_H1p(z, CV.Q2_value(pT), had))
+        H1p = onf['aux'].charge_conj(get_H1p(z, CV.Q2_value(pT), had))
         H = conf['aux'].charge_conj(get_H(z, CV.Q2_value(pT), had))
     elif had.endswith('0'):
         had = had.strip('0')
         plusH1p = get_H1p(z, CV.Q2_value(pT), had)
-        minusH1p = 0.0 #conf['aux'].charge_conj(get_H1p(z, CV.Q2_value(pT), had))
+        minusH1p = conf['aux'].charge_conj(get_H1p(z, CV.Q2_value(pT), had))
         H1p = 0.5 * (plusH1p + minusH1p)
 
         plusH = get_H(z, CV.Q2_value(pT), had)
