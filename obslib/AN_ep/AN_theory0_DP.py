@@ -309,6 +309,13 @@ def get_sigST(xF, pT, rs, tar, had):
     #print had,sig
     return sig
 
+def get_AN(xF, pT, rs, target, hadron):
+    num = get_sigST(xF, pT, rs, target, hadron)
+    den = get_sig(xF, pT, rs, target, hadron)
+    AN = num/den
+
+    return AN
+
 
 if __name__ == '__main__':
 
