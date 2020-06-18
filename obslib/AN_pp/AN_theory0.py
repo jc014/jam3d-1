@@ -143,18 +143,18 @@ def get_HTffa(m, s, t, u):
 def get_HTffb(m, s, t, u):
   # Hard parts for the transversely polarized fragmentation term
    HTffb[0] = 0
-   HTffb[1] = c['r8'] * s * (u - s) * m['ot3'] + 0.5 * c['r9'] * (s - u) * m['ot'] * m['ou'] + 0.5 * (s - u) * (m['t2'] - 2. * t * u - 2. * m['u2']) * m['ot3'] * m['ou']
-   HTffb[2] = c['r27'] * 0.5 * s * (t - 3. * u) * m['ot2'] * m['ou'] - s * u * m['ot3'] + c['r9'] * s * (2. * u - t) * m['ot3'] - c['r3'] * 0.5 * m['s2'] * m['ot2'] * m['ou']
-   HTffb[3] = c['r27'] * 0.5 * (3. * s - t) * m['ot2'] + m['s2'] * m['ot3'] + c['r9'] * s * (t - 2. * s) * m['ot3'] + c['r3'] * 0.5 * u * m['ot2']
-   HTffb[4] = 10. * c['r27'] * 0.5 * (s - u) * m['ot'] * m['ou']
-   HTffb[5] = c['r9'] * s * (2. * u - t) * m['ot3'] - s * u * m['ot3']
-   HTffb[6] = c['r9'] * s * (t - 2. * s) * m['ot3'] + m['s2'] * m['ot3']
-   HTffb[7] = HTffb[1]
-   HTffb[8] = HTffb[2]
-   HTffb[9] = HTffb[3]
-   HTffb[10] = HTffb[4]
-   HTffb[11] = HTffb[5]
-   HTffb[12] = HTffb[6]
+   HTffb[1] = 0.0 #c['r8'] * s * (u - s) * m['ot3'] + 0.5 * c['r9'] * (s - u) * m['ot'] * m['ou'] + 0.5 * (s - u) * (m['t2'] - 2. * t * u - 2. * m['u2']) * m['ot3'] * m['ou']
+   HTffb[2] = 0.0 #c['r27'] * 0.5 * s * (t - 3. * u) * m['ot2'] * m['ou'] - s * u * m['ot3'] + c['r9'] * s * (2. * u - t) * m['ot3'] - c['r3'] * 0.5 * m['s2'] * m['ot2'] * m['ou']
+   HTffb[3] = 0.0 #c['r27'] * 0.5 * (3. * s - t) * m['ot2'] + m['s2'] * m['ot3'] + c['r9'] * s * (t - 2. * s) * m['ot3'] + c['r3'] * 0.5 * u * m['ot2']
+   HTffb[4] = 0.0 #10. * c['r27'] * 0.5 * (s - u) * m['ot'] * m['ou']
+   HTffb[5] = 0.0 #c['r9'] * s * (2. * u - t) * m['ot3'] - s * u * m['ot3']
+   HTffb[6] = 0.0 #c['r9'] * s * (t - 2. * s) * m['ot3'] + m['s2'] * m['ot3']
+   HTffb[7] = 0.0 #HTffb[1]
+   HTffb[8] = 0.0 #HTffb[2]
+   HTffb[9] = 0.0 #HTffb[3]
+   HTffb[10] = 0.0 #HTffb[4]
+   HTffb[11] = 0.0 #HTffb[5]
+   HTffb[12] = 0.0 #HTffb[6]
    return HTffb
 
 def get_Hxxpz(z, Q2, had, m, s, t, u):
@@ -193,28 +193,25 @@ def get_Hxxpz(z, Q2, had, m, s, t, u):
 def get_HQS(m):
     fsi = 1. + m['ut']
     HQS[0] = 0
-    HQS[1] = -m['ou']*(2.+fsi)*(m['st2']+m['ut2'])*c['r18']
+    HQS[1] = 0.0 #-m['ou']*(2.+fsi)*(m['st2']+m['ut2'])*c['r18']
 
-    HQS[2] = -m['ou']*(2.-7.*fsi)*(m['su2']+m['tu2'])*c['r18']
-    HQS[3] = -m['ou']*(-10.-fsi)*m['st']*m['su']*c['r27']
+    HQS[2] = 0.0 #-m['ou']*(2.-7.*fsi)*(m['su2']+m['tu2'])*c['r18']
+    HQS[3] = 0.0 #-m['ou']*(-10.-fsi)*m['st']*m['su']*c['r27']
 
-    HQS[4] = -m['ou']*(7.+fsi)*(m['st2']+m['ut2'])*c['r18']
-    HQS[5] = -m['ou']*(-1. -7.*fsi)*(m['us2']+m['ts2'])*c['r18']
+    HQS[4] = 0.0 #-m['ou']*(7.+fsi)*(m['st2']+m['ut2'])*c['r18']
+    HQS[5] = 0.0 #-m['ou']*(-1. -7.*fsi)*(m['us2']+m['ts2'])*c['r18']
 
-    HQS[6] = -m['ou']*(-1.-fsi)*m['us']*m['ut']*c['r27']
+    HQS[6] = 0.0 #-m['ou']*(-1.-fsi)*m['us']*m['ut']*c['r27']
 
-    HQS[7] = -m['ou']*(7.-2.*fsi)*(m['su2']+m['tu2'])*c['r18']
-    HQS[8] = -m['ou']*(-1. -2.*fsi)*(m['us2']+m['ts2'])*c['r18']
-    HQS[9] = -m['ou']*(-1. -fsi)*m['ts']*m['tu']*c['r27']
+    HQS[7] = 0.0 #-m['ou']*(7.-2.*fsi)*(m['su2']+m['tu2'])*c['r18']
+    HQS[8] = 0.0 #-m['ou']*(-1. -2.*fsi)*(m['us2']+m['ts2'])*c['r18']
+    HQS[9] = 0.0 #-m['ou']*(-1. -fsi)*m['ts']*m['tu']*c['r27']
 
-    HQS[10] = -m['ou']*c['r6']*c['r9']*(m['tu']+m['ut'])*(1.+18.*m['ts']*m['us'])-m['ou']*fsi*c['r6']* \
-    (m['tu']+m['ut'])*(1.-9.*(m['us'])*(m['us']))
+    HQS[10] = 0.0 #-m['ou']*c['r6']*c['r9']*(m['tu']+m['ut'])*(1.+18.*m['ts']*m['us'])-m['ou']*fsi*c['r6']*(m['tu']+m['ut'])*(1.-9.*(m['us'])*(m['us']))
 
-    HQS[11] = -m['ou']*c['r4']*c['r4']*(m['su']+m['us'])*(1.-9.*m['ut']*m['ut'])-m['ou']*fsi*c['r8']* \
-    c['r18']*(m['su']+m['us'])*(1.+18.*m['st']*m['ut'])
+    HQS[11] = 0.0 #-m['ou']*c['r4']*c['r4']*(m['su']+m['us'])*(1.-9.*m['ut']*m['ut'])-m['ou']*fsi*c['r8']*c['r18']*(m['su']+m['us'])*(1.+18.*m['st']*m['ut'])
 
-    HQS[12] = -m['ou']*c['r4']*c['r4']*(m['ts']+m['st'])*(1.-9.*m['tu']*m['tu']) + m['ou']*fsi*c['r4']* \
-    c['r4']*(m['ts']+m['st'])*(1.-9.*m['su']*m['su'])
+    HQS[12] = 0.0 #-m['ou']*c['r4']*c['r4']*(m['ts']+m['st'])*(1.-9.*m['tu']*m['tu']) + m['ou']*fsi*c['r4']*c['r4']*(m['ts']+m['st'])*(1.-9.*m['su']*m['su'])
 
     return HQS
 
