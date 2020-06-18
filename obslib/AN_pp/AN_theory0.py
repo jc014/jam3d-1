@@ -126,35 +126,35 @@ def get_Hupol(m):
 def get_HTffa(m, s, t, u):
   # Hard parts for the transversely polarized fragmentation term
    HTffa[0] = 0.0
-   HTffa[1] = - c['r9'] * m['ot'] + c['r8'] * s * (u - s) * m['ot3'] - m['st2'] * m['ou']
-   HTffa[2] = c['r27'] * s * (t - u) * m['ot2'] * m['ou'] + c['r9'] * s * (u - 2. * t) * m['ot3'] + s * m['ot2']
-   HTffa[3] = c['r27'] * s * m['ot2'] + c['r9'] * s * (t - s) * m['ot3'] - c['r3'] * m['ot']
-   HTffa[4] = c['r27'] * s * m['ot'] * m['ou'] - c['r3'] * m['ot']
-   HTffa[5] = c['r9'] * s * (u - 2. * t) * m['ot3'] + s * m['ot2']
-   HTffa[6] = c['r9'] * s * (t - s) * m['ot3']
-   HTffa[7] = HTffa[1]
-   HTffa[8] = HTffa[2]
-   HTffa[9] = HTffa[3]
-   HTffa[10] = HTffa[4]
-   HTffa[11] = HTffa[5]
-   HTffa[12] = HTffa[6]
+   HTffa[1] = 0.0 #- c['r9'] * m['ot'] + c['r8'] * s * (u - s) * m['ot3'] - m['st2'] * m['ou']
+   HTffa[2] = 0.0 #c['r27'] * s * (t - u) * m['ot2'] * m['ou'] + c['r9'] * s * (u - 2. * t) * m['ot3'] + s * m['ot2']
+   HTffa[3] = 0.0 #c['r27'] * s * m['ot2'] + c['r9'] * s * (t - s) * m['ot3'] - c['r3'] * m['ot']
+   HTffa[4] = 0.0 #c['r27'] * s * m['ot'] * m['ou'] - c['r3'] * m['ot']
+   HTffa[5] = 0.0 #c['r9'] * s * (u - 2. * t) * m['ot3'] + s * m['ot2']
+   HTffa[6] = 0.0 #c['r9'] * s * (t - s) * m['ot3']
+   HTffa[7] = 0.0 #HTffa[1]
+   HTffa[8] = 0.0 #HTffa[2]
+   HTffa[9] = 0.0 #HTffa[3]
+   HTffa[10] = 0.0 #HTffa[4]
+   HTffa[11] = 0.0 #HTffa[5]
+   HTffa[12] = 0.0 #HTffa[6]
    return HTffa
 
 def get_HTffb(m, s, t, u):
   # Hard parts for the transversely polarized fragmentation term
    HTffb[0] = 0
-   HTffb[1] = 0.0 #c['r8'] * s * (u - s) * m['ot3'] + 0.5 * c['r9'] * (s - u) * m['ot'] * m['ou'] + 0.5 * (s - u) * (m['t2'] - 2. * t * u - 2. * m['u2']) * m['ot3'] * m['ou']
-   HTffb[2] = 0.0 #c['r27'] * 0.5 * s * (t - 3. * u) * m['ot2'] * m['ou'] - s * u * m['ot3'] + c['r9'] * s * (2. * u - t) * m['ot3'] - c['r3'] * 0.5 * m['s2'] * m['ot2'] * m['ou']
-   HTffb[3] = 0.0 #c['r27'] * 0.5 * (3. * s - t) * m['ot2'] + m['s2'] * m['ot3'] + c['r9'] * s * (t - 2. * s) * m['ot3'] + c['r3'] * 0.5 * u * m['ot2']
-   HTffb[4] = 0.0 #10. * c['r27'] * 0.5 * (s - u) * m['ot'] * m['ou']
-   HTffb[5] = 0.0 #c['r9'] * s * (2. * u - t) * m['ot3'] - s * u * m['ot3']
-   HTffb[6] = 0.0 #c['r9'] * s * (t - 2. * s) * m['ot3'] + m['s2'] * m['ot3']
-   HTffb[7] = 0.0 #HTffb[1]
-   HTffb[8] = 0.0 #HTffb[2]
-   HTffb[9] = 0.0 #HTffb[3]
-   HTffb[10] = 0.0 #HTffb[4]
-   HTffb[11] = 0.0 #HTffb[5]
-   HTffb[12] = 0.0 #HTffb[6]
+   HTffb[1] = c['r8'] * s * (u - s) * m['ot3'] + 0.5 * c['r9'] * (s - u) * m['ot'] * m['ou'] + 0.5 * (s - u) * (m['t2'] - 2. * t * u - 2. * m['u2']) * m['ot3'] * m['ou']
+   HTffb[2] = c['r27'] * 0.5 * s * (t - 3. * u) * m['ot2'] * m['ou'] - s * u * m['ot3'] + c['r9'] * s * (2. * u - t) * m['ot3'] - c['r3'] * 0.5 * m['s2'] * m['ot2'] * m['ou']
+   HTffb[3] = c['r27'] * 0.5 * (3. * s - t) * m['ot2'] + m['s2'] * m['ot3'] + c['r9'] * s * (t - 2. * s) * m['ot3'] + c['r3'] * 0.5 * u * m['ot2']
+   HTffb[4] = 10. * c['r27'] * 0.5 * (s - u) * m['ot'] * m['ou']
+   HTffb[5] = c['r9'] * s * (2. * u - t) * m['ot3'] - s * u * m['ot3']
+   HTffb[6] = c['r9'] * s * (t - 2. * s) * m['ot3'] + m['s2'] * m['ot3']
+   HTffb[7] = HTffb[1]
+   HTffb[8] = HTffb[2]
+   HTffb[9] = HTffb[3]
+   HTffb[10] = HTffb[4]
+   HTffb[11] = HTffb[5]
+   HTffb[12] = HTffb[6]
    return HTffb
 
 def get_Hxxpz(z, Q2, had, m, s, t, u):
