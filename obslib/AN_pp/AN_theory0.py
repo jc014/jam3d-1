@@ -126,18 +126,18 @@ def get_Hupol(m):
 def get_HTffa(m, s, t, u):
   # Hard parts for the transversely polarized fragmentation term
    HTffa[0] = 0.0
-   HTffa[1] = 0.0 #- c['r9'] * m['ot'] + c['r8'] * s * (u - s) * m['ot3'] - m['st2'] * m['ou']
-   HTffa[2] = 0.0 #c['r27'] * s * (t - u) * m['ot2'] * m['ou'] + c['r9'] * s * (u - 2. * t) * m['ot3'] + s * m['ot2']
-   HTffa[3] = 0.0 #c['r27'] * s * m['ot2'] + c['r9'] * s * (t - s) * m['ot3'] - c['r3'] * m['ot']
-   HTffa[4] = 0.0 #c['r27'] * s * m['ot'] * m['ou'] - c['r3'] * m['ot']
-   HTffa[5] = 0.0 #c['r9'] * s * (u - 2. * t) * m['ot3'] + s * m['ot2']
-   HTffa[6] = 0.0 #c['r9'] * s * (t - s) * m['ot3']
-   HTffa[7] = 0.0 #HTffa[1]
-   HTffa[8] = 0.0 #HTffa[2]
-   HTffa[9] = 0.0 #HTffa[3]
-   HTffa[10] = 0.0 #HTffa[4]
-   HTffa[11] = 0.0 #HTffa[5]
-   HTffa[12] = 0.0 #HTffa[6]
+   HTffa[1] = - c['r9'] * m['ot'] + c['r8'] * s * (u - s) * m['ot3'] - m['st2'] * m['ou']
+   HTffa[2] = c['r27'] * s * (t - u) * m['ot2'] * m['ou'] + c['r9'] * s * (u - 2. * t) * m['ot3'] + s * m['ot2']
+   HTffa[3] = c['r27'] * s * m['ot2'] + c['r9'] * s * (t - s) * m['ot3'] - c['r3'] * m['ot']
+   HTffa[4] = c['r27'] * s * m['ot'] * m['ou'] - c['r3'] * m['ot']
+   HTffa[5] = c['r9'] * s * (u - 2. * t) * m['ot3'] + s * m['ot2']
+   HTffa[6] = c['r9'] * s * (t - s) * m['ot3']
+   HTffa[7] = HTffa[1]
+   HTffa[8] = HTffa[2]
+   HTffa[9] = HTffa[3]
+   HTffa[10] = HTffa[4]
+   HTffa[11] = HTffa[5]
+   HTffa[12] = HTffa[6]
    return HTffa
 
 def get_HTffb(m, s, t, u):
@@ -193,25 +193,25 @@ def get_Hxxpz(z, Q2, had, m, s, t, u):
 def get_HQS(m):
     fsi = 1. + m['ut']
     HQS[0] = 0
-    HQS[1] = 0.0 #-m['ou']*(2.+fsi)*(m['st2']+m['ut2'])*c['r18']
+    HQS[1] = -m['ou']*(2.+fsi)*(m['st2']+m['ut2'])*c['r18']
 
-    HQS[2] = 0.0 #-m['ou']*(2.-7.*fsi)*(m['su2']+m['tu2'])*c['r18']
-    HQS[3] = 0.0 #-m['ou']*(-10.-fsi)*m['st']*m['su']*c['r27']
+    HQS[2] = -m['ou']*(2.-7.*fsi)*(m['su2']+m['tu2'])*c['r18']
+    HQS[3] = -m['ou']*(-10.-fsi)*m['st']*m['su']*c['r27']
 
-    HQS[4] = 0.0 #-m['ou']*(7.+fsi)*(m['st2']+m['ut2'])*c['r18']
-    HQS[5] = 0.0 #-m['ou']*(-1. -7.*fsi)*(m['us2']+m['ts2'])*c['r18']
+    HQS[4] = -m['ou']*(7.+fsi)*(m['st2']+m['ut2'])*c['r18']
+    HQS[5] = -m['ou']*(-1. -7.*fsi)*(m['us2']+m['ts2'])*c['r18']
 
-    HQS[6] = 0.0 #-m['ou']*(-1.-fsi)*m['us']*m['ut']*c['r27']
+    HQS[6] = -m['ou']*(-1.-fsi)*m['us']*m['ut']*c['r27']
 
-    HQS[7] = 0.0 #-m['ou']*(7.-2.*fsi)*(m['su2']+m['tu2'])*c['r18']
-    HQS[8] = 0.0 #-m['ou']*(-1. -2.*fsi)*(m['us2']+m['ts2'])*c['r18']
-    HQS[9] = 0.0 #-m['ou']*(-1. -fsi)*m['ts']*m['tu']*c['r27']
+    HQS[7] = -m['ou']*(7.-2.*fsi)*(m['su2']+m['tu2'])*c['r18']
+    HQS[8] = -m['ou']*(-1. -2.*fsi)*(m['us2']+m['ts2'])*c['r18']
+    HQS[9] = -m['ou']*(-1. -fsi)*m['ts']*m['tu']*c['r27']
 
-    HQS[10] = 0.0 #-m['ou']*c['r6']*c['r9']*(m['tu']+m['ut'])*(1.+18.*m['ts']*m['us'])-m['ou']*fsi*c['r6']*(m['tu']+m['ut'])*(1.-9.*(m['us'])*(m['us']))
+    HQS[10] = -m['ou']*c['r6']*c['r9']*(m['tu']+m['ut'])*(1.+18.*m['ts']*m['us'])-m['ou']*fsi*c['r6']*(m['tu']+m['ut'])*(1.-9.*(m['us'])*(m['us']))
 
-    HQS[11] = 0.0 #-m['ou']*c['r4']*c['r4']*(m['su']+m['us'])*(1.-9.*m['ut']*m['ut'])-m['ou']*fsi*c['r8']*c['r18']*(m['su']+m['us'])*(1.+18.*m['st']*m['ut'])
+    HQS[11] = -m['ou']*c['r4']*c['r4']*(m['su']+m['us'])*(1.-9.*m['ut']*m['ut'])-m['ou']*fsi*c['r8']*c['r18']*(m['su']+m['us'])*(1.+18.*m['st']*m['ut'])
 
-    HQS[12] = 0.0 #-m['ou']*c['r4']*c['r4']*(m['ts']+m['st'])*(1.-9.*m['tu']*m['tu']) + m['ou']*fsi*c['r4']*c['r4']*(m['ts']+m['st'])*(1.-9.*m['su']*m['su'])
+    HQS[12] = -m['ou']*c['r4']*c['r4']*(m['ts']+m['st'])*(1.-9.*m['tu']*m['tu']) + m['ou']*fsi*c['r4']*c['r4']*(m['ts']+m['st'])*(1.-9.*m['su']*m['su'])
 
     return HQS
 
