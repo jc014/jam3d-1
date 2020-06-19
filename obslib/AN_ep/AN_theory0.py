@@ -159,7 +159,7 @@ def get_frag(z, xF, pT, rs, tar, had):#Code for fragmentation of polarized cross
         H = get_H(z, CV.Q2_value(pT), had)
     elif had.endswith('-'):
         had = had.strip('-')
-        H1p = onf['aux'].charge_conj(get_H1p(z, CV.Q2_value(pT), had))
+        H1p = conf['aux'].charge_conj(get_H1p(z, CV.Q2_value(pT), had))
         H = conf['aux'].charge_conj(get_H(z, CV.Q2_value(pT), had))
     elif had.endswith('0'):
         had = had.strip('0')
