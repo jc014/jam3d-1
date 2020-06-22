@@ -9,6 +9,7 @@ from tools.tools import load_config
 from qcdlib.aux import AUX
 from tools.config import conf
 from scipy.integrate import quad
+import matplotlib.pyplot as plt
 
 
 ###########
@@ -308,3 +309,21 @@ if __name__ == '__main__':
   print get_AN(xF, pT, rs, tar, had)
   print get_ANfrag(xF, pT, rs, tar, had)
   print get_ANQS(xF, pT, rs, tar, had)
+
+  CV=Class_Variables()
+  x=np.linspace(-0.6,0.6,1000)
+  for i in range(len(x)):
+      plt.plot(x[i], CV.tt_value(0.3, 63.0, 3.0, x[i]), color ='blue', label = '_nolegend_', marker='o', markersize = 4)
+  #formatting
+  plt.xlabel(r'$x_F$', fontsize = 20) #axis labels
+  plt.ylabel('t', fontsize = 20)
+  #plt.text(-0.55, -0.2, 'EIC ' + r'$\pi^0$', fontsize=15)
+  plt.locator_params(axis='y', nbins = 4) #tick label density
+  plt.locator_params(axis='x', nbins = 6)
+  plt.axhline(y=0 , xmin=0, xmax=1, color='black', alpha = 0.5, linewidth = '0.3') #line at y=0
+  plt.tick_params(direction='in', length=4, which='minor', labelsize=15); plt.tick_params(direction='in', length=9, which='major', labelsize=15) #ticks
+  plt.minorticks_on()
+  plt.legend(loc = 'best', framealpha = 0.0, borderaxespad = 1.5)  #legend that only presents plots with labels
+  #save and clear
+  plt.savefig('t_vs_xF.pdf', bbox_inches='tight')
+  plt.clf()
