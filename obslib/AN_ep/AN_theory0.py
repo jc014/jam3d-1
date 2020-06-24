@@ -311,7 +311,7 @@ if __name__ == '__main__':
   print get_ANQS(xF, pT, rs, tar, had)
 
   CV=Class_Variables()
-  x=np.linspace(-0.6,0.6,1000)
+  x=np.linspace(-1,1,1000)
   tt_array3 = np.empty(len(x))
   tt_array6 = np.empty(len(x))
   ss_array = np.empty(len(x))
@@ -321,6 +321,10 @@ if __name__ == '__main__':
       tt_array6[i] = CV.tt_value(0.6, 63.0, 3.0, x[i])
       ss_array[i] = CV.ss_value(0.3, 63.0, 3.0, x[i])
       uu_array[i] = CV.uu_value(0.3, 63.0, 3.0, x[i])
+  print(tt_array3[900])
+  print(ss_array[900])
+  print(uu_array[900])
+  print(x[900])
   plt.plot(x, tt_array3, color ='blue', label = '_nolegend_')
   #formatting
   plt.xlabel(r'$x_F$', fontsize = 20) #axis labels
