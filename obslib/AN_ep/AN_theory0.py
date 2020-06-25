@@ -310,63 +310,63 @@ if __name__ == '__main__':
   print get_ANfrag(xF, pT, rs, tar, had)
   print get_ANQS(xF, pT, rs, tar, had)
 
-  CV=Class_Variables()
-  x=np.linspace(-1,1,1000)
-  tt_array3 = np.empty(len(x))
-  tt_array6 = np.empty(len(x))
-  ss_array = np.empty(len(x))
-  uu_array = np.empty(len(x))
-  for i in range(len(x)):
-      tt_array3[i] = CV.tt_value(0.3, 63.0, 3.0, x[i])
-      tt_array6[i] = CV.tt_value(0.6, 63.0, 3.0, x[i])
-      ss_array[i] = CV.ss_value(0.3, 63.0, 3.0, x[i])
-      uu_array[i] = CV.uu_value(0.3, 63.0, 3.0, x[i])
-  print(tt_array3[900])
-  print(ss_array[900])
-  print(uu_array[900])
-  print(x[900])
-  plt.plot(x, tt_array3, color ='blue', label = '_nolegend_')
-  #formatting
-  plt.xlabel(r'$x_F$', fontsize = 20) #axis labels
-  plt.ylabel('t', fontsize = 20)
-  #plt.text(-0.55, -0.2, 'EIC ' + r'$\pi^0$', fontsize=15)
-  plt.locator_params(axis='y', nbins = 4) #tick label density
-  plt.locator_params(axis='x', nbins = 6)
-  plt.axhline(y=0 , xmin=0, xmax=1, color='black', alpha = 0.5, linewidth = '0.3') #line at y=0
-  plt.tick_params(direction='in', length=4, which='minor', labelsize=15); plt.tick_params(direction='in', length=9, which='major', labelsize=15) #ticks
-  plt.minorticks_on()
-  plt.legend(loc = 'best', framealpha = 0.0, borderaxespad = 1.5)  #legend that only presents plots with labels
-  #save and clear
-  plt.savefig('t_vs_xF_at_z3.pdf', bbox_inches='tight')
-  plt.clf()
-
-  plt.plot(x, tt_array6, color ='blue', label = '_nolegend_')
-  #formatting
-  plt.xlabel(r'$x_F$', fontsize = 20) #axis labels
-  plt.ylabel('t', fontsize = 20)
-  #plt.text(-0.55, -0.2, 'EIC ' + r'$\pi^0$', fontsize=15)
-  plt.locator_params(axis='y', nbins = 4) #tick label density
-  plt.locator_params(axis='x', nbins = 6)
-  plt.axhline(y=0 , xmin=0, xmax=1, color='black', alpha = 0.5, linewidth = '0.3') #line at y=0
-  plt.tick_params(direction='in', length=4, which='minor', labelsize=15); plt.tick_params(direction='in', length=9, which='major', labelsize=15) #ticks
-  plt.minorticks_on()
-  plt.legend(loc = 'best', framealpha = 0.0, borderaxespad = 1.5)  #legend that only presents plots with labels
-  #save and clear
-  plt.savefig('t_vs_xF_at_z6.pdf', bbox_inches='tight')
-  plt.clf()
-
-  plt.plot(x, (ss_array*uu_array)/(tt_array3**3), color ='blue', label = r' $su/t^3$')
-  plt.plot(x, ss_array/(tt_array3**2), color ='red', label = r' $s/t^2$')
-  #formatting
-  plt.xlabel(r'$x_F$', fontsize = 20) #axis labels
+  #CV=Class_Variables()
+  #x=np.linspace(-1,1,1000)
+  #tt_array3 = np.empty(len(x))
+  #tt_array6 = np.empty(len(x))
+  #ss_array = np.empty(len(x))
+  #uu_array = np.empty(len(x))
+  #for i in range(len(x)):
+      #tt_array3[i] = CV.tt_value(0.3, 63.0, 3.0, x[i])
+      #tt_array6[i] = CV.tt_value(0.6, 63.0, 3.0, x[i])
+      #ss_array[i] = CV.ss_value(0.3, 63.0, 3.0, x[i])
+      #uu_array[i] = CV.uu_value(0.3, 63.0, 3.0, x[i])
+  #print(tt_array3[900])
+  #print(ss_array[900])
+  #print(uu_array[900])
+  #print(x[900])
+  #plt.plot(x, tt_array3, color ='blue', label = '_nolegend_')
+  ##formatting
+  #plt.xlabel(r'$x_F$', fontsize = 20) #axis labels
   #plt.ylabel('t', fontsize = 20)
-  #plt.text(-0.55, -0.2, 'EIC ' + r'$\pi^0$', fontsize=15)
-  plt.locator_params(axis='y', nbins = 4) #tick label density
-  plt.locator_params(axis='x', nbins = 6)
-  plt.axhline(y=0 , xmin=0, xmax=1, color='black', alpha = 0.5, linewidth = '0.3') #line at y=0
-  plt.tick_params(direction='in', length=4, which='minor', labelsize=15); plt.tick_params(direction='in', length=9, which='major', labelsize=15) #ticks
-  plt.minorticks_on()
-  plt.legend(loc = 'best', framealpha = 0.0, borderaxespad = 1.5)  #legend that only presents plots with labels
-  #save and clear
-  plt.savefig('tcubed_vs_xF.pdf', bbox_inches='tight')
-  plt.clf()
+  ##plt.text(-0.55, -0.2, 'EIC ' + r'$\pi^0$', fontsize=15)
+  #plt.locator_params(axis='y', nbins = 4) #tick label density
+  #plt.locator_params(axis='x', nbins = 6)
+  #plt.axhline(y=0 , xmin=0, xmax=1, color='black', alpha = 0.5, linewidth = '0.3') #line at y=0
+  #plt.tick_params(direction='in', length=4, which='minor', labelsize=15); plt.tick_params(direction='in', length=9, which='major', labelsize=15) #ticks
+  #plt.minorticks_on()
+  #plt.legend(loc = 'best', framealpha = 0.0, borderaxespad = 1.5)  #legend that only presents plots with labels
+  ##save and clear
+  #plt.savefig('t_vs_xF_at_z3.pdf', bbox_inches='tight')
+  #plt.clf()
+
+  #plt.plot(x, tt_array6, color ='blue', label = '_nolegend_')
+  ##formatting
+  #plt.xlabel(r'$x_F$', fontsize = 20) #axis labels
+  #plt.ylabel('t', fontsize = 20)
+  ##plt.text(-0.55, -0.2, 'EIC ' + r'$\pi^0$', fontsize=15)
+  #plt.locator_params(axis='y', nbins = 4) #tick label density
+  #plt.locator_params(axis='x', nbins = 6)
+  #plt.axhline(y=0 , xmin=0, xmax=1, color='black', alpha = 0.5, linewidth = '0.3') #line at y=0
+  #plt.tick_params(direction='in', length=4, which='minor', labelsize=15); plt.tick_params(direction='in', length=9, which='major', labelsize=15) #ticks
+  #plt.minorticks_on()
+  #plt.legend(loc = 'best', framealpha = 0.0, borderaxespad = 1.5)  #legend that only presents plots with labels
+  ##save and clear
+  #plt.savefig('t_vs_xF_at_z6.pdf', bbox_inches='tight')
+  #plt.clf()
+
+  #plt.plot(x, (ss_array*uu_array)/(tt_array3**3), color ='blue', label = r' $su/t^3$')
+  #plt.plot(x, ss_array/(tt_array3**2), color ='red', label = r' $s/t^2$')
+  ##formatting
+  #plt.xlabel(r'$x_F$', fontsize = 20) #axis labels
+  ##plt.ylabel('t', fontsize = 20)
+  ##plt.text(-0.55, -0.2, 'EIC ' + r'$\pi^0$', fontsize=15)
+  #plt.locator_params(axis='y', nbins = 4) #tick label density
+  #plt.locator_params(axis='x', nbins = 6)
+  #plt.axhline(y=0 , xmin=0, xmax=1, color='black', alpha = 0.5, linewidth = '0.3') #line at y=0
+  #plt.tick_params(direction='in', length=4, which='minor', labelsize=15); plt.tick_params(direction='in', length=9, which='major', labelsize=15) #ticks
+  #plt.minorticks_on()
+  #plt.legend(loc = 'best', framealpha = 0.0, borderaxespad = 1.5)  #legend that only presents plots with labels
+  ##save and clear
+  #plt.savefig('tcubed_vs_xF.pdf', bbox_inches='tight')
+  #plt.clf()
