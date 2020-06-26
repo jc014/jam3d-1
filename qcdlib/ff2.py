@@ -37,11 +37,11 @@ class FF(CORE):
 
     def set_default_params(self):
 
-        #--f(x) = norm * x**a * (1-x)**b * (1+c*x**0.5+d*x)
+        #--f(x) = norm * x**a1 * (1-x)**b1 * (1+c1*x+d1*x**2) * (1+ N2 * x**a2 * (1-x)**b2 * (1+c2*x+d2*x**2))
         params={}
         params['g1']   = np.array([0,0,0,0,0,0,0,0,0,0])
-        params['u1']   = np.array([0,0,0,0,0,0,0,0,0,0])
-        params['d1']   = np.array([0,0,0,0,0,0,0,0,0,0])
+        params['u1']   = np.array([0.2,2.5,2.5,0,0,10.0,0,0,0,0])
+        params['d1']   = np.array([-0.4,0.5,3.4,0,0,10.0,0,0,0,0])
         params['s1']   = np.array([0,0,0,0,0,0,0,0,0,0])
         params['c1']   = np.array([0,0,0,0,0,0,0,0,0,0])
         params['b1']   = np.array([0,0,0,0,0,0,0,0,0,0])
@@ -105,7 +105,7 @@ class FF(CORE):
             else:                self.widths2[i] = self._widths2_ufav
 
     def setup(self):
-        self.set_sumrules()
+        #self.set_sumrules()
         self.set_moms()
         self.set_widths()
         #--store moments of a given Q2 that has been already calculated
@@ -149,18 +149,18 @@ class FF(CORE):
 
         # flav composition
         vm,vp={},{}
-        vm[35]= bm + cm + dm + sm - 5*tm + um
+        vm[35]= bm + cm + dm + sm - 5.0*tm + um
         vm[24]= -4*bm + cm + dm + sm + um
         vm[15]= -3*cm + dm + sm + um
-        vm[8] = dm - 2*sp + 2*(-sm + sp) + um
+        vm[8] = dm - 2.0*sp + 2.0*(-sm + sp) + um
         vm[3] = -dm + um
         vm[0] = np.zeros(N.size,dtype=complex)
         vp[0] = np.zeros(N.size,dtype=complex)
         vp[3] = -dp + up
-        vp[8] = dp - 2*sp + up
-        vp[15]= -3*cp + dp + sp + up
-        vp[24]= -4*bp + cp + dp + sp + up
-        vp[35]= bp + cp + dp + sp - 5*tp + up
+        vp[8] = dp - 2.0*sp + up
+        vp[15]= -3.0*cp + dp + sp + up
+        vp[24]= -4.0*bp + cp + dp + sp + up
+        vp[35]= bp + cp + dp + sp - 5.0*tp + up
         qs    = bp + cp + dp + sp + tp + up
         qv    = bm + cm + dm + sm + tm + um
         q     = np.zeros((2,N.size),dtype=complex)
@@ -182,7 +182,6 @@ class FF(CORE):
         self.storage = {}
 
     def get_BC(self,moms):
-
         N=self.mellin.N
         zero=np.zeros(N.size,dtype=complex)
 

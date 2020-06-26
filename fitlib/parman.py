@@ -148,7 +148,7 @@ class PARMAN:
       if 'pdfpi-'       in semaphore and semaphore['pdfpi-']       == 1: self.set_pdfpi_params()
       if 'transversity' in semaphore and semaphore['transversity'] == 1: self.set_transversity_params(version)
       if 'sivers'       in semaphore and semaphore['sivers']       == 1: self.set_sivers_params(version)
-      if 'boermulders'  in semaphore and semaphore['boermulders']  == 1: self.set_boermulders_params()
+      if 'boermulders'  in semaphore and semaphore['boermulders']  == 1: self.set_boermulders_params(version)
       if 'ffpi'         in semaphore and semaphore['ffpi']         == 1: self.set_ffpi_params()
       if 'ffk'          in semaphore and semaphore['ffk']          == 1: self.set_ffk_params()
       if 'collinspi'    in semaphore and semaphore['collinspi']    == 1: self.set_collinspi_params(version)
@@ -303,18 +303,19 @@ class PARMAN:
         conf['boermulders']._widths2_dv  = conf['params']['boermulders']['widths2_dv']['value']
         conf['boermulders']._widths2_sea = conf['params']['boermulders']['widths2_sea']['value']
 
-        iflav=0
-        for flav in ['u','ub','d','db','s','sb']:
-            iflav+=1
-            ipar=-1
-            for par in ['N0','a0','b0','c0','d0','N1','a1','b1','c1','d1']:
-                ipar+=1
-                if '%s %s 1'%(flav,par) in conf['params']['boermulders']:
-                    conf['boermulders'].shape1[iflav][ipar] = conf['params']['boermulders']['%s %s 1'%(flav,par)]['value']
-                if '%s %s 2'%(flav,par) in conf['params']['boermulders']:
-                    conf['boermulders'].shape2[iflav][ipar] = conf['params']['boermulders']['%s %s 2'%(flav,par)]['value']
+        if version == 0:
+            FLAV = ['u','ub','d','db','s','sb']
+            PAR = ['N0','a0','b0','c0','d0','N1','a1','b1','c1','d1']
+            dist='boermulders'
+            self.set_constraits(dist,FLAV,PAR,version)
+            self.set_params(dist,FLAV,PAR,version)
 
-        conf['boermulders'].setup()
+        if version == 'JAM20+':
+            FLAV=['g1','uv1','dv1','sea1','sea2','db1','ub1','s1','sb1']
+            PAR=['N','a','b','c','d']
+            dist='boermulders'
+            self.set_constraits(dist,FLAV,PAR,version)
+            self.set_params(dist,FLAV,PAR,version)
 
     def set_ffpi_params(self):
         self.set_constraits('ffpi')
