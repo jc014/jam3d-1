@@ -121,6 +121,7 @@ def get_Hupol(m):
    Hupol[12] = 4. * c['r9'] * (- m['st'] - m['ts']) * (1. - 9. * m['su'] * m['tu'] * c['r4'])
    Hupol[13] = (m['tu'] + m['ut']) * c['r6'] - 3. * (m['ts2'] + m['us2']) * c['r8']
    Hupol[14] = 4.5 * (3. - m['ts'] * m['us'] - m['st'] * m['ut'] - m['su'] * m['tu'])
+  
    return Hupol
 
 def get_HTffa(m, s, t, u):
@@ -143,18 +144,12 @@ def get_HTffa(m, s, t, u):
 def get_HTffb(m, s, t, u):
   # Hard parts for the transversely polarized fragmentation term
    HTffb[0] = 0
-   HTffb[1] = c['r8'] * s * (u - s) * m['ot3'] + 0.5 * c['r9'] * (s - u) * m['ot'] * \
-     m['ou'] + 0.5 * (s - u) * (m['t2'] - 2. * t * u - 2. * m['u2']) * m['ot3'] * m['ou']
-   HTffb[2] = c['r27'] * 0.5 * s * (t - 3. * u) * m['ot2'] * m['ou'] - s * u * m['ot3'] + c['r9'] * s * (
-    2. * u - t) * m['ot3'] - c['r3'] * 0.5 * m['s2'] * m['ot2'] * m['ou']
-   HTffb[3] = c['r27'] * 0.5 * (3. * s - t) * m['ot2'] + m['s2'] * m['ot3'] + \
-     c['r9'] * s * (t - 2. * s) * m['ot3'] + \
-     c['r3'] * 0.5 * u * m['ot2']
+   HTffb[1] = c['r8'] * s * (u - s) * m['ot3'] + 0.5 * c['r9'] * (s - u) * m['ot'] * m['ou'] + 0.5 * (s - u) * (m['t2'] - 2. * t * u - 2. * m['u2']) * m['ot3'] * m['ou']
+   HTffb[2] = c['r27'] * 0.5 * s * (t - 3. * u) * m['ot2'] * m['ou'] - s * u * m['ot3'] + c['r9'] * s * (2. * u - t) * m['ot3'] - c['r3'] * 0.5 * m['s2'] * m['ot2'] * m['ou']
+   HTffb[3] = c['r27'] * 0.5 * (3. * s - t) * m['ot2'] + m['s2'] * m['ot3'] + c['r9'] * s * (t - 2. * s) * m['ot3'] + c['r3'] * 0.5 * u * m['ot2']
    HTffb[4] = 10. * c['r27'] * 0.5 * (s - u) * m['ot'] * m['ou']
-   HTffb[5] = c['r9'] * s * \
-    (2. * u - t) * m['ot3'] - s * u * m['ot3']
-   HTffb[6] = c['r9'] * s * \
-    (t - 2. * s) * m['ot3'] + m['s2'] * m['ot3']
+   HTffb[5] = c['r9'] * s * (2. * u - t) * m['ot3'] - s * u * m['ot3']
+   HTffb[6] = c['r9'] * s * (t - 2. * s) * m['ot3'] + m['s2'] * m['ot3']
    HTffb[7] = HTffb[1]
    HTffb[8] = HTffb[2]
    HTffb[9] = HTffb[3]
@@ -213,14 +208,11 @@ def get_HQS(m): #Note there is a 1/u in each hard factor compared to KQVY 2006
     HQS[8] = -m['ou']*(-1. -2.*fsi)*(m['us2']+m['ts2'])*c['r18']
     HQS[9] = -m['ou']*(-1. -fsi)*m['ts']*m['tu']*c['r27']
 
-    HQS[10] = -m['ou']*c['r6']*c['r9']*(m['tu']+m['ut'])*(1.+18.*m['ts']*m['us'])-m['ou']*fsi*c['r6']* \
-    (m['tu']+m['ut'])*(1.-9.*(m['us'])*(m['us']))
+    HQS[10] = -m['ou']*c['r6']*c['r9']*(m['tu']+m['ut'])*(1.+18.*m['ts']*m['us'])-m['ou']*fsi*c['r6']*(m['tu']+m['ut'])*(1.-9.*(m['us'])*(m['us']))
 
-    HQS[11] = -m['ou']*c['r4']*c['r4']*(m['su']+m['us'])*(1.-9.*m['ut']*m['ut'])-m['ou']*fsi*c['r8']* \
-    c['r18']*(m['su']+m['us'])*(1.+18.*m['st']*m['ut'])
+    HQS[11] = -m['ou']*c['r4']*c['r4']*(m['su']+m['us'])*(1.-9.*m['ut']*m['ut'])-m['ou']*fsi*c['r8']*c['r18']*(m['su']+m['us'])*(1.+18.*m['st']*m['ut'])
 
-    HQS[12] = -m['ou']*c['r4']*c['r4']*(m['ts']+m['st'])*(1.-9.*m['tu']*m['tu']) + m['ou']*fsi*c['r4']* \
-    c['r4']*(m['ts']+m['st'])*(1.-9.*m['su']*m['su'])
+    HQS[12] = -m['ou']*c['r4']*c['r4']*(m['ts']+m['st'])*(1.-9.*m['tu']*m['tu']) + m['ou']*fsi*c['r4']*c['r4']*(m['ts']+m['st'])*(1.-9.*m['su']*m['su'])
 
     return HQS
 
