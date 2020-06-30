@@ -132,14 +132,10 @@ def get_Hupol(m):
 def get_HTffa(m, s, t, u):
   # Hard parts for the transversely polarized fragmentation term
    HTffa[0] = 0
-   HTffa[1] = - c['r9'] * m['ot'] + c['r8'] * \
-    s * (u - s) * m['ot3'] - m['st2'] * m['ou']
-   HTffa[2] = c['r27'] * s * (t - u) * m['ot2'] * m['ou'] + \
-     c['r9'] * s * (u - 2. * t) * m['ot3'] + s * m['ot2']
-   HTffa[3] = c['r27'] * s * m['ot2'] + c['r9'] * \
-    s * (t - s) * m['ot3'] - c['r3'] * m['ot']
-   HTffa[4] = c['r27'] * s * m['ot'] * \
-     m['ou'] - c['r3'] * m['ot']
+   HTffa[1] = - c['r9'] * m['ot'] + c['r8'] * s * (u - s) * m['ot3'] - m['st2'] * m['ou']
+   HTffa[2] = c['r27'] * s * (t - u) * m['ot2'] * m['ou'] + c['r9'] * s * (u - 2. * t) * m['ot3'] + s * m['ot2']
+   HTffa[3] = c['r27'] * s * m['ot2'] + c['r9'] * s * (t - s) * m['ot3'] - c['r3'] * m['ot']
+   HTffa[4] = c['r27'] * s * m['ot'] * m['ou'] - c['r3'] * m['ot']
    HTffa[5] = c['r9'] * s * (u - 2. * t) * m['ot3'] + s * m['ot2']
    HTffa[6] = c['r9'] * s * (t - s) * m['ot3']
    HTffa[7] = HTffa[1]
