@@ -92,7 +92,7 @@ def get_Hupol(m):
 
 #  @profile
 # Calculation of the unpolarized cross section
-def get_upolden(x, z, xF, pT, rs, tar, had):
+def get_upolden(x, xF, pT, rs):
 
   M = conf['aux'].M
   Mh = {}
@@ -115,9 +115,7 @@ def get_upolden(x, z, xF, pT, rs, tar, had):
   ss = rs**2
   tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) + (xF * ss / 2)
   uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) - (xF * ss / 2)
-
-  oz = 1. / z
-
+  x = ((-ss * uu) - (tt * ss) - (tt * uu) - tt) / ((ss**2) + (tt * ss))
   xp = -x * tt / (x * ss + uu)
 
   # Mandelstam variables at the parton level
@@ -177,7 +175,7 @@ def get_upolden(x, z, xF, pT, rs, tar, had):
 
 #  @profile
 # Calculation of the fragmentation term in the transversely polarized cross section
-def get_polnum(x, z, xF, pT, rs, tar, had):
+def get_polnum(x, xF, pT, rs):
 
   M = conf['aux'].M
   Mh = {}
@@ -202,9 +200,7 @@ def get_polnum(x, z, xF, pT, rs, tar, had):
   ss = rs**2
   tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) + (xF * ss / 2)
   uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) - (xF * ss / 2)
-
-  oz = 1. / z
-
+  x = ((-ss * uu) - (tt * ss) - (tt * uu) - tt) / ((ss**2) + (tt * ss))
   xp = -x * tt / (x * ss + uu)
 
   # Mandelstam variables at the parton level
@@ -216,6 +212,11 @@ def get_polnum(x, z, xF, pT, rs, tar, had):
   numfac = (2 * M * pT) / (x * ss + uu)
 
   m=get_mandelstam(s, t, u)
+  Hupol=get_Hupol(m)
+  
+  Hupol1 = Hupol[1]
+  Hupol2 = Hupol[2]
+  Hupol3 = Hupol[3]
 
   # Get arrays of the nonperturbative functions
   f = get_f(x, Q2)
@@ -237,12 +238,12 @@ def get_polnum(x, z, xF, pT, rs, tar, had):
   fs = f[5]
   fsb = f[6]
 
-  uQS = (-2./np.pi) * f1Tp[1]
-  ubQS = (-2./np.pi) * f1Tp[2]
-  dQS = (-2./np.pi) * f1Tp[3]
-  dbQS = (-2./np.pi) * f1Tp[4]
-  sQS = (-2./np.pi) * f1Tp[5]
-  sbQS = (-2./np.pi) * f1Tp[6]
+  uQS = (-2./np.pi) * get_f1Tp(x, Q2)[1]
+  ubQS = (-2./np.pi) * get_f1Tp(x, Q2)[2]
+  dQS = (-2./np.pi) * get_f1Tp(x, Q2)[3]
+  dbQS = (-2./np.pi) * get_f1Tp(x, Q2)[4]
+  sQS = (-2./np.pi) * get_f1Tp(x, Q2)[5]
+  sbQS = (-2./np.pi) * get_f1Tp(x, Q2)[6]
 
 ######################
 #What about the e**2?
@@ -265,44 +266,53 @@ def get_polnum(x, z, xF, pT, rs, tar, had):
 
   return ffcs * numfac
 
-def get_num(xF, pT, rs, tar, had, mode='gauss', nx=10):
+def num_integral(x, xp, xF, pT, rs):
+    ss = rs**2
+    tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) + (xF * ss / 2)
+    uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) - (xF * ss / 2)
+    x = ((-ss * uu) - (tt * ss) - (tt * uu) - tt) / ((ss**2) + (tt * ss))
+    xp = -x * tt / (x * ss + uu)
+    return (1 / (x * xp)) * get_polnum(x, xF, pT, rs)
+def denom_integral(x, xp, xF, pT, rs):
+    ss = rs**2
+    tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) + (xF * ss / 2)
+    uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) - (xF * ss / 2)
+    x = ((-ss * uu) - (tt * ss) - (tt * uu) - tt) / ((ss**2) + (tt * ss))
+    xp = -x * tt / (x * ss + uu)
+    return (1 / (x * xp)) * get_upolden(x, xF, pT, rs)
 
-    Q2 = Q * Q
+def get_numint(xF, pT, rs):
+
     C_F = 4/3
     N_C = 3
     # Mandelstam variables at the hadron level
     ss = rs**2
     tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) + (xF * ss / 2)
     uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) - (xF * ss / 2)
+    x = ((-ss * uu) - (tt * ss) - (tt * uu) - tt) / ((ss**2) + (tt * ss))
+    xp = -x * tt / (x * ss + uu)
 
     # Lower limits of the x integration
     def xmin(uu, tt, ss): return -uu / (ss + tt)
 
-    if mode == 'gauss':
-        polnum = np.vectorize(lambda x: get_polnum(x, z, xF, pT, rs, tar, had))
-        numer = fixed_quad(polnum, xmin, 1, n=nx)[0]
-    elif mode == 'quad':
-        numer = quad(lambda x: get_polnum(x, z, xF, pT, rs, tar, had), xmin, 1.. n=nx)[0]
+    numer = quad(lambda x: num_integral(x, xp, xF, pT, rs), xmin(uu, tt, ss), 1., limit=100)[0]
     return numer
 
-def get_denom(xF, pT, rs, tar, had, mode='gauss', nx=10):
+def get_denomint(xF, pT, rs):
 
-    Q2 = Q * Q
     C_F = 4/3
     N_C = 3
     # Mandelstam variables at the hadron level
     ss = rs**2
     tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) + (xF * ss / 2)
     uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) - (xF * ss / 2)
+    x = ((-ss * uu) - (tt * ss) - (tt * uu) - tt) / ((ss**2) + (tt * ss))
+    xp = -x * tt / (x * ss + uu)
 
     # Lower limits of the x integration
     def xmin(uu, tt, ss): return -uu / (ss + tt)
 
-    if mode == 'gauss':
-        upolden = np.vectorize(lambda x, z: get_upolden(x, z, xF, pT, rs, tar, had))
-        denom = fixed_quad(upolden, xmin, 1, n=nx)[0]
-    elif mode == 'quad':
-        denom = quad(lambda x, z: get_dsigST(x, z, xF, pT, rs, tar, had), xmin, 1, n=nx)[0]
+    denom = quad(lambda x: denom_integral(x, xp, xF, pT, rs), xmin(uu, tt, ss), 1, limit=100)[0]
     return denom
 
 # def get_vars(rs, n):
@@ -335,10 +345,11 @@ if __name__ == '__main__':
   had='jet'
   pT = 2
   xF = 0.2
+  N_C = 3
 
   def test():
-    den = get_denom(xF, pT, rs, tar, had, mode='gauss', nx=10)
-    num = get_num(xF, pT, rs, tar, had, mode='gauss', nx=10)
+    num = get_numint(xF, pT, rs)
+    den = get_denomint(xF, pT, rs) / N_C
 
     AN = num / den
     print AN
