@@ -36,6 +36,21 @@ h = {}
 H1p = {}
 H = {}
 
+eu2, ed2 = 4/9., 1/9.
+e2 = []
+e2.append(0) #g
+e2.append(eu2) #u
+e2.append(eu2) #ub
+e2.append(ed2) #d
+e2.append(ed2) #db
+e2.append(ed2) #s
+e2.append(ed2) #sb
+e2.append(0) #c
+e2.append(0) #cb
+e2.append(0) #b
+e2.append(0) #bb
+e2 = np.array(e2)
+
 if 'basis' not in conf:
   conf['basis'] = 'default'
 
@@ -159,17 +174,17 @@ def get_upolden(x, xF, pT, rs):
 ######################
   upol = 0
 
-  upol += ((ftu * fu) * (2 * C_F * Hupol1)) + ((ftu * fg) *Hupol3) + ((ftg * fu) * Hupol2)
+  upol += (((ftu * fu) * (2 * C_F * Hupol1)) + ((ftu * fg) *Hupol3) + ((ftg * fu) * Hupol2)) * e2[1]
 
-  upol += ((ftub * fub) * (2 * C_F * Hupol1)) + ((ftub * fg) *Hupol3) + ((ftg * fub) * Hupol2)
+  upol += (((ftub * fub) * (2 * C_F * Hupol1)) + ((ftub * fg) *Hupol3) + ((ftg * fub) * Hupol2)) * e2[2]
 
-  upol += ((ftd * fd) * (2 * C_F * Hupol1)) + ((ftd * fg) *Hupol3) + ((ftg * fd) * Hupol2)
+  upol += (((ftd * fd) * (2 * C_F * Hupol1)) + ((ftd * fg) *Hupol3) + ((ftg * fd) * Hupol2)) * e2[3]
 
-  upol += ((ftdb * fdb) * (2 * C_F * Hupol1)) + ((ftdb * fg) *Hupol3) + ((ftg * fdb) * Hupol2)
+  upol += (((ftdb * fdb) * (2 * C_F * Hupol1)) + ((ftdb * fg) *Hupol3) + ((ftg * fdb) * Hupol2)) * e2[4]
 
-  upol += ((fts * fs) * (2 * C_F * Hupol1)) + ((fts * fg) *Hupol3) + ((ftg * fs) * Hupol2)
+  upol += (((fts * fs) * (2 * C_F * Hupol1)) + ((fts * fg) *Hupol3) + ((ftg * fs) * Hupol2)) * e2[5]
 
-  upol += ((ftsb * fsb) * (2 * C_F * Hupol1)) + ((ftsb * fg) *Hupol3) + ((ftg * fsb) * Hupol2)
+  upol += (((ftsb * fsb) * (2 * C_F * Hupol1)) + ((ftsb * fg) *Hupol3) + ((ftg * fsb) * Hupol2)) * e2[6]
 
   return denfac * upol
 
@@ -213,7 +228,7 @@ def get_polnum(x, xF, pT, rs):
 
   m=get_mandelstam(s, t, u)
   Hupol=get_Hupol(m)
-  
+
   Hupol1 = Hupol[1]
   Hupol2 = Hupol[2]
   Hupol3 = Hupol[3]
@@ -250,17 +265,17 @@ def get_polnum(x, xF, pT, rs):
 ######################
   ffcs = 0
 
-  ffcs += (((-1 / (N_C**2)) * ftu * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * uQS * (np.pi/2.)
+  ffcs += ((((-1 / (N_C**2)) * ftu * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * uQS * (np.pi/2.)) * e2[1]
 
-  ffcs += (((-1 / (N_C**2)) * ftub * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * ubQS * (np.pi/2.)
+  ffcs += ((((-1 / (N_C**2)) * ftub * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * ubQS * (np.pi/2.)) * e2[2]
 
-  ffcs += (((-1 / (N_C**2)) * ftd * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * dQS * (np.pi/2.)
+  ffcs += ((((-1 / (N_C**2)) * ftd * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * dQS * (np.pi/2.)) * e2[3]
 
-  ffcs += (((-1 / (N_C**2)) * ftdb * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * dbQS * (np.pi/2.)
+  ffcs += ((((-1 / (N_C**2)) * ftdb * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * dbQS * (np.pi/2.)) * e2[4]
 
-  ffcs += (((-1 / (N_C**2)) * fts * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * sQS * (np.pi/2.)
+  ffcs += ((((-1 / (N_C**2)) * fts * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * sQS * (np.pi/2.)) * e2[5]
 
-  ffcs += (((-1 / (N_C**2)) * ftsb * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * sbQS * (np.pi/2.)
+  ffcs += ((((-1 / (N_C**2)) * ftsb * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * sbQS * (np.pi/2.)) * e2[6]
 
   if had=='jet': ffcs=0.0
 
