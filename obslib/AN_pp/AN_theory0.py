@@ -116,17 +116,11 @@ def get_Hupol(m):
    Hupol[7] = 4. * (m['ts2'] + m['us2']) * c['r9']
    Hupol[8] = 4. * (m['su2'] + m['tu2']) * c['r9']
    Hupol[9] = -8. * m['tu'] * m['ts'] * c['r27']
-   Hupol[10] = 32. * c['r27'] * \
-    (m['tu'] + m['ut']) * \
-    (1. - 9. * m['ts'] * m['us'] * c['r4'])
-   Hupol[11] = 4. * c['r9'] * (- m['su'] - m['us']) * (
-    1. - 9. * m['st'] * m['ut'] * c['r4'])
-   Hupol[12] = 4. * c['r9'] * (- m['st'] - m['ts']) * (
-    1. - 9. * m['su'] * m['tu'] * c['r4'])
-   Hupol[13] = (m['tu'] + m['ut']) * c['r6'] - \
-    3. * (m['ts2'] + m['us2']) * c['r8']
-   Hupol[14] = 4.5 * (3. - m['ts'] * m['us'] -
-              m['st'] * m['ut'] - m['su'] * m['tu'])
+   Hupol[10] = 32. * c['r27'] * (m['tu'] + m['ut']) * (1. - 9. * m['ts'] * m['us'] * c['r4'])
+   Hupol[11] = 4. * c['r9'] * (- m['su'] - m['us']) * (1. - 9. * m['st'] * m['ut'] * c['r4'])
+   Hupol[12] = 4. * c['r9'] * (- m['st'] - m['ts']) * (1. - 9. * m['su'] * m['tu'] * c['r4'])
+   Hupol[13] = (m['tu'] + m['ut']) * c['r6'] - 3. * (m['ts2'] + m['us2']) * c['r8']
+   Hupol[14] = 4.5 * (3. - m['ts'] * m['us'] - m['st'] * m['ut'] - m['su'] * m['tu'])
    return Hupol
 
 def get_HTffa(m, s, t, u):
