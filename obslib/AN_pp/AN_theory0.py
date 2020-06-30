@@ -154,8 +154,7 @@ def get_HTffb(m, s, t, u):
   # Hard parts for the transversely polarized fragmentation term
    HTffb[0] = 0
    HTffb[1] = c['r8'] * s * (u - s) * m['ot3'] + 0.5 * c['r9'] * (s - u) * m['ot'] * \
-     m['ou'] + 0.5 * (s - u) * (m['t2'] - 2. * t *
-                 u - 2. * m['u2']) * m['ot3'] * m['ou']
+     m['ou'] + 0.5 * (s - u) * (m['t2'] - 2. * t * u - 2. * m['u2']) * m['ot3'] * m['ou']
    HTffb[2] = c['r27'] * 0.5 * s * (t - 3. * u) * m['ot2'] * m['ou'] - s * u * m['ot3'] + c['r9'] * s * (
     2. * u - t) * m['ot3'] - c['r3'] * 0.5 * m['s2'] * m['ot2'] * m['ou']
    HTffb[3] = c['r27'] * 0.5 * (3. * s - t) * m['ot2'] + m['s2'] * m['ot3'] + \
@@ -207,7 +206,7 @@ def get_Hxxpz(z, Q2, had, m, s, t, u):
   Hxxpz = np.einsum('i,j->ij', HTffa, H1p) + np.einsum('i,j->ij', HTffb, H) / z
   return Hxxpz
 
-def get_HQS(m):
+def get_HQS(m): #Note there is a 1/u in each hard factor compared to KQVY 2006
     fsi = 1. + m['ut']
     HQS[0] = 0
     HQS[1] = -m['ou']*(2.+fsi)*(m['st2']+m['ut2'])*c['r18']
@@ -484,12 +483,12 @@ def get_dsigST(x, z, xF, pT, rs, tar, had):
   ds = d[5]
   dsb = d[6]
 
-  uQS = (-2./np.pi) * f1Tp[1]
-  ubQS = (-2./np.pi) * f1Tp[2]
-  dQS = (-2./np.pi) * f1Tp[3]
-  dbQS = (-2./np.pi) * f1Tp[4]
-  sQS = (-2./np.pi) * f1Tp[5]
-  sbQS = (-2./np.pi) * f1Tp[6]
+  uQS = f1Tp[1]
+  ubQS = f1Tp[2]
+  dQS = f1Tp[3]
+  dbQS = f1Tp[4]
+  sQS = f1Tp[5]
+  sbQS = f1Tp[6]
 
   #Fragmentation term
 
@@ -604,7 +603,7 @@ def get_dsigST(x, z, xF, pT, rs, tar, had):
 
   QScs += (ubQS+dbQS+sbQS)*ftg*dg*sig12
 
-  QScs= -pT * M * (np.pi/2.) * numfac * oz * QScs
+  QScs= 2. * pT * M * numfac * QScs #Note there is a 1/u in the hard factors
 
   return ffcs + QScs
   #return ffcs
