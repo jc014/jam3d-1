@@ -55,9 +55,9 @@ def get_d(z, Q2, had): # Collinear unpolarized FF
       return conf['ffk'].get_C(z, Q2)
 
 def get_h(x, Q2): # Collinear transversity
-  return conf['transversity'].get_C(x, Q2)
+  return 0.0 #conf['transversity'].get_C(x, Q2)
 
-# (H_1^{\perp(1)}(z) - z*dH_1^{\perp(1)}(z)/dz)
+(H_1^{\perp(1)}(z) - z*dH_1^{\perp(1)}(z)/dz)
 def get_H1p(z, Q2, had):
   if 'pi' in had:
       return conf['collinspi'].get_C(z, Q2) - z * conf['dcollinspi'].get_C(z, Q2)
@@ -107,54 +107,54 @@ def get_mandelstam(s, t, u):
 
 def get_Hupol(m):
   # Hard parts for the unpolarized cross section
-   Hupol[1] = 0.0 #4. * (m['st2'] + m['ut2']) * c['r9']
-   Hupol[2] = 0.0 #4. * (m['su2'] + m['tu2']) * c['r9']
-   Hupol[3] = 0.0 #-8. * m['st'] * m['su'] * c['r27']
-   Hupol[4] = 0.0 #4. * (m['ts2'] + m['us2']) * c['r9']
-   Hupol[5] = 0.0 #4. * (m['st2'] + m['ut2']) * c['r9']
-   Hupol[6] = 0.0 #-8. * m['ut'] * m['us'] * c['r27']
-   Hupol[7] = 0.0 #4. * (m['ts2'] + m['us2']) * c['r9']
-   Hupol[8] = 0.0 #4. * (m['su2'] + m['tu2']) * c['r9']
-   Hupol[9] = 0.0 #-8. * m['tu'] * m['ts'] * c['r27']
-   Hupol[10] = 0.0 #32. * c['r27'] * (m['tu'] + m['ut']) * (1. - 9. * m['ts'] * m['us'] * c['r4'])
-   Hupol[11] = 0.0 #4. * c['r9'] * (- m['su'] - m['us']) * (1. - 9. * m['st'] * m['ut'] * c['r4'])
-   Hupol[12] = 0.0 #4. * c['r9'] * (- m['st'] - m['ts']) * (1. - 9. * m['su'] * m['tu'] * c['r4'])
-   Hupol[13] = 0.0 #(m['tu'] + m['ut']) * c['r6'] - 3. * (m['ts2'] + m['us2']) * c['r8']
-   Hupol[14] = 0.0 #4.5 * (3. - m['ts'] * m['us'] -m['st'] * m['ut'] - m['su'] * m['tu'])
+   Hupol[1] = 4. * (m['st2'] + m['ut2']) * c['r9']
+   Hupol[2] = 4. * (m['su2'] + m['tu2']) * c['r9']
+   Hupol[3] = -8. * m['st'] * m['su'] * c['r27']
+   Hupol[4] = 4. * (m['ts2'] + m['us2']) * c['r9']
+   Hupol[5] = 4. * (m['st2'] + m['ut2']) * c['r9']
+   Hupol[6] = -8. * m['ut'] * m['us'] * c['r27']
+   Hupol[7] = 4. * (m['ts2'] + m['us2']) * c['r9']
+   Hupol[8] = 4. * (m['su2'] + m['tu2']) * c['r9']
+   Hupol[9] = -8. * m['tu'] * m['ts'] * c['r27']
+   Hupol[10] = 32. * c['r27'] * (m['tu'] + m['ut']) * (1. - 9. * m['ts'] * m['us'] * c['r4'])
+   Hupol[11] = 4. * c['r9'] * (- m['su'] - m['us']) * (1. - 9. * m['st'] * m['ut'] * c['r4'])
+   Hupol[12] = 4. * c['r9'] * (- m['st'] - m['ts']) * (1. - 9. * m['su'] * m['tu'] * c['r4'])
+   Hupol[13] = (m['tu'] + m['ut']) * c['r6'] - 3. * (m['ts2'] + m['us2']) * c['r8']
+   Hupol[14] = 4.5 * (3. - m['ts'] * m['us'] -m['st'] * m['ut'] - m['su'] * m['tu'])
    return Hupol
 
 def get_HTffa(m, s, t, u):
   # Hard parts for the transversely polarized fragmentation term
    HTffa[0] = 0.0
-   HTffa[1] = 0.0 #- c['r9'] * m['ot'] + c['r8'] * s * (u - s) * m['ot3'] - m['st2'] * m['ou']
-   HTffa[2] = 0.0 #c['r27'] * s * (t - u) * m['ot2'] * m['ou'] + c['r9'] * s * (u - 2. * t) * m['ot3'] + s * m['ot2']
-   HTffa[3] = 0.0 #c['r27'] * s * m['ot2'] + c['r9'] * s * (t - s) * m['ot3'] - c['r3'] * m['ot']
-   HTffa[4] = 0.0 #c['r27'] * s * m['ot'] * m['ou'] - c['r3'] * m['ot']
-   HTffa[5] = 0.0 #c['r9'] * s * (u - 2. * t) * m['ot3'] + s * m['ot2']
-   HTffa[6] = 0.0 #c['r9'] * s * (t - s) * m['ot3']
-   HTffa[7] = 0.0 #HTffa[1]
-   HTffa[8] = 0.0 #HTffa[2]
-   HTffa[9] = 0.0 #HTffa[3]
-   HTffa[10] = 0.0 #HTffa[4]
-   HTffa[11] = 0.0 #HTffa[5]
-   HTffa[12] = 0.0 #HTffa[6]
+   HTffa[1] = - c['r9'] * m['ot'] + c['r8'] * s * (u - s) * m['ot3'] - m['st2'] * m['ou']
+   HTffa[2] = c['r27'] * s * (t - u) * m['ot2'] * m['ou'] + c['r9'] * s * (u - 2. * t) * m['ot3'] + s * m['ot2']
+   HTffa[3] = c['r27'] * s * m['ot2'] + c['r9'] * s * (t - s) * m['ot3'] - c['r3'] * m['ot']
+   HTffa[4] = c['r27'] * s * m['ot'] * m['ou'] - c['r3'] * m['ot']
+   HTffa[5] = c['r9'] * s * (u - 2. * t) * m['ot3'] + s * m['ot2']
+   HTffa[6] = c['r9'] * s * (t - s) * m['ot3']
+   HTffa[7] = HTffa[1]
+   HTffa[8] = HTffa[2]
+   HTffa[9] = HTffa[3]
+   HTffa[10] = HTffa[4]
+   HTffa[11] = HTffa[5]
+   HTffa[12] = HTffa[6]
    return HTffa
 
 def get_HTffb(m, s, t, u):
   # Hard parts for the transversely polarized fragmentation term
    HTffb[0] = 0
-   HTffb[1] = 0.0 #c['r8'] * s * (u - s) * m['ot3'] + 0.5 * c['r9'] * (s - u) * m['ot'] * m['ou'] + 0.5 * (s - u) * (m['t2'] - 2. * t * u - 2. * m['u2']) * m['ot3'] * m['ou']
-   HTffb[2] = 0.0 #c['r27'] * 0.5 * s * (t - 3. * u) * m['ot2'] * m['ou'] - s * u * m['ot3'] + c['r9'] * s * (2. * u - t) * m['ot3'] - c['r3'] * 0.5 * m['s2'] * m['ot2'] * m['ou']
-   HTffb[3] = 0.0 #c['r27'] * 0.5 * (3. * s - t) * m['ot2'] + m['s2'] * m['ot3'] + c['r9'] * s * (t - 2. * s) * m['ot3'] + c['r3'] * 0.5 * u * m['ot2']
-   HTffb[4] = 0.0 #10. * c['r27'] * 0.5 * (s - u) * m['ot'] * m['ou']
-   HTffb[5] = 0.0 #c['r9'] * s * (2. * u - t) * m['ot3'] - s * u * m['ot3']
-   HTffb[6] = 0.0 #c['r9'] * s * (t - 2. * s) * m['ot3'] + m['s2'] * m['ot3']
-   HTffb[7] = 0.0 #HTffb[1]
-   HTffb[8] = 0.0 #HTffb[2]
-   HTffb[9] = 0.0 #HTffb[3]
-   HTffb[10] = 0.0 #HTffb[4]
-   HTffb[11] = 0.0 #HTffb[5]
-   HTffb[12] = 0.0 #HTffb[6]
+   HTffb[1] = c['r8'] * s * (u - s) * m['ot3'] + 0.5 * c['r9'] * (s - u) * m['ot'] * m['ou'] + 0.5 * (s - u) * (m['t2'] - 2. * t * u - 2. * m['u2']) * m['ot3'] * m['ou']
+   HTffb[2] = c['r27'] * 0.5 * s * (t - 3. * u) * m['ot2'] * m['ou'] - s * u * m['ot3'] + c['r9'] * s * (2. * u - t) * m['ot3'] - c['r3'] * 0.5 * m['s2'] * m['ot2'] * m['ou']
+   HTffb[3] = c['r27'] * 0.5 * (3. * s - t) * m['ot2'] + m['s2'] * m['ot3'] + c['r9'] * s * (t - 2. * s) * m['ot3'] + c['r3'] * 0.5 * u * m['ot2']
+   HTffb[4] = 10. * c['r27'] * 0.5 * (s - u) * m['ot'] * m['ou']
+   HTffb[5] = c['r9'] * s * (2. * u - t) * m['ot3'] - s * u * m['ot3']
+   HTffb[6] = c['r9'] * s * (t - 2. * s) * m['ot3'] + m['s2'] * m['ot3']
+   HTffb[7] = HTffb[1]
+   HTffb[8] = HTffb[2]
+   HTffb[9] = HTffb[3]
+   HTffb[10] = HTffb[4]
+   HTffb[11] = HTffb[5]
+   HTffb[12] = HTffb[6]
    return HTffb
 
 def get_Hxxpz(z, Q2, had, m, s, t, u):
