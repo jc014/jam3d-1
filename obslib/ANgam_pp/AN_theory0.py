@@ -18,7 +18,6 @@ from scipy.integrate import quad, dblquad, fixed_quad
 flavor = ['g','u','ub','d','db','s','sb']
         #  0   1   2    3    4   5    6
 target = ['p']
-hadron = ['pi+','pi-','pi0']
 
 flavdict = {'g': 0, 'u': 1, 'ub': 2,'d': 3, 'db': 4, 's': 5, 'sb': 6}
 
@@ -31,10 +30,6 @@ Hupol = {}
 HQS = {}
 f = {}
 ft = {}
-d = {}
-h = {}
-H1p = {}
-H = {}
 
 eu2, ed2 = 4/9., 1/9.
 e2 = []
@@ -85,13 +80,6 @@ def get_Hupol(m):
 def get_upolden(x, xF, pT, rs):
 
   M = conf['aux'].M
-  Mh = {}
-  Mh['pi+'] = conf['aux'].Mpi
-  Mh['pi-'] = conf['aux'].Mpi
-  Mh['pi0'] = conf['aux'].Mpi
-  Mh['k+'] = conf['aux'].Mk
-  Mh['k-'] = conf['aux'].Mk
-  Mh['jet']=1 #This is a dummy formula so we don't get a runtime error
 
   #Defining all of our internal variables at the hadronic and partonic scales#
 
@@ -107,7 +95,6 @@ def get_upolden(x, xF, pT, rs):
   ss = rs**2
   tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) + (xF * ss / 2)
   uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) - (xF * ss / 2)
-  x = ((-ss * uu) - (tt * ss) - (tt * uu) - tt) / ((ss**2) + (tt * ss))
   xp = -x * tt / (x * ss + uu)
 
   # Mandelstam variables at the parton level
@@ -116,7 +103,7 @@ def get_upolden(x, xF, pT, rs):
   u = xp * uu
 
   # Prefactor
-  numfac = (-2.0 * M * pT) / (x * ss + uu)
+  denfac = 1 / (N_C * (x * ss + uu))
 
   #calling mandelstam variables
   m=get_mandelstam(s, t, u)
@@ -161,22 +148,13 @@ def get_upolden(x, xF, pT, rs):
 
   upol += (((ftsb * fsb) * (2 * C_F * Hupol1)) + ((ftsb * fg) *Hupol3) + ((ftg * fsb) * Hupol2)) * e2[6]
 
-  return denfac * upol
+  return denfac * upol * (1 / (x * xp))
 
 #  @profile
 # Calculation of the fragmentation term in the transversely polarized cross section
 def get_polnum(x, xF, pT, rs):
 
   M = conf['aux'].M
-  Mh = {}
-  Mh['pi+'] = conf['aux'].Mpi
-  Mh['pi-'] = conf['aux'].Mpi
-  Mh['pi0'] = conf['aux'].Mpi
-  Mh['k+'] = conf['aux'].Mk
-  Mh['k-'] = conf['aux'].Mk
-  Mh['jet']= 1 #This is a dummy formula so we don't get a runtime error
-
-  Mh = Mh[had]
 
   #Defining all of our internal variables at the hadronic and partonic scales#
 
@@ -192,7 +170,6 @@ def get_polnum(x, xF, pT, rs):
   ss = rs**2
   tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) + (xF * ss / 2)
   uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) - (xF * ss / 2)
-  x = ((-ss * uu) - (tt * ss) - (tt * uu) - tt) / ((ss**2) + (tt * ss))
   xp = -x * tt / (x * ss + uu)
 
   # Mandelstam variables at the parton level
@@ -231,46 +208,30 @@ def get_polnum(x, xF, pT, rs):
   fs = f[5]
   fsb = f[6]
 
-  uQS = (-2./np.pi) * get_f1Tp(x, Q2)[1]
-  ubQS = (-2./np.pi) * get_f1Tp(x, Q2)[2]
-  dQS = (-2./np.pi) * get_f1Tp(x, Q2)[3]
-  dbQS = (-2./np.pi) * get_f1Tp(x, Q2)[4]
-  sQS = (-2./np.pi) * get_f1Tp(x, Q2)[5]
-  sbQS = (-2./np.pi) * get_f1Tp(x, Q2)[6]
+  uQS = get_f1Tp(x, Q2)[1]
+  ubQS = get_f1Tp(x, Q2)[2]
+  dQS = get_f1Tp(x, Q2)[3]
+  dbQS = get_f1Tp(x, Q2)[4]
+  sQS = get_f1Tp(x, Q2)[5]
+  sbQS = get_f1Tp(x, Q2)[6]
 ############################################################################
 
-  ffcs = 0
+  QScs = 0
 
-  ffcs += ((((-1 / (N_C**2)) * ftu * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * uQS * (np.pi/2.)) * e2[1]
+  QScs += (((-1 / (N_C**2)) * ftu * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * uQS * e2[1]
 
-  ffcs += ((((-1 / (N_C**2)) * ftub * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * ubQS * (np.pi/2.)) * e2[2]
+  QScs += (((-1 / (N_C**2)) * ftub * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * ubQS * e2[2]
 
-  ffcs += ((((-1 / (N_C**2)) * ftd * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * dQS * (np.pi/2.)) * e2[3]
+  QScs += (((-1 / (N_C**2)) * ftd * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * dQS * e2[3]
 
-  ffcs += ((((-1 / (N_C**2)) * ftdb * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * dbQS * (np.pi/2.)) * e2[4]
+  QScs += (((-1 / (N_C**2)) * ftdb * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * dbQS * e2[4]
 
-  ffcs += ((((-1 / (N_C**2)) * fts * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * sQS * (np.pi/2.)) * e2[5]
+  QScs += (((-1 / (N_C**2)) * fts * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * sQS * e2[5]
 
-  ffcs += ((((-1 / (N_C**2)) * ftsb * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * sbQS * (np.pi/2.)) * e2[6]
+  QScs += (((-1 / (N_C**2)) * ftsb * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * sbQS * e2[6]
 
-  if had=='jet': ffcs=0.0
+  return QScs * numfac * (1 / (x * xp))
 
-  return ffcs * numfac
-
-def num_integral(x, xp, xF, pT, rs):
-    ss = rs**2
-    tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) + (xF * ss / 2)
-    uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) - (xF * ss / 2)
-    x = ((-ss * uu) - (tt * ss) - (tt * uu) - tt) / ((ss**2) + (tt * ss))
-    xp = -x * tt / (x * ss + uu)
-    return (1 / (x * xp)) * get_polnum(x, xF, pT, rs)
-def denom_integral(x, xp, xF, pT, rs):
-    ss = rs**2
-    tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) + (xF * ss / 2)
-    uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) - (xF * ss / 2)
-    x = ((-ss * uu) - (tt * ss) - (tt * uu) - tt) / ((ss**2) + (tt * ss))
-    xp = -x * tt / (x * ss + uu)
-    return (1 / (x * xp)) * get_upolden(x, xF, pT, rs)
 
 def get_numint(xF, pT, rs):
 
@@ -280,13 +241,11 @@ def get_numint(xF, pT, rs):
     ss = rs**2
     tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) + (xF * ss / 2)
     uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) - (xF * ss / 2)
-    x = ((-ss * uu) - (tt * ss) - (tt * uu) - tt) / ((ss**2) + (tt * ss))
-    xp = -x * tt / (x * ss + uu)
 
     # Lower limits of the x integration
-    def xmin(uu, tt, ss): return -uu / (ss + tt)
+    xmin = -uu / (ss + tt)
 
-    numer = quad(lambda x: num_integral(x, xp, xF, pT, rs), xmin(uu, tt, ss), 1., limit=100)[0]
+    numer = quad(lambda x: get_polnum(x, xF, pT, rs), xmin, 1., limit=100)[0]
     return numer
 
 def get_denomint(xF, pT, rs):
@@ -297,13 +256,11 @@ def get_denomint(xF, pT, rs):
     ss = rs**2
     tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) + (xF * ss / 2)
     uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) - (xF * ss / 2)
-    x = ((-ss * uu) - (tt * ss) - (tt * uu) - tt) / ((ss**2) + (tt * ss))
-    xp = -x * tt / (x * ss + uu)
 
     # Lower limits of the x integration
-    def xmin(uu, tt, ss): return -uu / (ss + tt)
+    xmin = -uu / (ss + tt)
 
-    denom = quad(lambda x: denom_integral(x, xp, xF, pT, rs), xmin(uu, tt, ss), 1, limit=100)[0]
+    denom = quad(lambda x: get_upolden(x, xF, pT, rs), xmin, 1, limit=100)[0]
     return denom
 
 # def get_vars(rs, n):
@@ -332,8 +289,6 @@ if __name__ == '__main__':
 
   rs = 200.
   tar = 'p'
-  #had = 'pi+'
-  had='jet'
   pT = 2
   xF = 0.3
   #xF = 2 * pT / rs
@@ -342,7 +297,7 @@ if __name__ == '__main__':
 
   def test():
     num = get_numint(xF, pT, rs)
-    den = get_denomint(xF, pT, rs) / N_C
+    den = get_denomint(xF, pT, rs)
 
     AN = num / den
     print AN
