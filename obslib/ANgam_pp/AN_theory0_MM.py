@@ -116,7 +116,7 @@ def get_upolden(x, xF, pT, rs):
   u = xp * uu
 
   # Prefactor
-  numfac = (2 * M * pT) / (x * ss + uu)
+  numfac = (-2.0 * M * pT) / (x * ss + uu)
 
   #calling mandelstam variables
   m=get_mandelstam(s, t, u)
@@ -335,7 +335,8 @@ if __name__ == '__main__':
   #had = 'pi+'
   had='jet'
   pT = 2
-  xF = 0.2
+  xF = 0.3
+  #xF = 2 * pT / rs
   C_F = 4/3
   N_C = 3
 
