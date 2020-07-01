@@ -55,9 +55,9 @@ def get_d(z, Q2, had): # Collinear unpolarized FF
       return conf['ffk'].get_C(z, Q2)
 
 def get_h(x, Q2): # Collinear transversity
-  return conf['transversity'].get_C(x, Q2)
+  return 0.0 #conf['transversity'].get_C(x, Q2)
 
-# (H_1^{\perp(1)}(z) - z*dH_1^{\perp(1)}(z)/dz)
+#(H_1^{\perp(1)}(z) - z*dH_1^{\perp(1)}(z)/dz)
 def get_H1p(z, Q2, had):
   if 'pi' in had:
       return conf['collinspi'].get_C(z, Q2) - z * conf['dcollinspi'].get_C(z, Q2)
@@ -121,7 +121,7 @@ def get_Hupol(m):
    Hupol[12] = 4. * c['r9'] * (- m['st'] - m['ts']) * (1. - 9. * m['su'] * m['tu'] * c['r4'])
    Hupol[13] = (m['tu'] + m['ut']) * c['r6'] - 3. * (m['ts2'] + m['us2']) * c['r8']
    Hupol[14] = 4.5 * (3. - m['ts'] * m['us'] - m['st'] * m['ut'] - m['su'] * m['tu'])
-  
+
    return Hupol
 
 def get_HTffa(m, s, t, u):
@@ -433,13 +433,13 @@ def get_dsigST(x, z, xF, pT, rs, tar, had):
       dm=conf['aux'].charge_conj(d)
       d=0.5*(dp+dm)
 
-  hg = h[0]
-  hu = h[1]
-  hub = h[2]
-  hd = h[3]
-  hdb = h[4]
-  hs = h[5]
-  hsb = h[6]
+  hg = 0.0 #h[0]
+  hu = 0.0 #h[1]
+  hub = 0.0 #h[2]
+  hd = 0.0 #h[3]
+  hdb = 0.0 #h[4]
+  hs = 0.0 #h[5]
+  hsb = 0.0 #h[6]
 
   ftg = ft[0]
   ftu = ft[1]
