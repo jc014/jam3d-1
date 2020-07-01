@@ -84,7 +84,13 @@ class RESMAN:
             if version == 'JAM20+':
                 conf['sivers']       = pdf2.PDF('Siv')
                 conf['dsivers']      = pdf2.PDF('Siv','deriv')
-        if 'boermulders'   in conf['params']: conf['boermulders']  = pdf1.PDF()
+        if 'boermulders' in conf['params']:
+            if version == 0:
+                conf['boermulders']  = pdf1.PDF()
+                conf['dboermulders'] = pdf1.PDF('deriv')
+            if version == 'JAM20+':
+                conf['boermulders']  = pdf2.PDF('BM')
+                conf['dboermulders'] = pdf2.PDF('BM','deriv')
         if 'ffpi'          in conf['params']: conf['ffpi']         = ff0.FF('pi')
         if 'ffk'           in conf['params']: conf['ffk']          = ff0.FF('k')
         if 'collinspi'     in conf['params']:
@@ -152,7 +158,9 @@ class RESMAN:
         if 'sivers'       in conf:
             state['sivers'      ]    = conf['sivers'       ].get_state()
             state['dsivers'      ]   = conf['dsivers'      ].get_state()
-        if 'boermulders'  in conf: state['boermulders' ]    = conf['boermulders'  ].get_state()
+        if 'boermulders'       in conf:
+            state['boermulders'      ]    = conf['boermulders'       ].get_state()
+            state['dboermulders'      ]   = conf['dboermulders'      ].get_state()
         if 'ffpi'         in conf: state['ffpi'        ]    = conf['ffpi'         ].get_state()
         if 'ffk'          in conf: state['ffk'         ]    = conf['ffk'          ].get_state()
         if 'collinspi'    in conf:
@@ -172,7 +180,9 @@ class RESMAN:
         if 'sivers'       in conf:
             conf['sivers'      ].set_state(state['sivers'      ])
             conf['dsivers'     ].set_state(state['dsivers'     ])
-        if 'boermulders'  in conf: conf['boermulders' ].set_state(state['boermulders' ])
+        if 'boermulders'       in conf:
+            conf['boermulders'      ].set_state(state['boermulders'      ])
+            conf['dboermulders'     ].set_state(state['dboermulders'     ])
         if 'ffpi'         in conf: conf['ffpi'        ].set_state(state['ffpi'        ])
         if 'ffk'          in conf: conf['ffk'         ].set_state(state['ffk'         ])
         if 'collinspi'    in conf:
