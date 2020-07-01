@@ -360,6 +360,7 @@ if __name__ == '__main__':
   had='jet'
   pT = 2
   xF = 0.2
+  C_F = 4/3
   N_C = 3
 
   def test():
