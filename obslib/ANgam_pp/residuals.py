@@ -8,7 +8,7 @@ import pandas as pd
 import time
 from tools.residuals import _RESIDUALS
 from reader import READER
-from obslib.AN_ep import AN_theory0 as ANep_theory
+from obslib.ANgam_pp import AN_theory0 as AN_theory
 from qcdlib.aux import AUX
 from qcdlib.alphaS import ALPHAS
 from tools.config import conf
@@ -17,8 +17,8 @@ from tools.config import conf
 class RESIDUALS(_RESIDUALS):
 
     def __init__(self):
-        self.reaction = 'ANep'
-        self.tabs = conf['ANep tabs']
+        self.reaction = 'ANgam'
+        self.tabs = conf['ANgam tabs']
         self.setup()
 
     def _get_theory(self, entry):
@@ -27,15 +27,17 @@ class RESIDUALS(_RESIDUALS):
         pT = self.tabs[k]['pT'][i]
         rs = self.tabs[k]['rs'][i]
         target = self.tabs[k]['target'][i]
-        hadron = self.tabs[k]['hadron'][i]
+        #hadron = self.tabs[k]['hadron'][i]
         obs = self.tabs[k]['obs'][i].strip()
         col = self.tabs[k]['col'][i].strip().upper()
 
+        if obs == 'ANgam':
+            numerator = AN_theory.get_numint(xF, pT, rs)
+            denominator = AN_theory.get_denomint(xF, pT, rs)
+            thy = numerator / denominator
+            print(thy)
+            #print hadron,xF,thy
 
-        if col=='HERMES' or col=='COMPASS' or col=='JLAB12': xF=-xF
-
-        if obs == 'ANep':
-            thy = ANep_theory.get_AN(xF, pT, rs, target, hadron)
         return thy
 
     def gen_report(self, verb=1, level=1):

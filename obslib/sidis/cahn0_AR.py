@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+
 # Adam Rilatt
 # 06 / 24 / 20
 # Cahn Function Testing
@@ -125,6 +126,7 @@ def get_cahn(x, z, Q2, pT, tar, had):
         F     = conf['aux'].p2n(F)
         w_tar = conf['aux'].p2n(w_tar)
         return _get_cahn(x, z, Q2, pT, tar, had, F, D, w_tar, w_had)
+
 
     elif tar == 'd':    # proton-neutron bound state ('deuteron'?)
         return (0.5 * (get_cahn(x, z, Q2, pT, 'p', had) +

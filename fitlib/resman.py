@@ -23,6 +23,8 @@ import obslib.AN_pp.residuals
 import obslib.AN_pp.reader
 import obslib.AN_ep.residuals
 import obslib.AN_ep.reader
+import obslib.ANgam_pp.residuals
+import obslib.ANgam_pp.reader
 import obslib.dy.reader
 import obslib.dy.residuals
 import obslib.wz.reader
@@ -48,6 +50,7 @@ class RESMAN:
             if 'sia'     in conf['datasets']: self.setup_sia()
             if 'moments' in conf['datasets']: self.setup_moments()
             if 'AN'      in conf['datasets']: self.setup_AN()
+            if 'ANgam'   in conf['datasets']: self.setup_ANgam()
             if 'ANep'    in conf['datasets']: self.setup_ANep()
             if 'dy'      in conf['datasets']: self.setup_dy()
             if 'wz'      in conf['datasets']: self.setup_wz()
@@ -84,7 +87,13 @@ class RESMAN:
             if version == 'JAM20+':
                 conf['sivers']       = pdf2.PDF('Siv')
                 conf['dsivers']      = pdf2.PDF('Siv','deriv')
-        if 'boermulders'   in conf['params']: conf['boermulders']  = pdf1.PDF()
+        if 'boermulders' in conf['params']:
+            if version == 0:
+                conf['boermulders']  = pdf1.PDF()
+                conf['dboermulders'] = pdf1.PDF('deriv')
+            if version == 'JAM20+':
+                conf['boermulders']  = pdf2.PDF('BM')
+                conf['dboermulders'] = pdf2.PDF('BM','deriv')
         if 'ffpi'          in conf['params']: conf['ffpi']         = ff0.FF('pi')
         if 'ffk'           in conf['params']: conf['ffk']          = ff0.FF('k')
         if 'collinspi'     in conf['params']:
@@ -128,6 +137,10 @@ class RESMAN:
         conf['ANep tabs']   = obslib.AN_ep.reader.READER().load_data_sets('ANep')
         self.ANepres = obslib.AN_ep.residuals.RESIDUALS()
 
+    def setup_ANgam(self):
+        conf['ANgam tabs']   = obslib.ANgam_pp.reader.READER().load_data_sets('ANgam')
+        self.ANgamres = obslib.ANgam_pp.residuals.RESIDUALS()
+
     def setup_dy(self):
         conf['dy tabs']   = obslib.dy.reader.READER().load_data_sets('dy')
         self.dyres = obslib.dy.residuals.RESIDUALS()
@@ -152,7 +165,9 @@ class RESMAN:
         if 'sivers'       in conf:
             state['sivers'      ]    = conf['sivers'       ].get_state()
             state['dsivers'      ]   = conf['dsivers'      ].get_state()
-        if 'boermulders'  in conf: state['boermulders' ]    = conf['boermulders'  ].get_state()
+        if 'boermulders'       in conf:
+            state['boermulders'      ]    = conf['boermulders'       ].get_state()
+            state['dboermulders'      ]   = conf['dboermulders'      ].get_state()
         if 'ffpi'         in conf: state['ffpi'        ]    = conf['ffpi'         ].get_state()
         if 'ffk'          in conf: state['ffk'         ]    = conf['ffk'          ].get_state()
         if 'collinspi'    in conf:
@@ -172,7 +187,9 @@ class RESMAN:
         if 'sivers'       in conf:
             conf['sivers'      ].set_state(state['sivers'      ])
             conf['dsivers'     ].set_state(state['dsivers'     ])
-        if 'boermulders'  in conf: conf['boermulders' ].set_state(state['boermulders' ])
+        if 'boermulders'       in conf:
+            conf['boermulders'      ].set_state(state['boermulders'      ])
+            conf['dboermulders'     ].set_state(state['dboermulders'     ])
         if 'ffpi'         in conf: conf['ffpi'        ].set_state(state['ffpi'        ])
         if 'ffk'          in conf: conf['ffk'         ].set_state(state['ffk'         ])
         if 'collinspi'    in conf:
@@ -196,6 +213,7 @@ class RESMAN:
         if 'sidis'  in conf['datasets']:  self.distribute_requests(container,self.sidisres.requests)
         if 'sia'    in conf['datasets']:  self.distribute_requests(container,self.siares.requests)
         if 'AN'     in conf['datasets']:  self.distribute_requests(container,self.ANres.requests)
+        if 'ANgam'  in conf['datasets']:  self.distribute_requests(container,self.ANgamres.requests)
         if 'ANep'   in conf['datasets']:  self.distribute_requests(container,self.ANepres.requests)
         if 'dy'     in conf['datasets']:  self.distribute_requests(container,self.dyres.requests)
         if 'wz'     in conf['datasets']:  self.distribute_requests(container,self.wzres.requests)
@@ -206,6 +224,7 @@ class RESMAN:
             if  request[i]['reaction']=='sidis' :  self.sidisres.process_request(request[i])
             if  request[i]['reaction']=='sia'   :  self.siares.process_request(request[i])
             if  request[i]['reaction']=='AN'    :  self.ANres.process_request(request[i])
+            if  request[i]['reaction']=='ANgam' :  self.ANgamres.process_request(request[i])
             if  request[i]['reaction']=='ANep'  :  self.ANepres.process_request(request[i])
             if  request[i]['reaction']=='dy'    :  self.dyres.process_request(request[i])
             if  request[i]['reaction']=='wz'    :  self.wzres.process_request(request[i])
@@ -223,6 +242,7 @@ class RESMAN:
                 if request['reaction']=='sidis'  : self.sidisres.update_tabs_external(request)
                 if request['reaction']=='sia'    : self.siares.update_tabs_external(request)
                 if request['reaction']=='AN'     : self.ANres.update_tabs_external(request)
+                if request['reaction']=='ANgam'  : self.ANgamres.update_tabs_external(request)
                 if request['reaction']=='ANep'   : self.ANepres.update_tabs_external(request)
                 if request['reaction']=='dy'     : self.dyres.update_tabs_external(request)
                 if request['reaction']=='wz'     : self.wzres.update_tabs_external(request)
@@ -241,6 +261,11 @@ class RESMAN:
             nres=np.append(nres,out[2])
         if 'AN' in conf['datasets']:
             out=self.ANres.get_residuals(calc=False)
+            res=np.append(res,out[0])
+            rres=np.append(rres,out[1])
+            nres=np.append(nres,out[2])
+        if 'ANgam' in conf['datasets']:
+            out=self.ANgamres.get_residuals(calc=False)
             res=np.append(res,out[0])
             rres=np.append(rres,out[1])
             nres=np.append(nres,out[2])
@@ -274,6 +299,9 @@ class RESMAN:
         if 'AN' in conf['datasets']:
             out=self.ANres.get_residuals(calc=False)
             reaction.extend(['AN' for _ in out[0]])
+        if 'ANgam' in conf['datasets']:
+            out=self.ANgamres.get_residuals(calc=False)
+            reaction.extend(['ANgam' for _ in out[0]])
         if 'ANep' in conf['datasets']:
             out=self.ANepres.get_residuals(calc=False)
             reaction.extend(['ANep' for _ in out[0]])
@@ -290,6 +318,7 @@ class RESMAN:
         if 'sidis'   in conf['datasets']: L.extend(self.sidisres.gen_report(verb,level))
         if 'sia'     in conf['datasets']: L.extend(self.siares.gen_report(verb,level))
         if 'AN'      in conf['datasets']: L.extend(self.ANres.gen_report(verb,level))
+        if 'ANgam'   in conf['datasets']: L.extend(self.ANgamres.gen_report(verb,level))
         if 'ANep'    in conf['datasets']: L.extend(self.ANepres.gen_report(verb,level))
         if 'dy'      in conf['datasets']: L.extend(self.dyres.gen_report(verb,level))
         if 'wz'      in conf['datasets']: L.extend(self.wzres.gen_report(verb,level))
@@ -300,6 +329,7 @@ class RESMAN:
         if 'sidis'   in conf['datasets']: data.update(self.sidisres.get_chi2())
         if 'sia'     in conf['datasets']: data.update(self.siares.get_chi2())
         if 'AN'      in conf['datasets']: data.update(self.ANres.get_chi2())
+        if 'ANgam'   in conf['datasets']: data.update(self.ANgamres.get_chi2())
         if 'ANep'    in conf['datasets']: data.update(self.ANepres.get_chi2())
         if 'dy'      in conf['datasets']: data.update(self.dyres.get_chi2())
         if 'wz'      in conf['datasets']: data.update(self.wzres.get_chi2())

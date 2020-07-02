@@ -24,7 +24,7 @@ flavdict = {'g': 0, 'u': 1, 'ub': 2,'d': 3, 'db': 4, 's': 5, 'sb': 6}
 
 # Common color factors and fractions
 c = {'r3': 1. / 3., 'r4': 0.25, 'r6': 1. / 6., 'r8': 0.125,
-         'r9': 1. / 9., 'r18': 1. / 18., 'r24': 1. / 24., 'r27': 1. / 27.}
+        'r9': 1. / 9., 'r18': 1. / 18., 'r24': 1. / 24., 'r27': 1. / 27.}
 
 m = {}
 Hupol = {}
@@ -55,9 +55,9 @@ def get_d(z, Q2, had): # Collinear unpolarized FF
       return conf['ffk'].get_C(z, Q2)
 
 def get_h(x, Q2): # Collinear transversity
-  return conf['transversity'].get_C(x, Q2)
+  return 0.0 #conf['transversity'].get_C(x, Q2)
 
-# (H_1^{\perp(1)}(z) - z*dH_1^{\perp(1)}(z)/dz)
+#(H_1^{\perp(1)}(z) - z*dH_1^{\perp(1)}(z)/dz)
 def get_H1p(z, Q2, had):
   if 'pi' in had:
       return conf['collinspi'].get_C(z, Q2) - z * conf['dcollinspi'].get_C(z, Q2)
@@ -116,30 +116,21 @@ def get_Hupol(m):
    Hupol[7] = 4. * (m['ts2'] + m['us2']) * c['r9']
    Hupol[8] = 4. * (m['su2'] + m['tu2']) * c['r9']
    Hupol[9] = -8. * m['tu'] * m['ts'] * c['r27']
-   Hupol[10] = 32. * c['r27'] * \
-    (m['tu'] + m['ut']) * \
-    (1. - 9. * m['ts'] * m['us'] * c['r4'])
-   Hupol[11] = 4. * c['r9'] * (- m['su'] - m['us']) * (
-    1. - 9. * m['st'] * m['ut'] * c['r4'])
-   Hupol[12] = 4. * c['r9'] * (- m['st'] - m['ts']) * (
-    1. - 9. * m['su'] * m['tu'] * c['r4'])
-   Hupol[13] = (m['tu'] + m['ut']) * c['r6'] - \
-    3. * (m['ts2'] + m['us2']) * c['r8']
-   Hupol[14] = 4.5 * (3. - m['ts'] * m['us'] -
-              m['st'] * m['ut'] - m['su'] * m['tu'])
+   Hupol[10] = 32. * c['r27'] * (m['tu'] + m['ut']) * (1. - 9. * m['ts'] * m['us'] * c['r4'])
+   Hupol[11] = 4. * c['r9'] * (- m['su'] - m['us']) * (1. - 9. * m['st'] * m['ut'] * c['r4'])
+   Hupol[12] = 4. * c['r9'] * (- m['st'] - m['ts']) * (1. - 9. * m['su'] * m['tu'] * c['r4'])
+   Hupol[13] = (m['tu'] + m['ut']) * c['r6'] - 3. * (m['ts2'] + m['us2']) * c['r8']
+   Hupol[14] = 4.5 * (3. - m['ts'] * m['us'] - m['st'] * m['ut'] - m['su'] * m['tu'])
+
    return Hupol
 
 def get_HTffa(m, s, t, u):
   # Hard parts for the transversely polarized fragmentation term
    HTffa[0] = 0
-   HTffa[1] = - c['r9'] * m['ot'] + c['r8'] * \
-    s * (u - s) * m['ot3'] - m['st2'] * m['ou']
-   HTffa[2] = c['r27'] * s * (t - u) * m['ot2'] * m['ou'] + \
-     c['r9'] * s * (u - 2. * t) * m['ot3'] + s * m['ot2']
-   HTffa[3] = c['r27'] * s * m['ot2'] + c['r9'] * \
-    s * (t - s) * m['ot3'] - c['r3'] * m['ot']
-   HTffa[4] = c['r27'] * s * m['ot'] * \
-     m['ou'] - c['r3'] * m['ot']
+   HTffa[1] = - c['r9'] * m['ot'] + c['r8'] * s * (u - s) * m['ot3'] - m['st2'] * m['ou']
+   HTffa[2] = c['r27'] * s * (t - u) * m['ot2'] * m['ou'] + c['r9'] * s * (u - 2. * t) * m['ot3'] + s * m['ot2']
+   HTffa[3] = c['r27'] * s * m['ot2'] + c['r9'] * s * (t - s) * m['ot3'] - c['r3'] * m['ot']
+   HTffa[4] = c['r27'] * s * m['ot'] * m['ou'] - c['r3'] * m['ot']
    HTffa[5] = c['r9'] * s * (u - 2. * t) * m['ot3'] + s * m['ot2']
    HTffa[6] = c['r9'] * s * (t - s) * m['ot3']
    HTffa[7] = HTffa[1]
@@ -153,19 +144,12 @@ def get_HTffa(m, s, t, u):
 def get_HTffb(m, s, t, u):
   # Hard parts for the transversely polarized fragmentation term
    HTffb[0] = 0
-   HTffb[1] = c['r8'] * s * (u - s) * m['ot3'] + 0.5 * c['r9'] * (s - u) * m['ot'] * \
-     m['ou'] + 0.5 * (s - u) * (m['t2'] - 2. * t *
-                 u - 2. * m['u2']) * m['ot3'] * m['ou']
-   HTffb[2] = c['r27'] * 0.5 * s * (t - 3. * u) * m['ot2'] * m['ou'] - s * u * m['ot3'] + c['r9'] * s * (
-    2. * u - t) * m['ot3'] - c['r3'] * 0.5 * m['s2'] * m['ot2'] * m['ou']
-   HTffb[3] = c['r27'] * 0.5 * (3. * s - t) * m['ot2'] + m['s2'] * m['ot3'] + \
-     c['r9'] * s * (t - 2. * s) * m['ot3'] + \
-     c['r3'] * 0.5 * u * m['ot2']
+   HTffb[1] = c['r8'] * s * (u - s) * m['ot3'] + 0.5 * c['r9'] * (s - u) * m['ot'] * m['ou'] + 0.5 * (s - u) * (m['t2'] - 2. * t * u - 2. * m['u2']) * m['ot3'] * m['ou']
+   HTffb[2] = c['r27'] * 0.5 * s * (t - 3. * u) * m['ot2'] * m['ou'] - s * u * m['ot3'] + c['r9'] * s * (2. * u - t) * m['ot3'] - c['r3'] * 0.5 * m['s2'] * m['ot2'] * m['ou']
+   HTffb[3] = c['r27'] * 0.5 * (3. * s - t) * m['ot2'] + m['s2'] * m['ot3'] + c['r9'] * s * (t - 2. * s) * m['ot3'] + c['r3'] * 0.5 * u * m['ot2']
    HTffb[4] = 10. * c['r27'] * 0.5 * (s - u) * m['ot'] * m['ou']
-   HTffb[5] = c['r9'] * s * \
-    (2. * u - t) * m['ot3'] - s * u * m['ot3']
-   HTffb[6] = c['r9'] * s * \
-    (t - 2. * s) * m['ot3'] + m['s2'] * m['ot3']
+   HTffb[5] = c['r9'] * s * (2. * u - t) * m['ot3'] - s * u * m['ot3']
+   HTffb[6] = c['r9'] * s * (t - 2. * s) * m['ot3'] + m['s2'] * m['ot3']
    HTffb[7] = HTffb[1]
    HTffb[8] = HTffb[2]
    HTffb[9] = HTffb[3]
@@ -207,7 +191,7 @@ def get_Hxxpz(z, Q2, had, m, s, t, u):
   Hxxpz = np.einsum('i,j->ij', HTffa, H1p) + np.einsum('i,j->ij', HTffb, H) / z
   return Hxxpz
 
-def get_HQS(m):
+def get_HQS(m): #Note there is a 1/u in each hard factor compared to KQVY 2006
     fsi = 1. + m['ut']
     HQS[0] = 0
     HQS[1] = -m['ou']*(2.+fsi)*(m['st2']+m['ut2'])*c['r18']
@@ -224,14 +208,11 @@ def get_HQS(m):
     HQS[8] = -m['ou']*(-1. -2.*fsi)*(m['us2']+m['ts2'])*c['r18']
     HQS[9] = -m['ou']*(-1. -fsi)*m['ts']*m['tu']*c['r27']
 
-    HQS[10] = -m['ou']*c['r6']*c['r9']*(m['tu']+m['ut'])*(1.+18.*m['ts']*m['us'])-m['ou']*fsi*c['r6']* \
-    (m['tu']+m['ut'])*(1.-9.*(m['us'])*(m['us']))
+    HQS[10] = -m['ou']*c['r6']*c['r9']*(m['tu']+m['ut'])*(1.+18.*m['ts']*m['us'])-m['ou']*fsi*c['r6']*(m['tu']+m['ut'])*(1.-9.*(m['us'])*(m['us']))
 
-    HQS[11] = -m['ou']*c['r4']*c['r4']*(m['su']+m['us'])*(1.-9.*m['ut']*m['ut'])-m['ou']*fsi*c['r8']* \
-    c['r18']*(m['su']+m['us'])*(1.+18.*m['st']*m['ut'])
+    HQS[11] = -m['ou']*c['r4']*c['r4']*(m['su']+m['us'])*(1.-9.*m['ut']*m['ut'])-m['ou']*fsi*c['r8']*c['r18']*(m['su']+m['us'])*(1.+18.*m['st']*m['ut'])
 
-    HQS[12] = -m['ou']*c['r4']*c['r4']*(m['ts']+m['st'])*(1.-9.*m['tu']*m['tu']) + m['ou']*fsi*c['r4']* \
-    c['r4']*(m['ts']+m['st'])*(1.-9.*m['su']*m['su'])
+    HQS[12] = -m['ou']*c['r4']*c['r4']*(m['ts']+m['st'])*(1.-9.*m['tu']*m['tu']) + m['ou']*fsi*c['r4']*c['r4']*(m['ts']+m['st'])*(1.-9.*m['su']*m['su'])
 
     return HQS
 
@@ -452,13 +433,13 @@ def get_dsigST(x, z, xF, pT, rs, tar, had):
       dm=conf['aux'].charge_conj(d)
       d=0.5*(dp+dm)
 
-  hg = h[0]
-  hu = h[1]
-  hub = h[2]
-  hd = h[3]
-  hdb = h[4]
-  hs = h[5]
-  hsb = h[6]
+  hg = 0.0 #h[0]
+  hu = 0.0 #h[1]
+  hub = 0.0 #h[2]
+  hd = 0.0 #h[3]
+  hdb = 0.0 #h[4]
+  hs = 0.0 #h[5]
+  hsb = 0.0 #h[6]
 
   ftg = ft[0]
   ftu = ft[1]
@@ -484,12 +465,12 @@ def get_dsigST(x, z, xF, pT, rs, tar, had):
   ds = d[5]
   dsb = d[6]
 
-  uQS = (-2./np.pi) * f1Tp[1]
-  ubQS = (-2./np.pi) * f1Tp[2]
-  dQS = (-2./np.pi) * f1Tp[3]
-  dbQS = (-2./np.pi) * f1Tp[4]
-  sQS = (-2./np.pi) * f1Tp[5]
-  sbQS = (-2./np.pi) * f1Tp[6]
+  uQS = f1Tp[1]
+  ubQS = f1Tp[2]
+  dQS = f1Tp[3]
+  dbQS = f1Tp[4]
+  sQS = f1Tp[5]
+  sbQS = f1Tp[6]
 
   #Fragmentation term
 
@@ -604,7 +585,7 @@ def get_dsigST(x, z, xF, pT, rs, tar, had):
 
   QScs += (ubQS+dbQS+sbQS)*ftg*dg*sig12
 
-  QScs= -pT * M * (np.pi/2.) * numfac * oz * QScs
+  QScs= 2. * pT * M * numfac * QScs #Note there is a 1/u in the hard factors
 
   return ffcs + QScs
   #return ffcs
