@@ -136,17 +136,17 @@ def get_upolden(x, xF, pT, rs):
 
   upol = 0
 
-  upol += (((ftu * fu) * (2 * C_F * Hupol1)) + ((ftu * fg) *Hupol3) + ((ftg * fu) * Hupol2)) * e2[1]
+  upol += ((ftu * fu * 2 * C_F * Hupol1) + (ftu * fg *Hupol3) + (ftg * fu * Hupol2)) * e2[1]
 
-  upol += (((ftub * fub) * (2 * C_F * Hupol1)) + ((ftub * fg) *Hupol3) + ((ftg * fub) * Hupol2)) * e2[2]
+  upol += ((ftub * fub * 2 * C_F * Hupol1) + (ftub * fg *Hupol3) + (ftg * fub * Hupol2)) * e2[2]
 
-  upol += (((ftd * fd) * (2 * C_F * Hupol1)) + ((ftd * fg) *Hupol3) + ((ftg * fd) * Hupol2)) * e2[3]
+  upol += ((ftd * fd * 2 * C_F * Hupol1) + (ftd * fg *Hupol3) + (ftg * fd * Hupol2)) * e2[3]
 
-  upol += (((ftdb * fdb) * (2 * C_F * Hupol1)) + ((ftdb * fg) *Hupol3) + ((ftg * fdb) * Hupol2)) * e2[4]
+  upol += ((ftdb * fdb * 2 * C_F * Hupol1) + (ftdb * fg *Hupol3) + (ftg * fdb * Hupol2)) * e2[4]
 
-  upol += (((fts * fs) * (2 * C_F * Hupol1)) + ((fts * fg) *Hupol3) + ((ftg * fs) * Hupol2)) * e2[5]
+  upol += ((fts * fs * 2 * C_F * Hupol1) + (fts * fg *Hupol3) + (ftg * fs * Hupol2)) * e2[5]
 
-  upol += (((ftsb * fsb) * (2 * C_F * Hupol1)) + ((ftsb * fg) *Hupol3) + ((ftg * fsb) * Hupol2)) * e2[6]
+  upol += ((ftsb * fsb * 2 * C_F * Hupol1) + (ftsb * fg *Hupol3) + (ftg * fsb * Hupol2)) * e2[6]
 
   return denfac * upol * (1 / (x * xp))
 

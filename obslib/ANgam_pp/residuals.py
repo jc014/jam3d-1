@@ -35,9 +35,8 @@ class RESIDUALS(_RESIDUALS):
             numerator = AN_theory.get_numint(xF, pT, rs)
             denominator = AN_theory.get_denomint(xF, pT, rs)
             thy = numerator / denominator
-            print(thy)
             #print hadron,xF,thy
-
+            print(thy)
         return thy
 
     def gen_report(self, verb=1, level=1):
