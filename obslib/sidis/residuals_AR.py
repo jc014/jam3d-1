@@ -136,7 +136,7 @@ class RESIDUALS(_RESIDUALS):
                     FUUcos2_integral = fast_integrate(lambda y : (1 / (Q_compass(y) ** 4)) * FUUcos2(y), yA, yB)[0]
                     FUU_integral     = fast_integrate(lambda y : (1 / (Q_compass(y) ** 4)) * FUU(y),     yA, yB)[0]
 
-                    return FUUcos2_integral / FUU_integral
+                    theory = FUUcos2_integral / FUU_integral
 
                 else:   # use coefficient method
 
@@ -145,7 +145,9 @@ class RESIDUALS(_RESIDUALS):
                                      cahn.get_cahn(x, z, Q2, pT, tar, had))
                     FUU     = upol.get_FUU(x,z,Q2,pT,tar,had)
 
-                    return coeff * FUUcos2 / FUU
+                    theory = coeff * FUUcos2 / FUU_integral
+
+                return theory
 
             thy = yield_thy(col, should_integrate = True)
 
@@ -168,6 +170,8 @@ class RESIDUALS(_RESIDUALS):
         else:
             print 'ERR: exp=%d obs=%s and target=%s not implemented' % (k, obs, tar)
             sys.exit()
+
+        return thy
 
     def gen_report(self, verb=1, level=1):
         """
