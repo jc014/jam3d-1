@@ -78,51 +78,76 @@ class RESIDUALS(_RESIDUALS):
                 but require a y-based coefficient. The COMPASS data requires an
                 integration over y, and does not require the coefficient.    '''
 
-            if col in ['COMPASS', 'JLAB']:
+            def yield_thy(accelerator, should_integrate):
 
-                coeff   = (1 - y) / (1 - y + 0.5 * y ** 2)
-                FUUcos2 = (boermulders.get_FUU(x,z,Q2,pT,tar,had) +
-                           cahn.get_cahn(x, z, Q2, pT, tar, had))
-                FUU     = upol.get_FUU(x,z,Q2,pT,tar,had)
+                # depending on input parameters, either selects the coefficient
+                # method or the integration method of producing a residual value.
+                # root_s and w2_min also fluctuate based on accelerator.
 
-                thy = coeff * FUUcos2 / FUU
+                # set known values based on the source of AUUcos2 data
+                if   accelerator == 'COMPASS':
+                    ROOT_S    = 17.3
+                    W2_MIN    = 25
+                    RANGE_MIN = 0.2
+                    RANGE_MAX = 0.9
 
-            elif col == 'HERMES':
+                #TODO: define accelerator constants for JLab and HERMES data
+                elif accelerator == 'JLAB':
+                    ROOT_S    = 7.25
+                    W2_MIN    = 4
+                    RANGE_MIN = 0.2
+                    RANGE_MAX = 0.85
 
-                def fast_integrate(f, low, hi):
-                    f = np.vectorize(f)
-                    return integrate.fixed_quad(f, low, hi, n = 10)
+                elif accelerator == 'HERMES':
+                    ROOT_S    = 3.42
+                    W2_MIN    = 10
+                    RANGE_MIN = 0.2
+                    RANGE_MAX = 0.85
 
-                # given values from COMPASS data
-                GeV    = 1 * (10 ** 9)
-                M2     = conf['aux'].M ** 2
-                ROOT_S = 17.3 * GeV
-                W2_MIN = 25   * (GeV ** 2)
-                Q2_MIN = 1    * (GeV ** 2)
-                Q2_MAX = 1000 * (GeV ** 2)
 
-                yA = max(   # lower bound of integration
-                        0.2,
-                        Q2_MAX / (x * ((ROOT_S ** 2) - M2)),
-                        (W2_MIN - M2) / ((1 - x) * ((ROOT_S ** 2) - M2))
-                        )
-                yB = min(   # upper bound of integration
-                        Q2_MAX / (x * ((ROOT_S ** 2) - M2)),
-                        0.9
-                        )
+                if should_integrate:
 
-                # any value dependent on y must be a function so that its value
-                # may be recalculated during the integration process
-                Q_compass  = lambda y : np.sqrt(((ROOT_S ** 2) - M2) * x * y)
-                FUU        = lambda y : upol.get_FUU(x, z, Q_compass(y) ** 2, pT, tar, had)
-                FUUcos2    = lambda y : (boermulders.get_FUU(x,z, Q_compass(y) ** 2,pT,tar,had) +
-                                         cahn.get_cahn(x, z, Q_compass(y) ** 2, pT, tar, had))
+                    def fast_integrate(f, low, hi):
+                        f = np.vectorize(f)
+                        return integrate.fixed_quad(f, low, hi, n = 10)
 
-                # integrate over y for the numerator and denominator of AUUcos2
-                FUUcos2_integral = fast_integrate(lambda y : (1 / (Q_compass(y) ** 4)) * FUUcos2(y), yA, yB)[0]
-                FUU_integral     = fast_integrate(lambda y : (1 / (Q_compass(y) ** 4)) * FUU(y),     yA, yB)[0]
+                    M2     = conf['aux'].M ** 2
+                    Q2_MIN = 1
+                    Q2_MAX = 1000
 
-                thy = FUUcos2_integral / FUU_integral
+                    yA = max(   # lower bound of integration
+                            RANGE_MIN,
+                            Q2_MAX / (x * ((ROOT_S ** 2) - M2)),
+                            (W2_MIN - M2) / ((1 - x) * ((ROOT_S ** 2) - M2))
+                            )
+                    yB = min(   # upper bound of integration
+                            Q2_MAX / (x * ((ROOT_S ** 2) - M2)),
+                            RANGE_MAX
+                            )
+
+                    # any value dependent on y must be a function so that its value
+                    # may be recalculated during the integration process
+                    Q_compass  = lambda y : np.sqrt(((ROOT_S ** 2) - M2) * x * y)
+                    FUU        = lambda y : upol.get_FUU(x, z, Q_compass(y) ** 2, pT, tar, had)
+                    FUUcos2    = lambda y : (boermulders.get_FUU(x, z, Q_compass(y) ** 2, pT, tar, had) +
+                                                   cahn.get_cahn(x, z, Q_compass(y) ** 2, pT, tar, had))
+
+                    # integrate over y for the numerator and denominator of AUUcos2
+                    FUUcos2_integral = fast_integrate(lambda y : (1 / (Q_compass(y) ** 4)) * FUUcos2(y), yA, yB)[0]
+                    FUU_integral     = fast_integrate(lambda y : (1 / (Q_compass(y) ** 4)) * FUU(y),     yA, yB)[0]
+
+                    return FUUcos2_integral / FUU_integral
+
+                else:   # use coefficient method
+
+                    coeff   = (1 - y) / (1 - y + 0.5 * y ** 2)
+                    FUUcos2 = (boermulders.get_FUU(x, z, Q2, pT, tar, had) +
+                                     cahn.get_cahn(x, z, Q2, pT, tar, had))
+                    FUU     = upol.get_FUU(x,z,Q2,pT,tar,had)
+
+                    return coeff * FUUcos2 / FUU
+
+            thy = yield_thy(col, should_integrate = True)
 
         elif obs == 'AUTsinphiS':  # This is for collinear!
 
@@ -143,8 +168,6 @@ class RESIDUALS(_RESIDUALS):
         else:
             print 'ERR: exp=%d obs=%s and target=%s not implemented' % (k, obs, tar)
             sys.exit()
-
-        return thy
 
     def gen_report(self, verb=1, level=1):
         """
