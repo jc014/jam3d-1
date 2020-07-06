@@ -55,7 +55,7 @@ def get_d(z, Q2, had): # Collinear unpolarized FF
       return conf['ffk'].get_C(z, Q2)
 
 def get_h(x, Q2): # Collinear transversity
-  return 0.0 #conf['transversity'].get_C(x, Q2)
+  return conf['transversity'].get_C(x, Q2)
 
 #(H_1^{\perp(1)}(z) - z*dH_1^{\perp(1)}(z)/dz)
 def get_H1p(z, Q2, had):
