@@ -98,7 +98,7 @@ def get_upolden(x, xF, pT, rs):
   xp = -x * tt / (x * ss + uu)
 
   # Mandelstam variables at the parton level
-  s = x * ss
+  s = x * xp * ss
   t = x * tt
   u = xp * uu
 
@@ -173,7 +173,7 @@ def get_polnum(x, xF, pT, rs):
   xp = -x * tt / (x * ss + uu)
 
   # Mandelstam variables at the parton level
-  s = x * ss
+  s = x * xp * ss
   t = x * tt
   u = xp * uu
 
