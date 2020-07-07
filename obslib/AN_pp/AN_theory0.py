@@ -55,7 +55,7 @@ def get_d(z, Q2, had): # Collinear unpolarized FF
       return conf['ffk'].get_C(z, Q2)
 
 def get_h(x, Q2): # Collinear transversity
-  return 0.0 #conf['transversity'].get_C(x, Q2)
+  return conf['transversity'].get_C(x, Q2)
 
 #(H_1^{\perp(1)}(z) - z*dH_1^{\perp(1)}(z)/dz)
 def get_H1p(z, Q2, had):
@@ -433,13 +433,13 @@ def get_dsigST(x, z, xF, pT, rs, tar, had):
       dm=conf['aux'].charge_conj(d)
       d=0.5*(dp+dm)
 
-  hg = 0.0 #h[0]
-  hu = 0.0 #h[1]
-  hub = 0.0 #h[2]
-  hd = 0.0 #h[3]
-  hdb = 0.0 #h[4]
-  hs = 0.0 #h[5]
-  hsb = 0.0 #h[6]
+  hg = h[0]
+  hu = h[1]
+  hub = h[2]
+  hd = h[3]
+  hdb = h[4]
+  hs = h[5]
+  hsb = h[6]
 
   ftg = ft[0]
   ftu = ft[1]

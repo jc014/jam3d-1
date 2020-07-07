@@ -29,6 +29,8 @@ import obslib.dy.reader
 import obslib.dy.residuals
 import obslib.wz.reader
 import obslib.wz.residuals
+import obslib.Soffer_Bound.reader
+import obslib.Soffer_Bound.residuals
 
 #--from fitlib
 from fitlib.parman import PARMAN
@@ -54,6 +56,7 @@ class RESMAN:
             if 'ANep'    in conf['datasets']: self.setup_ANep()
             if 'dy'      in conf['datasets']: self.setup_dy()
             if 'wz'      in conf['datasets']: self.setup_wz()
+            if 'SB'      in conf['datasets']: self.setup_SB()
 
         if  parallel:
             self.setup_parallel(nworkers)
@@ -149,6 +152,10 @@ class RESMAN:
         conf['wz tabs']   = obslib.wz.reader.READER().load_data_sets('wz')
         self.wzres = obslib.wz.residuals.RESIDUALS()
 
+    def setup_SB(self):
+        conf['SB tabs']   = obslib.Soffer_Bound.reader.READER().load_data_sets('SB')
+        self.SBres = obslib.Soffer_Bound.residuals.RESIDUALS()
+
     def setup_parallel(self,nworkers):
         self.parallel=PARALLEL()
         self.parallel.task=self.task
@@ -217,6 +224,7 @@ class RESMAN:
         if 'ANep'   in conf['datasets']:  self.distribute_requests(container,self.ANepres.requests)
         if 'dy'     in conf['datasets']:  self.distribute_requests(container,self.dyres.requests)
         if 'wz'     in conf['datasets']:  self.distribute_requests(container,self.wzres.requests)
+        if 'SB'     in conf['datasets']:  self.distribute_requests(container,self.SBres.requests)
         return container
 
     def task(self,request):
@@ -228,6 +236,7 @@ class RESMAN:
             if  request[i]['reaction']=='ANep'  :  self.ANepres.process_request(request[i])
             if  request[i]['reaction']=='dy'    :  self.dyres.process_request(request[i])
             if  request[i]['reaction']=='wz'    :  self.wzres.process_request(request[i])
+            if  request[i]['reaction']=='SB'    :  self.SBres.process_request(request[i])
         return request
 
     def get_residuals(self,par):
@@ -246,6 +255,7 @@ class RESMAN:
                 if request['reaction']=='ANep'   : self.ANepres.update_tabs_external(request)
                 if request['reaction']=='dy'     : self.dyres.update_tabs_external(request)
                 if request['reaction']=='wz'     : self.wzres.update_tabs_external(request)
+                if request['reaction']=='SB'     : self.SBres.update_tabs_external(request)
 
         #--compute residuals
         res,rres,nres=[],[],[]
@@ -284,6 +294,11 @@ class RESMAN:
             res=np.append(res,out[0])
             rres=np.append(rres,out[1])
             nres=np.append(nres,out[2])
+        if 'SB' in conf['datasets']:
+            out=self.SBres.get_residuals(calc=False)
+            res=np.append(res,out[0])
+            rres=np.append(rres,out[1])
+            nres=np.append(nres,out[2])
         return res,rres,nres
 
     def get_data_info(self):
@@ -311,6 +326,9 @@ class RESMAN:
         if 'wz' in conf['datasets']:
             out=self.wzres.get_residuals(calc=False)
             reaction.extend(['wz' for _ in out[0]])
+        if 'SB' in conf['datasets']:
+            out=self.SBres.get_residuals(calc=False)
+            reaction.extend(['SB' for _ in out[0]])
         return reaction
 
     def gen_report(self,verb=0,level=0):
@@ -322,6 +340,7 @@ class RESMAN:
         if 'ANep'    in conf['datasets']: L.extend(self.ANepres.gen_report(verb,level))
         if 'dy'      in conf['datasets']: L.extend(self.dyres.gen_report(verb,level))
         if 'wz'      in conf['datasets']: L.extend(self.wzres.gen_report(verb,level))
+        if 'SB'      in conf['datasets']: L.extend(self.SBres.gen_report(verb,level))
         return L
 
     def get_chi2(self):
@@ -333,6 +352,7 @@ class RESMAN:
         if 'ANep'    in conf['datasets']: data.update(self.ANepres.get_chi2())
         if 'dy'      in conf['datasets']: data.update(self.dyres.get_chi2())
         if 'wz'      in conf['datasets']: data.update(self.wzres.get_chi2())
+        if 'SB'      in conf['datasets']: data.update(self.SBres.get_chi2())
         return data
 
     def test(self,ntasks=10):

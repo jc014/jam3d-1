@@ -89,21 +89,21 @@ def get_upolden(x, xF, pT, rs):
     Q = 1.
 
   Q2 = Q * Q
-  C_F = 4/3
-  N_C = 3
+  C_F = 4.0/3.0
+  N_C = 3.0
   # Mandelstam variables at the hadron level
   ss = rs**2
-  tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) + (xF * ss / 2)
-  uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) - (xF * ss / 2)
+  tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4.0))) + (xF * ss / 2.0)
+  uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4.0))) - (xF * ss / 2.0)
   xp = -x * tt / (x * ss + uu)
 
   # Mandelstam variables at the parton level
-  s = x * ss
+  s = x * xp * ss
   t = x * tt
   u = xp * uu
 
   # Prefactor
-  denfac = 1 / (N_C * (x * ss + uu))
+  denfac = (1. / (N_C * (x * ss + uu))) * (1. / (x * xp))
 
   #calling mandelstam variables
   m=get_mandelstam(s, t, u)
@@ -136,19 +136,19 @@ def get_upolden(x, xF, pT, rs):
 
   upol = 0
 
-  upol += (((ftu * fu) * (2 * C_F * Hupol1)) + ((ftu * fg) *Hupol3) + ((ftg * fu) * Hupol2)) * e2[1]
+  upol += ((ftu * fub * 2. * C_F * Hupol1) + (ftub * fg *Hupol3) + (ftg * fu * Hupol2)) * e2[1]
 
-  upol += (((ftub * fub) * (2 * C_F * Hupol1)) + ((ftub * fg) *Hupol3) + ((ftg * fub) * Hupol2)) * e2[2]
+  upol += ((ftub * fu * 2. * C_F * Hupol1) + (ftu * fg *Hupol3) + (ftg * fub * Hupol2)) * e2[2]
 
-  upol += (((ftd * fd) * (2 * C_F * Hupol1)) + ((ftd * fg) *Hupol3) + ((ftg * fd) * Hupol2)) * e2[3]
+  upol += ((ftd * fdb * 2. * C_F * Hupol1) + (ftdb * fg *Hupol3) + (ftg * fd * Hupol2)) * e2[3]
 
-  upol += (((ftdb * fdb) * (2 * C_F * Hupol1)) + ((ftdb * fg) *Hupol3) + ((ftg * fdb) * Hupol2)) * e2[4]
+  upol += ((ftdb * fd * 2. * C_F * Hupol1) + (ftd * fg *Hupol3) + (ftg * fdb * Hupol2)) * e2[4]
 
-  upol += (((fts * fs) * (2 * C_F * Hupol1)) + ((fts * fg) *Hupol3) + ((ftg * fs) * Hupol2)) * e2[5]
+  upol += ((fts * fsb * 2. * C_F * Hupol1) + (ftsb * fg *Hupol3) + (ftg * fs * Hupol2)) * e2[5]
 
-  upol += (((ftsb * fsb) * (2 * C_F * Hupol1)) + ((ftsb * fg) *Hupol3) + ((ftg * fsb) * Hupol2)) * e2[6]
+  upol += ((ftsb * fs * 2. * C_F * Hupol1) + (fts * fg *Hupol3) + (ftg * fsb * Hupol2)) * e2[6]
 
-  return denfac * upol * (1 / (x * xp))
+  return denfac * upol
 
 #  @profile
 # Calculation of the fragmentation term in the transversely polarized cross section
@@ -164,21 +164,21 @@ def get_polnum(x, xF, pT, rs):
     Q = 1.
 
   Q2 = Q * Q
-  C_F = 4/3
-  N_C = 3
+  C_F = 4.0/3.0
+  N_C = 3.0
   # Mandelstam variables at the hadron level
   ss = rs**2
-  tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) + (xF * ss / 2)
-  uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) - (xF * ss / 2)
+  tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4.0))) + (xF * ss / 2.0)
+  uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4.0))) - (xF * ss / 2.0)
   xp = -x * tt / (x * ss + uu)
 
   # Mandelstam variables at the parton level
-  s = x * ss
+  s = x * xp * ss
   t = x * tt
   u = xp * uu
 
   # Prefactor
-  numfac = (2 * M * pT) / (x * ss + uu)
+  numfac = (-2.0 * M * pT) * (1. / (x * xp)) / (x * ss + uu)
 
   #calling mandelstam variables
   m=get_mandelstam(s, t, u)
@@ -218,49 +218,51 @@ def get_polnum(x, xF, pT, rs):
 
   QScs = 0
 
-  QScs += (((-1 / (N_C**2)) * ftu * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * uQS * e2[1]
+  QScs += (((-1 / (N_C**2)) * ftub * Hupol1) + ((1 / (2. * C_F)) * ftg *Hupol2)) * (1. / u) * uQS * e2[1]
 
-  QScs += (((-1 / (N_C**2)) * ftub * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * ubQS * e2[2]
+  QScs += (((-1 / (N_C**2)) * ftu * Hupol1) + ((1 / (2.* C_F)) * ftg *Hupol2)) * (1. / u) * ubQS * e2[2]
 
-  QScs += (((-1 / (N_C**2)) * ftd * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * dQS * e2[3]
+  QScs += (((-1 / (N_C**2)) * ftdb * Hupol1) + ((1 / (2. * C_F)) * ftg *Hupol2)) * (1. / u) * dQS * e2[3]
 
-  QScs += (((-1 / (N_C**2)) * ftdb * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * dbQS * e2[4]
+  QScs += (((-1 / (N_C**2)) * ftd * Hupol1) + ((1 / (2.* C_F)) * ftg *Hupol2)) * (1. / u) * dbQS * e2[4]
 
-  QScs += (((-1 / (N_C**2)) * fts * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * sQS * e2[5]
+  QScs += (((-1 / (N_C**2)) * ftsb * Hupol1) + ((1 / (2. * C_F)) * ftg *Hupol2)) * (1. / u) * sQS * e2[5]
 
-  QScs += (((-1 / (N_C**2)) * ftsb * Hupol1) + ((1 / (2 * C_F)) * ftg *Hupol2)) * (1 / u) * sbQS * e2[6]
+  QScs += (((-1 / (N_C**2)) * fts * Hupol1) + ((1 / (2.* C_F)) * ftg *Hupol2)) * (1. / u) * sbQS * e2[6]
 
-  return QScs * numfac * (1 / (x * xp))
+  return QScs * numfac
 
 
-def get_numint(xF, pT, rs):
+def get_numint(xF, pT, rs, nx = 10):
 
-    C_F = 4/3
-    N_C = 3
+    C_F = 4.0/3.0
+    N_C = 3.0
     # Mandelstam variables at the hadron level
     ss = rs**2
-    tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) + (xF * ss / 2)
-    uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) - (xF * ss / 2)
+    tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4.0))) + (xF * ss / 2.0)
+    uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4.0))) - (xF * ss / 2.0)
 
     # Lower limits of the x integration
     xmin = -uu / (ss + tt)
 
-    numer = quad(lambda x: get_polnum(x, xF, pT, rs), xmin, 1., limit=100)[0]
+    dnumerdx = np.vectorize(lambda x: get_polnum(x, xF, pT, rs))
+    numer = fixed_quad(dnumerdx, xmin, 1., n = nx)[0]
     return numer
 
-def get_denomint(xF, pT, rs):
+def get_denomint(xF, pT, rs, nx = 10):
 
-    C_F = 4/3
-    N_C = 3
+    C_F = 4.0/3.0
+    N_C = 3.0
     # Mandelstam variables at the hadron level
     ss = rs**2
-    tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) + (xF * ss / 2)
-    uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4))) - (xF * ss / 2)
+    tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4.0))) + (xF * ss / 2.0)
+    uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4.0))) - (xF * ss / 2.0)
 
     # Lower limits of the x integration
     xmin = -uu / (ss + tt)
 
-    denom = quad(lambda x: get_upolden(x, xF, pT, rs), xmin, 1, limit=100)[0]
+    ddenomdx = np.vectorize(lambda x: get_upolden(x, xF, pT, rs))
+    denom = fixed_quad(ddenomdx, xmin, 1., n = nx)[0]
     return denom
 
 # def get_vars(rs, n):
@@ -289,14 +291,14 @@ if __name__ == '__main__':
 
   rs = 200.
   tar = 'p'
-  pT = 2
+  pT = 2.
   xF = 0.3
   #xF = 2 * pT / rs
-  C_F = 4/3
-  N_C = 3
+  C_F = 4.0/3.0
+  N_C = 3.0
 
   def test():
-    num = get_numint(xF, pT, rs)
+    num = get_numint(xF, pT, rs, nx = 10)
     den = get_denomint(xF, pT, rs)
 
     AN = num / den
