@@ -2,12 +2,14 @@
 import sys
 import os
 import numpy as np
+from scipy import integrate
 from tools.residuals import _RESIDUALS
 from tools.config import conf
 from obslib.sidis import upol0 as upol
 from obslib.sidis import collins0 as collins
 from obslib.sidis import sivers0 as sivers
 from obslib.sidis import boermulders0 as boermulders
+from obslib.sidis import cahn0_AR as cahn
 from obslib.sidis import aUTsPs0 as AUTsinphiS
 from obslib.idis.stfuncs import STFUNCS as DIS_STFUNCS
 
@@ -72,18 +74,87 @@ class RESIDUALS(_RESIDUALS):
 
         elif obs == 'AUUcos2':
 
-            epsilon = (1 - y) / (1 - y + 0.5 * y**2)
-            coeff = 1.
-            if col == 'HERMES':
-                coeff = epsilon  # add depolarization factor for HERMES
-            if col == 'COMPASS':
-                coeff = 1.
-            if col == 'JLAB':
-                coeff = epsilon  # add depolarization factor for CLAS
+            ''' The data from JLab and HERMES do not require any integrations,
+                but require a y-based coefficient. The COMPASS data requires an
+                integration over y, and does not require the coefficient.    '''
 
-            FUUcos2 = boermulders.get_FUU(x,z,Q2,pT,tar,had)
-            FUU = upol.get_FUU(x,z,Q2,pT,tar,had)
-            thy = coeff * FUUcos2 / FUU
+            def yield_thy(accelerator, should_integrate, ny=10):
+
+                # depending on input parameters, either selects the coefficient
+                # method or the integration method of producing a residual value.
+                # root_s and W2_min also fluctuate based on accelerator.
+
+                # set known values based on the source of AUUcos2 data
+                if  accelerator == 'COMPASS':
+                    ROOT_S    = 17.3
+                    W2_MIN    = 25.0
+                    RANGE_MIN = 0.2
+                    RANGE_MAX = 0.9
+
+                elif accelerator == 'CLAS': #JLab col in the data files
+                    ROOT_S    = 3.42
+                    W2_MIN    = 4.0
+                    RANGE_MIN = 0.2
+                    RANGE_MAX = 0.85
+
+                elif accelerator == 'HERMES':
+                    ROOT_S    = 7.25
+                    W2_MIN    = 10
+                    RANGE_MIN = 0.2
+                    RANGE_MAX = 0.85
+
+
+                if should_integrate:
+
+                    def fast_integrate(f, low, hi, ny):
+                        f = np.vectorize(f)
+                        return integrate.fixed_quad(f, low, hi, n=ny)
+
+                    M2     = conf['aux'].M ** 2
+                    Q2_MIN = 1
+                    Q2_MAX = 1000
+
+                    yA = max(   # lower bound of integration
+                            RANGE_MIN,
+                            Q2_MIN / (x * ((ROOT_S ** 2) - M2)),
+                            (W2_MIN - M2) / ((1 - x) * ((ROOT_S ** 2) - M2))
+                            )
+                    yB = min(   # upper bound of integration
+                            Q2_MAX / (x * ((ROOT_S ** 2) - M2)),
+                            RANGE_MAX
+                            )
+
+                    # any value dependent on y must be a function so that its value
+                    # may be recalculated during the integration process
+                    Q = lambda y : np.sqrt(((ROOT_S ** 2) - M2) * x * y)
+
+                    if accelerator=='HERMES' or accelerator=='CLAS':
+                        FUU     = lambda y : (1.- y + 0.5*y**2) * upol.get_FUU(x, z, Q(y) ** 2, pT, tar, had)
+                        FUUcos2 = lambda y : (1.-y) * (boermulders.get_FUU(x, z, Q(y) ** 2, pT, tar, had) + cahn.get_cahn(x, z, Q(y) ** 2, pT, tar, had))
+
+                    elif accelerator=='COMPASS':
+                        FUU     = lambda y : upol.get_FUU(x, z, Q(y) ** 2, pT, tar, had)
+                        FUUcos2 = lambda y : (boermulders.get_FUU(x, z, Q(y) ** 2, pT, tar, had) + cahn.get_cahn(x, z, Q(y) ** 2, pT, tar, had))
+
+                    # integrate over y for the numerator and denominator of AUUcos2
+                    FUUcos2_integral = fast_integrate(lambda y : (1. / (Q(y) ** 4)) * FUUcos2(y), yA, yB, ny)[0]
+                    FUU_integral     = fast_integrate(lambda y : (1. / (Q(y) ** 4)) * FUU(y),     yA, yB, ny)[0]
+
+                    theory = FUUcos2_integral / FUU_integral
+
+                else:   # no integration
+
+                    if accelerator=='HERMES' or accelerator=='CLAS': coeff   = (1 - y) / (1 - y + 0.5 * y ** 2)
+                    elif accelerator=='COMPASS': coeff  = 1.
+
+                    FUUcos2 = (boermulders.get_FUU(x, z, Q2, pT, tar, had) + cahn.get_cahn(x, z, Q2, pT, tar, had))
+                    FUU     = upol.get_FUU(x,z,Q2,pT,tar,had)
+
+                    theory = coeff * FUUcos2 / FUU
+
+                return theory
+
+            thy = yield_thy(col, should_integrate = False, ny=10)
 
         elif obs == 'AUTsinphiS':  # This is for collinear!
 
@@ -228,10 +299,11 @@ if __name__ == '__main__':
     conf['pdf']          = pdf0.PDF()
     conf['transversity'] = pdf1.PDF()
     conf['sivers']       = pdf1.PDF()
-    conf['ffpi'] = ff0.FF('pi')
-    conf['ffk']  = ff0.FF('k')
-    conf['collinspi'] = ff1.FF('pi')
-    conf['collinsk']  = ff1.FF('k')
+    conf['boermulders']  = pdf1.PDF()
+    conf['ffpi']         = ff0.FF('pi')
+    conf['ffk']          = ff0.FF('k')
+    conf['collinspi']    = ff1.FF('pi')
+    conf['collinsk']     = ff1.FF('k')
 
 
     conf['datasets']={}
@@ -239,6 +311,10 @@ if __name__ == '__main__':
 
     conf['datasets']['sidis']['xlsx']={}
 
+    ''' For AUUcos2 testing purposes, most entries have been commented out.
+        Uncomment for full program functionality. '''
+
+    '''
     # upol
     conf['datasets']['sidis']['xlsx'][1000]='sidis/expdata/1000.xlsx'  # |  proton   | pi+   | M_Hermes | hermes
     conf['datasets']['sidis']['xlsx'][1001]='sidis/expdata/1001.xlsx'  # |  proton   | pi-   | M_Hermes | hermes
@@ -248,7 +324,6 @@ if __name__ == '__main__':
     conf['datasets']['sidis']['xlsx'][1003]='sidis/expdata/1003.xlsx'  # |  proton   | k-    | M_Hermes | hermes
     conf['datasets']['sidis']['xlsx'][1006]='sidis/expdata/1006.xlsx'  # |  deuteron | k+    | M_Hermes | hermes
     conf['datasets']['sidis']['xlsx'][1007]='sidis/expdata/1007.xlsx'  # |  deuteron | k-    | M_Hermes | hermes
-
     # sivers
     conf['datasets']['sidis']['xlsx'][2000]='sidis/expdata/2000.xlsx' # | proton   | pi+    | AUTsivers        | hermes     | PT
     conf['datasets']['sidis']['xlsx'][2001]='sidis/expdata/2001.xlsx' # | proton   | pi+    | AUTsivers        | hermes     | x
@@ -296,9 +371,7 @@ if __name__ == '__main__':
     conf['datasets']['sidis']['xlsx'][2509]='sidis/expdata/2509.xlsx' # | neutron  | pi-    | AUTsivers        | solid stat | x
     conf['datasets']['sidis']['xlsx'][2510]='sidis/expdata/2510.xlsx' # | proton   | pi+    | AUTsivers        | solid stat | x
     conf['datasets']['sidis']['xlsx'][2511]='sidis/expdata/2511.xlsx' # | proton   | pi-    | AUTsivers        | solid stat | x
-
     # collins
-
     conf['datasets']['sidis']['xlsx'][3000]='sidis/expdata/3000.xlsx' # | proton   | pi+    | AUTcollins       | hermes     | x
     conf['datasets']['sidis']['xlsx'][3003]='sidis/expdata/3003.xlsx' # | proton   | pi+    | AUTcollins       | hermes     | z
     conf['datasets']['sidis']['xlsx'][3026]='sidis/expdata/3026.xlsx' # | proton   | pi+    | AUTcollins       | hermes     | pt
@@ -340,7 +413,9 @@ if __name__ == '__main__':
     conf['datasets']['sidis']['xlsx'][4010]='sidis/expdata/4010.xlsx' # | deuteron | k-     | AUTcollins       | compass    | pt
     #conf['datasets']['sidis']['xlsx'][3001]='sidis/expdata/3001.xlsx' # | neutron  | pi-    | AUTcollins       | jlab       | x
     #conf['datasets']['sidis']['xlsx'][3002]='sidis/expdata/3002.xlsx' # | neutron  | pi+    | AUTcollins       | jlab       | x
+    '''
 
+    conf['datasets']['sidis']['xlsx'][5003]='sidis/expdata/5003.xlsx' # | hermes. i don't know the rest of the info
 
     conf['datasets']['sidis']['norm']={}
     for k in conf['datasets']['sidis']['xlsx']: conf['datasets']['sidis']['norm'][k]={'value':1,'fixed':True,'min':0,'max':1}
@@ -348,7 +423,8 @@ if __name__ == '__main__':
 
     conf['sidis tabs'] = READER().load_data_sets('sidis')
 
-    conf['residuals']= RESIDUALS()
+    conf['residuals'] = RESIDUALS()
+
     print conf['residuals'].get_residuals()
 
     #conf['residuals'].gen_report(verb=1, level=1)

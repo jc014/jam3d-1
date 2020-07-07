@@ -293,7 +293,7 @@ class PARMAN:
             self.set_constraits(dist,FLAV,PAR,version)
             self.set_params(dist,FLAV,PAR,version)
 
-    def set_boermulders_params(self):
+    def set_boermulders_params(self,version):
         self.set_constraits('boermulders')
         conf['boermulders']._widths1_uv  = conf['params']['boermulders']['widths1_uv']['value']
         conf['boermulders']._widths1_dv  = conf['params']['boermulders']['widths1_dv']['value']
