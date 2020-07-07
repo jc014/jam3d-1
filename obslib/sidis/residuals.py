@@ -150,11 +150,11 @@ class RESIDUALS(_RESIDUALS):
                     FUUcos2 = (boermulders.get_FUU(x, z, Q2, pT, tar, had) + cahn.get_cahn(x, z, Q2, pT, tar, had))
                     FUU     = upol.get_FUU(x,z,Q2,pT,tar,had)
 
-                    theory = coeff * FUUcos2 / FUU_integral
+                    theory = coeff * FUUcos2 / FUU
 
                 return theory
 
-            thy = yield_thy(col, should_integrate = True, ny=10)
+            thy = yield_thy(col, should_integrate = False, ny=10)
 
         elif obs == 'AUTsinphiS':  # This is for collinear!
 
