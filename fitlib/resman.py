@@ -99,6 +99,7 @@ class RESMAN:
                 conf['dboermulders'] = pdf2.PDF('BM','deriv')
         if 'ffpi'          in conf['params']: conf['ffpi']         = ff0.FF('pi')
         if 'ffk'           in conf['params']: conf['ffk']          = ff0.FF('k')
+        if 'ffh'           in conf['params']: conf['ffh']          = ff0.FF('h')
         if 'collinspi'     in conf['params']:
             if version == 0:
                 conf['collinspi']    = ff1.FF('pi')
@@ -177,6 +178,7 @@ class RESMAN:
             state['dboermulders'      ]   = conf['dboermulders'      ].get_state()
         if 'ffpi'         in conf: state['ffpi'        ]    = conf['ffpi'         ].get_state()
         if 'ffk'          in conf: state['ffk'         ]    = conf['ffk'          ].get_state()
+        if 'ffh'          in conf: state['ffh'         ]    = conf['ffh'          ].get_state()
         if 'collinspi'    in conf:
             state['collinspi'   ]    = conf['collinspi'    ].get_state()
             state['dcollinspi'  ]    = conf['dcollinspi'   ].get_state()
@@ -199,6 +201,7 @@ class RESMAN:
             conf['dboermulders'     ].set_state(state['dboermulders'     ])
         if 'ffpi'         in conf: conf['ffpi'        ].set_state(state['ffpi'        ])
         if 'ffk'          in conf: conf['ffk'         ].set_state(state['ffk'         ])
+        if 'ffh'          in conf: conf['ffh'         ].set_state(state['ffh'         ])
         if 'collinspi'    in conf:
             conf['collinspi'   ].set_state(state['collinspi'   ])
             conf['dcollinspi'  ].set_state(state['dcollinspi'  ])
