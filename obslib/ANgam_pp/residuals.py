@@ -26,6 +26,7 @@ class RESIDUALS(_RESIDUALS):
         xF = self.tabs[k]['xF'][i]
         pT = self.tabs[k]['pT'][i]
         rs = self.tabs[k]['rs'][i]
+        eta = self.tabs[k]['eta'][i]
         target = self.tabs[k]['target'][i]
         #hadron = self.tabs[k]['hadron'][i]
         obs = self.tabs[k]['obs'][i].strip()
@@ -36,7 +37,7 @@ class RESIDUALS(_RESIDUALS):
             denominator = AN_theory.get_denomint(xF, pT, rs)
             thy = numerator / denominator
             #print hadron,xF,thy
-            print(thy)
+            print(thy, eta, rs)
         return thy
 
     def gen_report(self, verb=1, level=1):
