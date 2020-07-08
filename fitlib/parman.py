@@ -151,6 +151,7 @@ class PARMAN:
       if 'boermulders'  in semaphore and semaphore['boermulders']  == 1: self.set_boermulders_params(version)
       if 'ffpi'         in semaphore and semaphore['ffpi']         == 1: self.set_ffpi_params()
       if 'ffk'          in semaphore and semaphore['ffk']          == 1: self.set_ffk_params()
+      if 'ffh'          in semaphore and semaphore['ffh']          == 1: self.set_ffh_params()
       if 'collinspi'    in semaphore and semaphore['collinspi']    == 1: self.set_collinspi_params(version)
       if 'collinsk'     in semaphore and semaphore['collinsk']     == 1: self.set_collinsk_params(version)
       if 'Htildepi'     in semaphore and semaphore['Htildepi']     == 1: self.set_Htildepi_params(version)
@@ -332,6 +333,14 @@ class PARMAN:
         conf['ffk']._widths2_fav   = conf['params']['ffk']['widths2_fav']['value']
         conf['ffk']._widths2_ufav  = conf['params']['ffk']['widths2_ufav']['value']
         conf['ffk'].setup()
+
+    def set_ffh_params(self):
+        self.set_constraits('ffh')
+        conf['ffh']._widths1_fav   = conf['params']['ffh']['widths1_fav']['value']
+        conf['ffh']._widths1_ufav  = conf['params']['ffh']['widths1_ufav']['value']
+        conf['ffh']._widths2_fav   = conf['params']['ffh']['widths2_fav']['value']
+        conf['ffh']._widths2_ufav  = conf['params']['ffh']['widths2_ufav']['value']
+        conf['ffh'].setup()
 
     def set_collinspi_params(self,version):
         self.set_constraits('collinspi')
