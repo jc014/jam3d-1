@@ -112,8 +112,8 @@ def get_cahn(x, z, Q2, pT, tar, had):
         w_had = np.abs(conf['ffk'].get_widths(Q2))
 
     elif 'h' in had:
-        D     = conf['ffh'].get_C(z, Q2)
-        w_had = np.abs(conf['ffh'].get_widths(Q2))
+        D     = conf['ffh'].get_C(z, Q2) #use pions for now
+        w_had = np.abs(conf['ffh'].get_widths(Q2)) #use pions for now
 
     # build function based on the target
     if tar == 'p':
