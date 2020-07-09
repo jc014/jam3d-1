@@ -14,11 +14,13 @@ class READER(_READER):
 
     def get_W2(self, tab, k):
         cols = tab.columns.values
+        if tab['Q2'][0]==None: return tab
         tab['W2'] = pd.Series(conf['aux'].M**2 + tab['Q2'] /
                               tab['x'] - tab['Q2'], index=tab.index)
         return tab
 
     def get_rap(self, tab, k):
+        if tab['Q2'][0]==None: return tab
         Q2 = tab['Q2']
         pT = tab['pT']
         x = tab['x']
