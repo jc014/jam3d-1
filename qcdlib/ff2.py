@@ -94,15 +94,26 @@ class FF(CORE):
         self.get_BC(moms)
 
     def set_widths(self):
-        if   self.hadron=='pi': i1,i2=1,4
-        elif self.hadron=='k':  i1,i2=1,6
-        elif self.hadron=='h':  i1,i2=1,4
-
-        for i in range(1, 11):
-            if   i==i1 or i==i2: self.widths1[i] = self._widths1_fav
-            else:                self.widths1[i] = self._widths1_ufav
-            if   i==i1 or i==i2: self.widths2[i] = self._widths2_fav
-            else:                self.widths2[i] = self._widths2_ufav
+        # 1,  2,  3,  4,  5,  6,  7,  8,  9, 10
+        # u, ub,  d, db,  s, sb,  c, cb,  b, bb
+        if self.hadron=='pi':
+            for i in range(1, 11):
+                if   i == 1 or i==4: self.widths1[i] = self._widths1_fav
+                else:                  self.widths1[i] = self._widths1_ufav
+                if   i == 1 or i==4: self.widths2[i] = self._widths2_fav
+                else:                  self.widths2[i] = self._widths2_ufav
+        elif self.hadron=='k':
+            for i in range(1, 11):
+                if   i == 1 or i==6: self.widths1[i] = self._widths1_fav
+                else:                  self.widths1[i] = self._widths1_ufav
+                if   i == 1 or i==6: self.widths2[i] = self._widths2_fav
+                else:                  self.widths2[i] = self._widths2_ufav
+        elif self.hadron=='h':
+            for i in range(1, 11):
+                if   i == 1 or i==4 or i==6: self.widths1[i] = self._widths1_fav
+                else:                  self.widths1[i] = self._widths1_ufav
+                if   i == 1 or i==4 or i==6: self.widths2[i] = self._widths2_fav
+                else:                  self.widths2[i] = self._widths2_ufav
 
     def setup(self):
         #self.set_sumrules()
