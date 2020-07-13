@@ -12,7 +12,8 @@ from tools.config import conf
 from scipy.integrate import quad, dblquad, fixed_quad
 
 
-#This includes the SFP term to AN in pp -> gam X (see 1410.3448)
+#AN_theory0.py - program to calculate A_N in pp -> gam X
+#This includes the SGP (Qiu-Sterman) term (see 1410.3448)
 
 flavor = ['g','u','ub','d','db','s','sb']
         #  0   1   2    3    4   5    6
@@ -57,52 +58,21 @@ def get_ft(x, Q2): # Collinear unpolarized PDF
 def get_f1Tp(x, Q2): # (f_1T^{\perp(1)}(x) - x*df_1T^{\perp(1)}(x)/dx)
     return conf['sivers'].get_C(x, Q2) - x * conf['dsivers'].get_C(x, Q2)
 
-def get_G(x, Q2): # (f_1T^{\perp(1)}(x)
-    return conf['sivers'].get_C(x, Q2)
-
 def get_mandelstam(s, t, u):
 # Convenient combinations of the partonic Mandelstam variables
-   m['s'] = s
-   m['s2'] = s * s
-   m['s3'] = s**3.
-   m['t'] = t
-   m['t2'] = t * t
-   m['t3'] = t**3.
-   m['u'] = u
-   m['u2'] = u * u
-   m['u3'] = u**3.
-   m['ostu'] = 1. / (s * t * u)
-   m['os'] = 1. / s
-   m['ot'] = 1. / t
-   m['ou'] = 1. / u
    m['st'] = s / t
    m['su'] = s / u
    m['ts'] = t / s
    m['tu'] = t / u
    m['us'] = u / s
    m['ut'] = u / t
-   m['st2'] = s**2. / t**2.
-   m['su2'] = s**2. / u**2.
-   m['ts2'] = t**2. / s**2.
-   m['tu2'] = t**2. / u**2.
-   m['us2'] = u**2. / s**2.
-   m['ut2'] = u**2. / t**2.
-   m['os2'] = 1. / s**2.
-   m['ot2'] = 1. / t**2.
-   m['ou2'] = 1. / u**2.
-   m['os3'] = 1. / s**3.
-   m['ot3'] = 1. / t**3.
-   m['ou3'] = 1. / u**3.
    return m
 
 def get_Hupol(m):
   # Hard parts for the unpolarized cross section
-   N_C = 3.0
-   Hupol[1] = (2 * (m['s2'] + m['u2']) / (m['t2']*m['u'])) + (2 *m['s'] * (m['u'] - m['s']) / (N_C * m['t']*m['u2']))
-   Hupol[2] = (2 * (m['s2'] + m['u2']) / (m['t2']*m['u'])) + ((2 * N_C * m['s'] / (m['u2'])) + (2 * (m['u2'] + m['s']*m['t']) / (N_C * m['s'] * m['t'] * m['u'])))
-   Hupol[3] = 2 * (N_C * N_C * m['t'] * m['u'] - (m['s'] * (m['s'] - m['t']))) / ((N_C * N_C - 1) * m['s'] * m['t'] * m['u'])
-   Hupol[4] = (2 * (m['s2'] + m['u2']) / (m['t2']*m['u']))
-   Hupol[5] = (2 * (m['s2'] + m['u2']) / (m['t2']*m['u']))
+   Hupol[1] = m['ut'] + m['tu']
+   Hupol[2] = (-m['st']) - m['ts']
+   Hupol[3] = (-m['su']) - m['us']
    return Hupol
 
 #  @profile
@@ -218,7 +188,6 @@ def get_polnum(x, xF, pT, rs):
   Hupol1 = Hupol[1]
   Hupol2 = Hupol[2]
   Hupol3 = Hupol[3]
-  Hupol4 = Hupol[4]
 
   # Get arrays of the nonperturbative functions
   ft = get_ft(xp, Q2)
@@ -239,29 +208,27 @@ def get_polnum(x, xF, pT, rs):
   fs = f[5]
   fsb = f[6]
 
-  G = get_G(x, Q2)
-  Gg = G[0]
-  Gu = G[1]
-  Gub = G[2]
-  Gd = G[3]
-  Gdb = G[4]
-  Gs = G[5]
-  Gsb = G[6]
+  uQS = get_f1Tp(x, Q2)[1]
+  ubQS = get_f1Tp(x, Q2)[2]
+  dQS = get_f1Tp(x, Q2)[3]
+  dbQS = get_f1Tp(x, Q2)[4]
+  sQS = get_f1Tp(x, Q2)[5]
+  sbQS = get_f1Tp(x, Q2)[6]
 ############################################################################
-    #uds
-  QScs = 0
-# a = u
-  QScs += ((e2[1] * e2 [2] * Hupol4 *fub * Gu) + (e2[1] * e2 [4] * Hupol4 *fdb * Gu) + (e2[1] * e2 [6] * Hupol4 *fsb * Gu)) + ((e2[1] * e2 [2] * Hupol4 *fu * Gu) + (e2[1] * e2 [4] * Hupol4 *fd * Gu) + (e2[1] * e2 [6] * Hupol4 *fs * Gu)) + (e2[1]**2 * Hupol3 * Gu * fg)
-# a = ub
-  QScs += ((e2[2] * e2 [1] * Hupol4 *fu * Gub) + (e2[2] * e2 [3] * Hupol4 *fd * Gub) + (e2[2] * e2 [5] * Hupol4 *fs * Gub)) + ((e2[2] * e2 [1] * Hupol4 *fub * Gub) + (e2[2] * e2 [3] * Hupol4 *fdb * Gub) + (e2[2] * e2 [5] * Hupol4 *fsb * Gub)) + (e2[2]**2 * Hupol3 * Gub * fg)
-# a = d
-  QScs += ((e2[3] * e2 [2] * Hupol4 *fub * Gd) + (e2[3] * e2 [4] * Hupol4 *fdb * Gd) + (e2[3] * e2 [6] * Hupol4 *fsb * Gd)) + ((e2[3] * e2 [2] * Hupol4 *fu * Gd) + (e2[3] * e2 [4] * Hupol4 *fd * Gd) + (e2[3] * e2 [6] * Hupol4 *fs * Gd)) + (e2[3]**2 * Hupol3 * Gd * fg)
-# a = db
-  QScs += ((e2[4] * e2 [1] * Hupol4 *fu * Gdb) + (e2[4] * e2 [3] * Hupol4 *fd * Gdb) + (e2[4] * e2 [5] * Hupol4 *fs * Gdb)) + ((e2[4] * e2 [1] * Hupol4 *fub * Gdb) + (e2[4] * e2 [3] * Hupol4 *fdb * Gdb) + (e2[4] * e2 [5] * Hupol4 *fsb * Gdb)) + (e2[4]**2 * Hupol3 * Gdb * fg)
-# a = s
-  QScs += ((e2[5] * e2 [2] * Hupol4 *fub * Gs) + (e2[5] * e2 [4] * Hupol4 *fdb * Gs) + (e2[5] * e2 [6] * Hupol4 *fsb * Gs)) + ((e2[5] * e2 [2] * Hupol4 *fu * Gs) + (e2[5] * e2 [4] * Hupol4 *fd * Gs) + (e2[5] * e2 [6] * Hupol4 *fs * Gs)) + (e2[5]**2 * Hupol3 * Gs * fg)
 
-  QScs += ((e2[6] * e2 [1] * Hupol4 *fu * Gsb) + (e2[6] * e2 [3] * Hupol4 *fd * Gsb) + (e2[6] * e2 [5] * Hupol4 *fs * Gsb)) + ((e2[6] * e2 [1] * Hupol4 *fub * Gsb) + (e2[6] * e2 [3] * Hupol4 *fdb * Gsb) + (e2[6] * e2 [5] * Hupol4 *fsb * Gsb)) + (e2[6]**2 * Hupol3 * Gsb * fg)
+  QScs = 0
+
+  QScs += (((-1 / (N_C**2)) * ftub * Hupol1) + ((1 / (2. * C_F)) * ftg *Hupol2)) * (1. / u) * uQS * e2[1]
+
+  QScs += (((-1 / (N_C**2)) * ftu * Hupol1) + ((1 / (2.* C_F)) * ftg *Hupol2)) * (1. / u) * ubQS * e2[2]
+
+  QScs += (((-1 / (N_C**2)) * ftdb * Hupol1) + ((1 / (2. * C_F)) * ftg *Hupol2)) * (1. / u) * dQS * e2[3]
+
+  QScs += (((-1 / (N_C**2)) * ftd * Hupol1) + ((1 / (2.* C_F)) * ftg *Hupol2)) * (1. / u) * dbQS * e2[4]
+
+  QScs += (((-1 / (N_C**2)) * ftsb * Hupol1) + ((1 / (2. * C_F)) * ftg *Hupol2)) * (1. / u) * sQS * e2[5]
+
+  QScs += (((-1 / (N_C**2)) * fts * Hupol1) + ((1 / (2.* C_F)) * ftg *Hupol2)) * (1. / u) * sbQS * e2[6]
 
   return QScs * numfac
 
@@ -332,7 +299,8 @@ if __name__ == '__main__':
 
   def test():
     num = get_numint(xF, pT, rs, nx = 10)
-    den = get_denomint(xF, pT, rs, nx =10)
+    den = get_denomint(xF, pT, rs)
+
     AN = num / den
     print AN
 
