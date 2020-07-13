@@ -26,6 +26,7 @@ def _get_FUU(x,z,Q2,pT,tar,had,F,D,w_tar,w_had):
     M=conf['aux'].M
     if   'pi' in had: Mh=conf['aux'].Mpi
     elif 'k'  in had: Mh=conf['aux'].Mk
+    elif 'h'  in had: Mh=conf['aux'].Mpi #use pions for now
 
     if had.endswith('+'):
 
@@ -67,12 +68,14 @@ def get_FUU(x,z,Q2,pT,tar,had):
     F = conf['boermulders'].get_C(x, Q2)
     if   'pi' in had:  D = conf['collinspi'].get_C(z, Q2)
     elif  'k' in had:  D = conf['collinsk'].get_C(z, Q2)
+    elif 'h' in had: D = conf['collinspi'].get_C(z, Q2) #use pions for now
     F[0],D[0]=0,0  # set glue to zero
 
     # get widths (proton and positive hadrons)
     w_tar=conf['boermulders'].get_widths(Q2)
     if   'pi' in had: w_had=np.abs(conf['collinspi'].get_widths(Q2))
     elif 'k'  in had: w_had=np.abs(conf['collinsk'].get_widths(Q2))
+    elif 'h' in had: w_had=np.abs(conf['collinspi'].get_widths(Q2)) #use pions for now
 
     # build structure function
     K = x
@@ -85,7 +88,7 @@ def get_FUU(x,z,Q2,pT,tar,had):
         F=conf['aux'].p2n(F)
         w_tar=conf['aux'].p2n(w_tar)
         return  _get_FUU(x,z,Q2,pT,tar,had,F,D,w_tar,w_had)
-  
+
     elif tar=='d':
 
       return 0.5*(get_FUU(x,z,Q2,pT,'p',had)+get_FUU(x,z,Q2,pT,'n',had))
@@ -119,8 +122,3 @@ if __name__ == '__main__':
     print get_FUU(x,z,Q2,pT,'d','pi+')
     print get_FUU(x,z,Q2,pT,'d','pi-')
     print get_FUU(x,z,Q2,pT,'d','pi0')
-
-
-
-
-

@@ -21,12 +21,14 @@ class RESIDUALS(_RESIDUALS):
         obs = self.tabs[k]['obs'][i].strip()
 
         if obs=='SBu':
-            if np.abs(SB.get_h1(x,Q2)[1]) > exp: thy = SB.get_h1(x,Q2)[1]
-            if np.abs(SB.get_h1(x,Q2)[1]) <= exp: thy = exp
+            #if np.abs(SB.get_h1(x,Q2)[1]) > exp: thy = SB.get_h1(x,Q2)[1]
+            #if np.abs(SB.get_h1(x,Q2)[1]) <= exp: thy = exp
+            thy = SB.get_h1(x,Q2)[1]
 
         elif obs=='SBd':
-            if np.abs(SB.get_h1(x,Q2)[3]) > exp: thy = SB.get_h1(x,Q2)[3]
-            if np.abs(SB.get_h1(x,Q2)[3]) <= exp: thy = exp
+            #if np.abs(SB.get_h1(x,Q2)[3]) > exp: thy = SB.get_h1(x,Q2)[3]
+            #if np.abs(SB.get_h1(x,Q2)[3]) <= exp: thy = exp
+            thy = SB.get_h1(x,Q2)[3]
 
         return thy
 

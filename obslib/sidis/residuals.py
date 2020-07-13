@@ -9,7 +9,7 @@ from obslib.sidis import upol0 as upol
 from obslib.sidis import collins0 as collins
 from obslib.sidis import sivers0 as sivers
 from obslib.sidis import boermulders0 as boermulders
-from obslib.sidis import cahn0_AR as cahn
+from obslib.sidis import cahn0 as cahn
 from obslib.sidis import aUTsPs0 as AUTsinphiS
 from obslib.idis.stfuncs import STFUNCS as DIS_STFUNCS
 
@@ -24,9 +24,11 @@ class RESIDUALS(_RESIDUALS):
     def _get_theory(self, entry):
         k, i = entry
         x = self.tabs[k]['x'][i]
-        y = self.tabs[k]['y'][i]
+        try: y = self.tabs[k]['y'][i]
+        except ValueError: y=None
         z = self.tabs[k]['z'][i]
-        Q2 = self.tabs[k]['Q2'][i]
+        try: Q2 = self.tabs[k]['Q2'][i]
+        except ValueError: Q2=None
         pT = self.tabs[k]['pT'][i]
         exp = self.tabs[k]['value'][i]
         tar = self.tabs[k]['target'][i]
@@ -47,7 +49,8 @@ class RESIDUALS(_RESIDUALS):
             FUU = upol.get_FUU(x,z,Q2,pT,tar,had)
             F2 = self.dis_stfuncs.get_F2(x, Q2,tar)
             thy = FUU / F2
-            if col=='HERMES': thy*=2*np.pi*pT
+            if col=='HERMES': thy=2*np.pi*pT*thy
+            if col=='COMPASS': thy=np.pi*thy
 
         elif obs == 'AUTcollins':
 
@@ -154,7 +157,7 @@ class RESIDUALS(_RESIDUALS):
 
                 return theory
 
-            thy = yield_thy(col, should_integrate = False, ny=10)
+            thy = yield_thy(col, should_integrate = True, ny=10)
 
         elif obs == 'AUTsinphiS':  # This is for collinear!
 
