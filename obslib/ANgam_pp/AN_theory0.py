@@ -25,7 +25,7 @@ c = {'r3': 1. / 3., 'r4': 0.25, 'r6': 1. / 6., 'r8': 0.125,
          'r9': 1. / 9., 'r18': 1. / 18., 'r24': 1. / 24., 'r27': 1. / 27.}
 
 m = {}
-Hupol = {}
+HPall = {}
 HQS = {}
 f = {}
 ft = {}
@@ -45,6 +45,20 @@ e2.append(0) #b
 e2.append(0) #bb
 e2 = np.array(e2)
 
+e = []
+e.append(0) #g
+e.append(2.0/3.0) #u
+e.append(-2.0/3.0) #ub
+e.append(-1.0/3.0) #d
+e.append(1.0/3.0) #db
+e.append(-1.0/3.0) #s
+e.append(1.0/3.0) #sb
+e.append(0) #c
+e.append(0) #cb
+e.append(0) #b
+e.append(0) #bb
+e = np.array(e)
+
 if 'basis' not in conf:
   conf['basis'] = 'default'
 
@@ -60,92 +74,120 @@ def get_f1Tp(x, Q2): # (f_1T^{\perp(1)}(x) - x*df_1T^{\perp(1)}(x)/dx)
 def get_G(x, Q2): # (f_1T^{\perp(1)}(x)
     return conf['sivers'].get_C(x, Q2)
 
-def get_mandelstam(s, t, u):
+def get_mandelstam(CV.ss_value(rs, xF, pT, x), CV.tt_value(rs, xF, pT, x), CV.uu_value(rs, xF, pT, x)):
 # Convenient combinations of the partonic Mandelstam variables
-   m['s'] = s
-   m['s2'] = s * s
-   m['s3'] = s**3.
-   m['t'] = t
-   m['t2'] = t * t
-   m['t3'] = t**3.
-   m['u'] = u
-   m['u2'] = u * u
-   m['u3'] = u**3.
-   m['ostu'] = 1. / (s * t * u)
-   m['os'] = 1. / s
-   m['ot'] = 1. / t
-   m['ou'] = 1. / u
-   m['st'] = s / t
-   m['su'] = s / u
-   m['ts'] = t / s
-   m['tu'] = t / u
-   m['us'] = u / s
-   m['ut'] = u / t
-   m['st2'] = s**2. / t**2.
-   m['su2'] = s**2. / u**2.
-   m['ts2'] = t**2. / s**2.
-   m['tu2'] = t**2. / u**2.
-   m['us2'] = u**2. / s**2.
-   m['ut2'] = u**2. / t**2.
-   m['os2'] = 1. / s**2.
-   m['ot2'] = 1. / t**2.
-   m['ou2'] = 1. / u**2.
-   m['os3'] = 1. / s**3.
-   m['ot3'] = 1. / t**3.
-   m['ou3'] = 1. / u**3.
+   m['s'] = CV.ss_value(rs, xF, pT, x)
+   m['s2'] = CV.ss_value(rs, xF, pT, x) * CV.ss_value(rs, xF, pT, x)
+   m['s3'] = CV.ss_value(rs, xF, pT, x)**3.
+   m['t'] = CV.tt_value(rs, xF, pT, x)
+   m['t2'] = CV.tt_value(rs, xF, pT, x) * CV.tt_value(rs, xF, pT, x)
+   m['t3'] = CV.tt_value(rs, xF, pT, x)**3.
+   m['u'] = CV.uu_value(rs, xF, pT, x)
+   m['u2'] = CV.uu_value(rs, xF, pT, x) * CV.uu_value(rs, xF, pT, x)
+   m['u3'] = CV.uu_value(rs, xF, pT, x)**3.
+   m['ostu'] = 1. / ( CV.ss_value(rs, xF, pT, x)* CV.tt_value(rs, xF, pT, x) * CV.uu_value(rs, xF, pT, x))
+   m['os'] = 1. / CV.ss_value(rs, xF, pT, x)
+   m['ot'] = 1. / CV.tt_value(rs, xF, pT, x)
+   m['ou'] = 1. / CV.uu_value(rs, xF, pT, x)
+   m['st'] = CV.ss_value(rs, xF, pT, x) / CV.tt_value(rs, xF, pT, x)
+   m['su'] = CV.ss_value(rs, xF, pT, x) / CV.uu_value(rs, xF, pT, x)
+   m['ts'] = CV.tt_value(rs, xF, pT, x) / CV.ss_value(rs, xF, pT, x)
+   m['tu'] = CV.tt_value(rs, xF, pT, x) / CV.uu_value(rs, xF, pT, x)
+   m['us'] = CV.uu_value(rs, xF, pT, x) / CV.ss_value(rs, xF, pT, x)
+   m['ut'] = CV.uu_value(rs, xF, pT, x) / CV.tt_value(rs, xF, pT, x)
+   m['st2'] = CV.ss_value(rs, xF, pT, x)**2. / CV.tt_value(rs, xF, pT, x)**2.
+   m['su2'] = CV.ss_value(rs, xF, pT, x)**2. / CV.uu_value(rs, xF, pT, x)**2.
+   m['ts2'] = CV.tt_value(rs, xF, pT, x)**2. / CV.ss_value(rs, xF, pT, x)**2.
+   m['tu2'] = CV.tt_value(rs, xF, pT, x)**2. / CV.uu_value(rs, xF, pT, x)**2.
+   m['us2'] = CV.uu_value(rs, xF, pT, x)**2. / CV.ss_value(rs, xF, pT, x)**2.
+   m['ut2'] = CV.uu_value(rs, xF, pT, x)**2. / CV.tt_value(rs, xF, pT, x)**2.
+   m['os2'] = 1. / CV.ss_value(rs, xF, pT, x)**2.
+   m['ot2'] = 1. / CV.tt_value(rs, xF, pT, x)**2.
+   m['ou2'] = 1. / CV.uu_value(rs, xF, pT, x)**2.
+   m['os3'] = 1. / CV.ss_value(rs, xF, pT, x)**3.
+   m['ot3'] = 1. / CV.tt_value(rs, xF, pT, x)**3.
+   m['ou3'] = 1. / CV.uu_value(rs, xF, pT, x)**3.
    return m
 
-def get_Hupol(m):
-  # Hard parts for the unpolarized cross section
+# Hard parts for all the functions
+def get_HPall(m):
    N_C = 3.0
-   Hupol[1] = (2 * (m['s2'] + m['u2']) / (m['t2']*m['u'])) + (2 *m['s'] * (m['u'] - m['s']) / (N_C * m['t']*m['u2']))
-   Hupol[2] = (2 * (m['s2'] + m['u2']) / (m['t2']*m['u'])) + ((2 * N_C * m['s'] / (m['u2'])) + (2 * (m['u2'] + m['s']*m['t']) / (N_C * m['s'] * m['t'] * m['u'])))
-   Hupol[3] = 2 * (N_C * N_C * m['t'] * m['u'] - (m['s'] * (m['s'] - m['t']))) / ((N_C * N_C - 1) * m['s'] * m['t'] * m['u'])
-   Hupol[4] = (2 * (m['s2'] + m['u2']) / (m['t2']*m['u']))
-   Hupol[5] = (2 * (m['s2'] + m['u2']) / (m['t2']*m['u']))
-   return Hupol
+
+   #Found in SFP numerator
+   HPall[1] = (2 * (m['s2'] + m['u2']) / (m['t2']*m['u'])) + (2 *m['s'] * (m['u'] - m['s']) / (N_C * m['t']*m['u2']))
+   HPall[2] = (2 * (m['s2'] + m['u2']) / (m['t2']*m['u'])) + ((2 * N_C * m['s'] / (m['u2'])) + (2 * (m['u2'] + m['s']*m['t']) / (N_C * m['s'] * m['t'] * m['u'])))
+   HPall[3] = 2 * (N_C * N_C * m['t'] * m['u'] - (m['s'] * (m['s'] - m['t']))) / ((N_C * N_C - 1) * m['s'] * m['t'] * m['u'])
+
+   #HPall[1] and [2] when the quarks are not the same, eq 27 & 28 in 1410.3448
+   #Found in SFP numerator
+   HPall[4] = (2 * (m['s2'] + m['u2']) / (m['t2']*m['u']))
+   HPall[5] = -(2 * (m['s2'] + m['u2']) / (m['t2']*m['u']))
+
+   # Found in unpolarized cross section and SGP numerator
+   HPall[6] = m['ut'] + m['tu']
+   HPall[7] = (-m['st']) - m['ts']
+   HPall[8] = (-m['su']) - m['us']
+   return HPall
+
+class Class_Variables():
+    #Declaring all the class methods that are referenced throughout
+    @classmethod
+    def Q2_value(cls, pT):
+        if pT > 1.:
+          Q = pT
+        else:
+          Q = 1.
+        Q2 = Q * Q
+    @classmethod
+    def S_value(cls, rs):
+        return rs**2
+    @classmethod
+    def T_value(cls, rs, xF, pT):
+        return (- rs * np.sqrt( (pT**2) + (xF * xF * CV.S_value(rs) / 4.0))) + (xF * CV.S_value(rs) / 2.0)
+    @classmethod
+    def U_value(cls, rs, xF, pT):
+        return (- rs * np.sqrt( (pT**2) + (xF * xF * CV.S_value(rs) / 4.0))) - (xF * CV.S_value(rs) / 2.0)
+    @classmethod
+    def xp_value(cls, rs, xF, pT, x):
+        return -x * CV.T_value(rs, xF, pT) / (x * CV.S_value(rs) + CV.U_value(rs, xF, pT))
+    @classmethod
+    def ss_value(cls, rs, xF, pT, x):
+        return x * CV.xp_value(rs, xF, pT, x) * CV.S_value(rs)
+    @classmethod
+    def tt_value(cls, rs, xF, pT, x):
+        return x * CV.T_value(rs, xF, pT, x)
+    @classmethod
+    def uu_value(cls, rs, xF, pT, x):
+        return CV.xp_value(rs, xF, pT, x) * CV.U_value(rs)
+
+################################################################################
+#Defining Consistent Variables
+CV = Class_Variables()
+
+C_F = 4.0/3.0
+N_C = 3.0
+################################################################################
 
 #  @profile
 # Calculation of the unpolarized cross section
-def get_upolden(x, xF, pT, rs):
+def get_upolden_SGP(x, xF, pT, rs):
 
   M = conf['aux'].M
 
-  #Defining all of our internal variables at the hadronic and partonic scales#
-
-  if pT > 1.:
-    Q = pT
-  else:
-    Q = 1.
-
-  Q2 = Q * Q
-  C_F = 4.0/3.0
-  N_C = 3.0
-  # Mandelstam variables at the hadron level
-  ss = rs**2
-  tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4.0))) + (xF * ss / 2.0)
-  uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4.0))) - (xF * ss / 2.0)
-  xp = -x * tt / (x * ss + uu)
-
-  # Mandelstam variables at the parton level
-  s = x * xp * ss
-  t = x * tt
-  u = xp * uu
-
   # Prefactor
-  denfac = (1. / (N_C * (x * ss + uu))) * (1. / (x * xp))
+  denfac = (1. / (N_C * (x * CV.S_value(rs) + CV.U_value(rs, xF, pT)))) * (1. / (x * CV.xp_value(rs, xF, pT, x)))
 
   #calling mandelstam variables
   m=get_mandelstam(s, t, u)
 
   #Calling Hard Factors
-  Hupol=get_Hupol(m)
-  Hupol1 = Hupol[1]
-  Hupol2 = Hupol[2]
-  Hupol3 = Hupol[3]
+  HPall=get_HPall(m)
+  HPall1 = HPall[6]
+  HPall2 = HPall[7]
+  HPall3 = HPall[8]
 
   # Get arrays of the nonperturbative functions
-  ft = get_ft(xp, Q2)
+  ft = get_ft(CV.xp_value(rs, xF, pT, x), CV.Q2_value(pT))
   ftg = ft[0]
   ftu = ft[1]
   ftub = ft[2]
@@ -154,7 +196,59 @@ def get_upolden(x, xF, pT, rs):
   fts = ft[5]
   ftsb = ft[6]
 
-  f = get_f(x, Q2)
+  f = get_f(x, CV.Q2_value(pT))
+  fg = f[0]
+  fu = f[1]
+  fub = f[2]
+  fd = f[3]
+  fdb = f[4]
+  fs = f[5]
+  fsb = f[6]
+############################################################################
+
+  upol_SGP = 0
+
+  upol_SGP += ((ftu * fub * 2. * C_F * HPall1) + (ftub * fg *HPall3) + (ftg * fu * HPall2)) * e2[1]
+
+  upol_SGP += ((ftub * fu * 2. * C_F * HPall1) + (ftu * fg *HPall3) + (ftg * fub * HPall2)) * e2[2]
+
+  upol_SGP += ((ftd * fdb * 2. * C_F * HPall1) + (ftdb * fg *HPall3) + (ftg * fd * HPall2)) * e2[3]
+
+  upol_SGP += ((ftdb * fd * 2. * C_F * HPall1) + (ftd * fg *HPall3) + (ftg * fdb * HPall2)) * e2[4]
+
+  upol_SGP += ((fts * fsb * 2. * C_F * HPall1) + (ftsb * fg *HPall3) + (ftg * fs * HPall2)) * e2[5]
+
+  upol_SGP += ((ftsb * fs * 2. * C_F * HPall1) + (fts * fg *HPall3) + (ftg * fsb * HPall2)) * e2[6]
+
+  return denfac * upol_SGP
+
+def get_upolden_SFP(x, xF, pT, rs):
+
+  M = conf['aux'].M
+
+  # Prefactor
+  denfac = (1. / (N_C * (x * CV.S_value(rs) + CV.U_value(rs, xF, pT)))) * (1. / (x * CV.xp_value(rs, xF, pT, x)))
+
+  #calling mandelstam variables
+  m=get_mandelstam(s, t, u)
+
+  #Calling Hard Factors
+  HPall=get_HPall(m)
+  HPall1 = HPall[6]
+  HPall2 = HPall[7]
+  HPall3 = HPall[8]
+
+  # Get arrays of the nonperturbative functions
+  ft = get_ft(CV.xp_value(rs, xF, pT, x), CV.Q2_value(pT))
+  ftg = ft[0]
+  ftu = ft[1]
+  ftub = ft[2]
+  ftd = ft[3]
+  ftdb = ft[4]
+  fts = ft[5]
+  ftsb = ft[6]
+
+  f = get_f(x, CV.Q2_value(pT))
   fg = f[0]
   fu = f[1]
   fub = f[2]
@@ -166,62 +260,42 @@ def get_upolden(x, xF, pT, rs):
 
   upol = 0
 
-  upol += ((ftu * fub * 2. * C_F * Hupol1) + (ftub * fg *Hupol3) + (ftg * fu * Hupol2)) * e2[1]
+  upol_SFP += ((ftu * fub * 2. * C_F * HPall1) + (ftub * fg *HPall3) + (ftg * fu * HPall2)) * e2[1]
 
-  upol += ((ftub * fu * 2. * C_F * Hupol1) + (ftu * fg *Hupol3) + (ftg * fub * Hupol2)) * e2[2]
+  upol_SFP += ((ftub * fu * 2. * C_F * HPall1) + (ftu * fg *HPall3) + (ftg * fub * HPall2)) * e2[2]
 
-  upol += ((ftd * fdb * 2. * C_F * Hupol1) + (ftdb * fg *Hupol3) + (ftg * fd * Hupol2)) * e2[3]
+  upol_SFP += ((ftd * fdb * 2. * C_F * HPall1) + (ftdb * fg *HPall3) + (ftg * fd * HPall2)) * e2[3]
 
-  upol += ((ftdb * fd * 2. * C_F * Hupol1) + (ftd * fg *Hupol3) + (ftg * fdb * Hupol2)) * e2[4]
+  upol_SFP += ((ftdb * fd * 2. * C_F * HPall1) + (ftd * fg *HPall3) + (ftg * fdb * HPall2)) * e2[4]
 
-  upol += ((fts * fsb * 2. * C_F * Hupol1) + (ftsb * fg *Hupol3) + (ftg * fs * Hupol2)) * e2[5]
+  upol_SFP += ((fts * fsb * 2. * C_F * HPall1) + (ftsb * fg *HPall3) + (ftg * fs * HPall2)) * e2[5]
 
-  upol += ((ftsb * fs * 2. * C_F * Hupol1) + (fts * fg *Hupol3) + (ftg * fsb * Hupol2)) * e2[6]
+  upol_SFP += ((ftsb * fs * 2. * C_F * HPall1) + (fts * fg *HPall3) + (ftg * fsb * HPall2)) * e2[6]
 
-  return denfac * upol
+  return denfac * upol_SFP
 
 #  @profile
 # Calculation of the fragmentation term in the transversely polarized cross section
-def get_polnum(x, xF, pT, rs):
+def get_polnum_SFP(x, xF, pT, rs):
 
   M = conf['aux'].M
 
-  #Defining all of our internal variables at the hadronic and partonic scales#
-
-  if pT > 1.:
-    Q = pT
-  else:
-    Q = 1.
-
-  Q2 = Q * Q
-  C_F = 4.0/3.0
-  N_C = 3.0
-  # Mandelstam variables at the hadron level
-  ss = rs**2
-  tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4.0))) + (xF * ss / 2.0)
-  uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4.0))) - (xF * ss / 2.0)
-  xp = -x * tt / (x * ss + uu)
-
-  # Mandelstam variables at the parton level
-  s = x * xp * ss
-  t = x * tt
-  u = xp * uu
-
   # Prefactor
-  numfac = (-2.0 * M * pT) * (1. / (x * xp)) / (x * ss + uu)
+  numfac = (-2.0 * M * pT) * (1. / (x * CV.xp_value(rs, xF, pT, x))) / (x * CV.S_value(rs) + CV.U_value(rs, xF, pT))
 
   #calling mandelstam variables
   m=get_mandelstam(s, t, u)
 
   #Calling Hard Factors
-  Hupol=get_Hupol(m)
-  Hupol1 = Hupol[1]
-  Hupol2 = Hupol[2]
-  Hupol3 = Hupol[3]
-  Hupol4 = Hupol[4]
+  HPall=get_HPall(m)
+  HPall1 = HPall[1]
+  HPall2 = HPall[2]
+  HPall3 = HPall[3]
+  HPall4 = HPall[4]
+  HPall5 = HPall[5]
 
   # Get arrays of the nonperturbative functions
-  ft = get_ft(xp, Q2)
+  ft = get_ft(CV.xp_value(rs, xF, pT, x), CV.Q2_value(pT))
   ftg = ft[0]
   ftu = ft[1]
   ftub = ft[2]
@@ -230,7 +304,7 @@ def get_polnum(x, xF, pT, rs):
   fts = ft[5]
   ftsb = ft[6]
 
-  f = get_f(x, Q2)
+  f = get_f(x, CV.Q2_value(pT))
   fg = f[0]
   fu = f[1]
   fub = f[2]
@@ -239,7 +313,7 @@ def get_polnum(x, xF, pT, rs):
   fs = f[5]
   fsb = f[6]
 
-  G = get_G(x, Q2)
+  G = get_G(x, CV.Q2(pT))
   Gg = G[0]
   Gu = G[1]
   Gub = G[2]
@@ -248,55 +322,127 @@ def get_polnum(x, xF, pT, rs):
   Gs = G[5]
   Gsb = G[6]
 ############################################################################
+
     #uds
-  QScs = 0
+  SFPcs = 0
 # a = u
-  QScs += ((e2[1] * e2 [2] * Hupol4 *fub * Gu) + (e2[1] * e2 [4] * Hupol4 *fdb * Gu) + (e2[1] * e2 [6] * Hupol4 *fsb * Gu)) + ((e2[1] * e2 [2] * Hupol4 *fu * Gu) + (e2[1] * e2 [4] * Hupol4 *fd * Gu) + (e2[1] * e2 [6] * Hupol4 *fs * Gu)) + (e2[1]**2 * Hupol3 * Gu * fg)
+  SFPcs += ((e[1] * e[2] * HPall4 *fub * Gu) + (e[1] * e [4] * HPall4 *fdb * Gu) + (e[1] * e [6] * HPall4 *fsb * Gu)) + ((e[1] * e [2] * HPall5 *fu * Gu) + (e[1] * e [4] * HPall5 *fd * Gu) + (e[1] * e [6] * HPall5 *fs * Gu)) + (e[1]**2 * HPall3 * Gu * fg)
 # a = ub
-  QScs += ((e2[2] * e2 [1] * Hupol4 *fu * Gub) + (e2[2] * e2 [3] * Hupol4 *fd * Gub) + (e2[2] * e2 [5] * Hupol4 *fs * Gub)) + ((e2[2] * e2 [1] * Hupol4 *fub * Gub) + (e2[2] * e2 [3] * Hupol4 *fdb * Gub) + (e2[2] * e2 [5] * Hupol4 *fsb * Gub)) + (e2[2]**2 * Hupol3 * Gub * fg)
+  SFPcs += ((e[2] * e[1] * HPall4 *fu * Gub) + (e[2] * e [3] * HPall4 *fd * Gub) + (e[2] * e [5] * HPall4 *fs * Gub)) + ((e[2] * e [1] * HPall5 *fub * Gub) + (e[2] * e [3] * HPall5 *fdb * Gub) + (e[2] * e [5] * HPall5 *fsb * Gub)) + (e[2]**2 * HPall3 * Gub * fg)
 # a = d
-  QScs += ((e2[3] * e2 [2] * Hupol4 *fub * Gd) + (e2[3] * e2 [4] * Hupol4 *fdb * Gd) + (e2[3] * e2 [6] * Hupol4 *fsb * Gd)) + ((e2[3] * e2 [2] * Hupol4 *fu * Gd) + (e2[3] * e2 [4] * Hupol4 *fd * Gd) + (e2[3] * e2 [6] * Hupol4 *fs * Gd)) + (e2[3]**2 * Hupol3 * Gd * fg)
+  SFPcs += ((e[3] * e[2] * HPall4 *fub * Gd) + (e[3] * e [4] * HPall4 *fdb * Gd) + (e[3] * e [6] * HPall4 *fsb * Gd)) + ((e[3] * e [2] * HPall5 *fu * Gd) + (e[3] * e [4] * HPall5 *fd * Gd) + (e[3] * e [6] * HPall5 *fs * Gd)) + (e[3]**2 * HPall3 * Gd * fg)
 # a = db
-  QScs += ((e2[4] * e2 [1] * Hupol4 *fu * Gdb) + (e2[4] * e2 [3] * Hupol4 *fd * Gdb) + (e2[4] * e2 [5] * Hupol4 *fs * Gdb)) + ((e2[4] * e2 [1] * Hupol4 *fub * Gdb) + (e2[4] * e2 [3] * Hupol4 *fdb * Gdb) + (e2[4] * e2 [5] * Hupol4 *fsb * Gdb)) + (e2[4]**2 * Hupol3 * Gdb * fg)
+  SFPcs += ((e[4] * e[1] * HPall4 *fu * Gdb) + (e[4] * e [3] * HPall4 *fd * Gdb) + (e[4] * e [5] * HPall4 *fs * Gdb)) + ((e[4] * e [1] * HPall5 *fub * Gdb) + (e[4] * e [3] * HPall5 *fdb * Gdb) + (e[4] * e [5] * HPall5 *fsb * Gdb)) + (e[4]**2 * HPall3 * Gdb * fg)
 # a = s
-  QScs += ((e2[5] * e2 [2] * Hupol4 *fub * Gs) + (e2[5] * e2 [4] * Hupol4 *fdb * Gs) + (e2[5] * e2 [6] * Hupol4 *fsb * Gs)) + ((e2[5] * e2 [2] * Hupol4 *fu * Gs) + (e2[5] * e2 [4] * Hupol4 *fd * Gs) + (e2[5] * e2 [6] * Hupol4 *fs * Gs)) + (e2[5]**2 * Hupol3 * Gs * fg)
+  SFPcs += ((e[5] * e[2] * HPall4 *fub * Gs) + (e[5] * e [4] * HPall4 *fdb * Gs) + (e[5] * e [6] * HPall4 *fsb * Gs)) + ((e[5] * e [2] * HPall5 *fu * Gs) + (e[5] * e [4] * HPall5 *fd * Gs) + (e[5] * e [6] * HPall5 *fs * Gs)) + (e[5]**2 * HPall3 * Gs * fg)
+# a = sb
+  SFPcs += ((e[6] * e[1] * HPall4 *fu * Gsb) + (e[6] * e [3] * HPall4 *fd * Gsb) + (e[6] * e [5] * HPall4 *fs * Gsb)) + ((e[6] * e [1] * HPall5 *fub * Gsb) + (e[6] * e [3] * HPall5 *fdb * Gsb) + (e[6] * e [5] * HPall5 *fsb * Gsb)) + (e[6]**2 * HPall3 * Gsb * fg)
 
-  QScs += ((e2[6] * e2 [1] * Hupol4 *fu * Gsb) + (e2[6] * e2 [3] * Hupol4 *fd * Gsb) + (e2[6] * e2 [5] * Hupol4 *fs * Gsb)) + ((e2[6] * e2 [1] * Hupol4 *fub * Gsb) + (e2[6] * e2 [3] * Hupol4 *fdb * Gsb) + (e2[6] * e2 [5] * Hupol4 *fsb * Gsb)) + (e2[6]**2 * Hupol3 * Gsb * fg)
+  return SFPcs * numfac
 
-  return QScs * numfac
+def get_polnum_SGP(x, xF, pT, rs):
 
+  M = conf['aux'].M
 
-def get_numint(xF, pT, rs, nx = 10):
+  # Prefactor
+  numfac = (-2.0 * M * pT) * (1. / (x * CV.xp_value(rs, xF, pT, x))) / (x * CV.S_value(rs) + CV.U_value(rs, xF, pT))
 
-    C_F = 4.0/3.0
-    N_C = 3.0
-    # Mandelstam variables at the hadron level
-    ss = rs**2
-    tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4.0))) + (xF * ss / 2.0)
-    uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4.0))) - (xF * ss / 2.0)
+  #calling mandelstam variables
+  m=get_mandelstam(s, t, u)
 
+  #Calling Hard Factors
+  HPall=get_HPall(m)
+  HPall1 = HPall[6]
+  HPall2 = HPall[7]
+  HPall3 = HPall[8]
+
+  # Get arrays of the nonperturbative functions
+  ft = get_ft(CV.xp_value(rs, xF, pT, x), CV.Q2_value(pT))
+  ftg = ft[0]
+  ftu = ft[1]
+  ftub = ft[2]
+  ftd = ft[3]
+  ftdb = ft[4]
+  fts = ft[5]
+  ftsb = ft[6]
+
+  f = get_f(x, CV.Q2_value(pT))
+  fg = f[0]
+  fu = f[1]
+  fub = f[2]
+  fd = f[3]
+  fdb = f[4]
+  fs = f[5]
+  fsb = f[6]
+
+  uQS = get_f1Tp(x, CV.Q2(pT))[1]
+  ubQS = get_f1Tp(x, CV.Q2(pT))[2]
+  dQS = get_f1Tp(x, CV.Q2(pT))[3]
+  dbQS = get_f1Tp(x, CV.Q2(pT))[4]
+  sQS = get_f1Tp(x, CV.Q2(pT))[5]
+  sbQS = get_f1Tp(x, CV.Q2(pT))[6]
+############################################################################
+
+  SGPcs = 0
+
+  SGPcs += (((-1 / (N_C**2)) * ftub * HPall1) + ((1 / (2. * C_F)) * ftg *HPall2)) * (1. / u) * uQS * e2[1]
+
+  SGPcs += (((-1 / (N_C**2)) * ftu * HPall1) + ((1 / (2.* C_F)) * ftg *HPall2)) * (1. / u) * ubQS * e2[2]
+
+  SGPcs += (((-1 / (N_C**2)) * ftdb * HPall1) + ((1 / (2. * C_F)) * ftg *HPall2)) * (1. / u) * dQS * e2[3]
+
+  SGPcs += (((-1 / (N_C**2)) * ftd * HPall1) + ((1 / (2.* C_F)) * ftg *HPall2)) * (1. / u) * dbQS * e2[4]
+
+  SGPcs += (((-1 / (N_C**2)) * ftsb * HPall1) + ((1 / (2. * C_F)) * ftg *HPall2)) * (1. / u) * sQS * e2[5]
+
+  SGPcs += (((-1 / (N_C**2)) * fts * HPall1) + ((1 / (2.* C_F)) * ftg *HPall2)) * (1. / u) * sbQS * e2[6]
+
+  return SGPcs * numfac
+
+#  @profile
+#  Integral of the numerators
+def get_numint_SFP(xF, pT, rs, nx = 10):
     # Lower limits of the x integration
-    xmin = -uu / (ss + tt)
+    xmin = -CV.U_value(rs, xF, pT) / (CV.S_value(rs) + CV.T_value(rs, xF, pT))
 
-    dnumerdx = np.vectorize(lambda x: get_polnum(x, xF, pT, rs))
+    dnumerdx = np.vectorize(lambda x: get_polnum_SFP(x, xF, pT, rs))
     numer = fixed_quad(dnumerdx, xmin, 1., n = nx)[0]
     return numer
 
-def get_denomint(xF, pT, rs, nx = 10):
-
-    C_F = 4.0/3.0
-    N_C = 3.0
-    # Mandelstam variables at the hadron level
-    ss = rs**2
-    tt = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4.0))) + (xF * ss / 2.0)
-    uu = (- rs * np.sqrt( (pT**2) + (xF * xF * ss / 4.0))) - (xF * ss / 2.0)
-
+def get_numint_SGP(xF, pT, rs, nx = 10):
     # Lower limits of the x integration
-    xmin = -uu / (ss + tt)
+    xmin = -CV.U_value(rs, xF, pT) / (CV.S_value(rs) + CV.T_value(rs, xF, pT))
 
-    ddenomdx = np.vectorize(lambda x: get_upolden(x, xF, pT, rs))
+    dnumerdx = np.vectorize(lambda x: get_polnum_SGP(x, xF, pT, rs))
+    numer = fixed_quad(dnumerdx, xmin, 1., n = nx)[0]
+    return numer
+
+#  @profile
+#  Integral of the denominators
+def get_denomint_SFP(xF, pT, rs, nx = 10):
+    # Lower limits of the x integration
+    xmin = -CV.U_value(rs, xF, pT) / (CV.S_value(rs) + CV.T_value(rs, xF, pT))
+
+    ddenomdx = np.vectorize(lambda x: get_upolden_SFP(x, xF, pT, rs))
     denom = fixed_quad(ddenomdx, xmin, 1., n = nx)[0]
     return denom
+
+def get_denomint_SGP(xF, pT, rs, nx = 10):
+    # Lower limits of the x integration
+    xmin = -CV.U_value(rs, xF, pT) / (CV.S_value(rs) + CV.T_value(rs, xF, pT))
+
+    ddenomdx = np.vectorize(lambda x: get_upolden_SGP(x, xF, pT, rs))
+    denom = fixed_quad(ddenomdx, xmin, 1., n = nx)[0]
+    return denom
+
+def get_SFP(xF, pT, rs, nx=10):
+    return get_numint_SFP(xF, pT, rs, nx) / get_denomint_SFP(xF, pT, rs, nx)
+
+def get_SGP(xF, pT, rs, nx=10):
+    return get_numint_SGP(xF, pT, rs, nx) / get_denomint_SGP(xF, pT, rs, nx)
+
+def get_AN(xF, pT, rs, nx=10):
+    return get_SFP(xF, pT, rs, nx=10) + get_SGP(xF, pT, rs, nx=10)
 
 # def get_vars(rs, n):
 #     xF_over_pT = 2 * np.sinh(n) / rs
@@ -331,9 +477,7 @@ if __name__ == '__main__':
   N_C = 3.0
 
   def test():
-    num = get_numint(xF, pT, rs, nx = 10)
-    den = get_denomint(xF, pT, rs, nx =10)
-    AN = num / den
+    AN = get_AN(xF, pT, rs, nx = 10)
     print AN
 
   test()
