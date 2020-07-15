@@ -62,19 +62,19 @@ e = np.array(e)
 if 'basis' not in conf:
   conf['basis'] = 'default'
 
-def get_f(x, Q2): # Collinear unpolarized PDF
-  return conf['pdf'].get_C(x, Q2)
+def get_f(x, pT): # Collinear unpolarized PDF
+  return conf['pdf'].get_C(x, CV.Q2_value(pT))
 
-def get_ft(x, Q2): # Collinear unpolarized PDF
-  return conf['pdf'].get_C(x, Q2)
+def get_ft(x, pT): # Collinear unpolarized PDF
+  return conf['pdf'].get_C(x, CV.Q2_value(pT))
 
-def get_f1Tp(x, Q2): # (f_1T^{\perp(1)}(x) - x*df_1T^{\perp(1)}(x)/dx)
-    return conf['sivers'].get_C(x, Q2) - x * conf['dsivers'].get_C(x, Q2)
+def get_f1Tp(x, pT): # (f_1T^{\perp(1)}(x) - x*df_1T^{\perp(1)}(x)/dx)
+    return conf['sivers'].get_C(x, CV.Q2_value(pT)) - x * conf['dsivers'].get_C(x, CV.Q2_value(pT))
 
-def get_G(x, Q2): # (f_1T^{\perp(1)}(x)
-    return conf['sivers'].get_C(x, Q2)
+def get_G(x, pT): # (f_1T^{\perp(1)}(x)
+    return conf['sivers'].get_C(x, CV.Q2_value(pT))
 
-def get_mandelstam(CV.ss_value(rs, xF, pT, x), CV.tt_value(rs, xF, pT, x), CV.uu_value(rs, xF, pT, x)):
+def get_mandelstam(rs, xF, pT, x):
 # Convenient combinations of the partonic Mandelstam variables
    m['s'] = CV.ss_value(rs, xF, pT, x)
    m['s2'] = CV.ss_value(rs, xF, pT, x) * CV.ss_value(rs, xF, pT, x)
@@ -155,10 +155,10 @@ class Class_Variables():
         return x * CV.xp_value(rs, xF, pT, x) * CV.S_value(rs)
     @classmethod
     def tt_value(cls, rs, xF, pT, x):
-        return x * CV.T_value(rs, xF, pT, x)
+        return x * CV.T_value(rs, xF, pT)
     @classmethod
     def uu_value(cls, rs, xF, pT, x):
-        return CV.xp_value(rs, xF, pT, x) * CV.U_value(rs)
+        return CV.xp_value(rs, xF, pT, x) * CV.U_value(rs, xF, pT)
 
 ################################################################################
 #Defining Consistent Variables
@@ -173,12 +173,12 @@ N_C = 3.0
 def get_upolden_SGP(x, xF, pT, rs):
 
   M = conf['aux'].M
-
+  xp = -x * CV.T_value(rs, xF, pT) / (x * CV.S_value(rs) + CV.U_value(rs, xF, pT))
   # Prefactor
   denfac = (1. / (N_C * (x * CV.S_value(rs) + CV.U_value(rs, xF, pT)))) * (1. / (x * CV.xp_value(rs, xF, pT, x)))
 
   #calling mandelstam variables
-  m=get_mandelstam(s, t, u)
+  m=get_mandelstam(rs, xF, pT, x)
 
   #Calling Hard Factors
   HPall=get_HPall(m)
@@ -187,7 +187,7 @@ def get_upolden_SGP(x, xF, pT, rs):
   HPall3 = HPall[8]
 
   # Get arrays of the nonperturbative functions
-  ft = get_ft(CV.xp_value(rs, xF, pT, x), CV.Q2_value(pT))
+  ft = get_ft(xp, pT)
   ftg = ft[0]
   ftu = ft[1]
   ftub = ft[2]
@@ -196,7 +196,7 @@ def get_upolden_SGP(x, xF, pT, rs):
   fts = ft[5]
   ftsb = ft[6]
 
-  f = get_f(x, CV.Q2_value(pT))
+  f = get_f(x, pT)
   fg = f[0]
   fu = f[1]
   fub = f[2]
@@ -230,8 +230,8 @@ def get_upolden_SFP(x, xF, pT, rs):
   denfac = (1. / (N_C * (x * CV.S_value(rs) + CV.U_value(rs, xF, pT)))) * (1. / (x * CV.xp_value(rs, xF, pT, x)))
 
   #calling mandelstam variables
-  m=get_mandelstam(s, t, u)
-
+  m=get_mandelstam(rs, xF, pT, x)
+  xp = -x * CV.T_value(rs, xF, pT) / (x * CV.S_value(rs) + CV.U_value(rs, xF, pT))
   #Calling Hard Factors
   HPall=get_HPall(m)
   HPall1 = HPall[6]
@@ -239,7 +239,7 @@ def get_upolden_SFP(x, xF, pT, rs):
   HPall3 = HPall[8]
 
   # Get arrays of the nonperturbative functions
-  ft = get_ft(CV.xp_value(rs, xF, pT, x), CV.Q2_value(pT))
+  ft = get_ft(xp, pT)
   ftg = ft[0]
   ftu = ft[1]
   ftub = ft[2]
@@ -248,7 +248,7 @@ def get_upolden_SFP(x, xF, pT, rs):
   fts = ft[5]
   ftsb = ft[6]
 
-  f = get_f(x, CV.Q2_value(pT))
+  f = get_f(x, pT)
   fg = f[0]
   fu = f[1]
   fub = f[2]
@@ -284,8 +284,8 @@ def get_polnum_SFP(x, xF, pT, rs):
   numfac = (-2.0 * M * pT) * (1. / (x * CV.xp_value(rs, xF, pT, x))) / (x * CV.S_value(rs) + CV.U_value(rs, xF, pT))
 
   #calling mandelstam variables
-  m=get_mandelstam(s, t, u)
-
+  m=get_mandelstam(rs, xF, pT, x)
+  xp = -x * CV.T_value(rs, xF, pT) / (x * CV.S_value(rs) + CV.U_value(rs, xF, pT))
   #Calling Hard Factors
   HPall=get_HPall(m)
   HPall1 = HPall[1]
@@ -295,7 +295,7 @@ def get_polnum_SFP(x, xF, pT, rs):
   HPall5 = HPall[5]
 
   # Get arrays of the nonperturbative functions
-  ft = get_ft(CV.xp_value(rs, xF, pT, x), CV.Q2_value(pT))
+  ft = get_ft(xp, pT)
   ftg = ft[0]
   ftu = ft[1]
   ftub = ft[2]
@@ -304,7 +304,7 @@ def get_polnum_SFP(x, xF, pT, rs):
   fts = ft[5]
   ftsb = ft[6]
 
-  f = get_f(x, CV.Q2_value(pT))
+  f = get_f(x, pT)
   fg = f[0]
   fu = f[1]
   fub = f[2]
@@ -313,7 +313,7 @@ def get_polnum_SFP(x, xF, pT, rs):
   fs = f[5]
   fsb = f[6]
 
-  G = get_G(x, CV.Q2(pT))
+  G = get_G(x, pT)
   Gg = G[0]
   Gu = G[1]
   Gub = G[2]
@@ -321,6 +321,8 @@ def get_polnum_SFP(x, xF, pT, rs):
   Gdb = G[4]
   Gs = G[5]
   Gsb = G[6]
+
+  print(type(Q2))
 ############################################################################
 
     #uds
@@ -348,8 +350,8 @@ def get_polnum_SGP(x, xF, pT, rs):
   numfac = (-2.0 * M * pT) * (1. / (x * CV.xp_value(rs, xF, pT, x))) / (x * CV.S_value(rs) + CV.U_value(rs, xF, pT))
 
   #calling mandelstam variables
-  m=get_mandelstam(s, t, u)
-
+  m=get_mandelstam(rs, xF, pT, x)
+  xp = -x * CV.T_value(rs, xF, pT) / (x * CV.S_value(rs) + CV.U_value(rs, xF, pT))
   #Calling Hard Factors
   HPall=get_HPall(m)
   HPall1 = HPall[6]
@@ -357,7 +359,7 @@ def get_polnum_SGP(x, xF, pT, rs):
   HPall3 = HPall[8]
 
   # Get arrays of the nonperturbative functions
-  ft = get_ft(CV.xp_value(rs, xF, pT, x), CV.Q2_value(pT))
+  ft = get_ft(xp, pT)
   ftg = ft[0]
   ftu = ft[1]
   ftub = ft[2]
@@ -366,7 +368,7 @@ def get_polnum_SGP(x, xF, pT, rs):
   fts = ft[5]
   ftsb = ft[6]
 
-  f = get_f(x, CV.Q2_value(pT))
+  f = get_f(x, pT)
   fg = f[0]
   fu = f[1]
   fub = f[2]
@@ -375,12 +377,12 @@ def get_polnum_SGP(x, xF, pT, rs):
   fs = f[5]
   fsb = f[6]
 
-  uQS = get_f1Tp(x, CV.Q2(pT))[1]
-  ubQS = get_f1Tp(x, CV.Q2(pT))[2]
-  dQS = get_f1Tp(x, CV.Q2(pT))[3]
-  dbQS = get_f1Tp(x, CV.Q2(pT))[4]
-  sQS = get_f1Tp(x, CV.Q2(pT))[5]
-  sbQS = get_f1Tp(x, CV.Q2(pT))[6]
+  uQS = get_f1Tp(x, pT)[1]
+  ubQS = get_f1Tp(x, pT)[2]
+  dQS = get_f1Tp(x, pT)[3]
+  dbQS = get_f1Tp(x, pT)[4]
+  sQS = get_f1Tp(x, pT)[5]
+  sbQS = get_f1Tp(x, pT)[6]
 ############################################################################
 
   SGPcs = 0
@@ -472,7 +474,6 @@ if __name__ == '__main__':
   tar = 'p'
   pT = 2.
   xF = 0.3
-  #xF = 2 * pT / rs
   C_F = 4.0/3.0
   N_C = 3.0
 
@@ -481,36 +482,3 @@ if __name__ == '__main__':
     print AN
 
   test()
-
-# from timeit import Timer
-# t = Timer("test()", "from __main__ import test")
-# print 't elapsed ',t.timeit(number=1)
-
-# def test2():
-#  den = anthy.get_dsig(0.3,0.6,xF,pT,rs,tar,had)
-#  num = anthy.get_dsigST(0.3,0.6,xF,pT,rs,tar,had)
-#
-#  print den,num
-#
-# from timeit import Timer
-# t = Timer("test2()", "from __main__ import test2")
-# print 't elapsed ',t.timeit(number=1)
-
-# start = time.time()
-# print anthy.get_dsig(0.3,0.6,xF,pT,rs,tar,had)
-# print anthy.get_dsigST(0.3,0.6,xF,pT,rs,tar,had)
-# end = time.time()
-# print 'time=',(end-start)
-
-#  start = time.time()
-#  test()
-#  end = time.time()
-#  print 'time=', (end - start)
-
-  # Integration of the numerator from xmin to 1 and from zmin to 1 (the values for xmin and zmin are above)
-
-  # Integration of the denominator from xmin to 1 and from zmin to 1 (the values for xmin and zmin are above)
-  #den = dblquad(lambda x,z: ANTHEORY().get_dsig(x,z,xF,pT,rs,tar,had),zmin,1.,xmin,lambda x: 1.)
-
-  #AN = num[0]/den[0]
-  # print(AN)

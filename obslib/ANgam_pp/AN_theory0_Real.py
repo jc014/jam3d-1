@@ -214,6 +214,8 @@ def get_polnum(x, xF, pT, rs):
   dbQS = get_f1Tp(x, Q2)[4]
   sQS = get_f1Tp(x, Q2)[5]
   sbQS = get_f1Tp(x, Q2)[6]
+
+  print(type(Q2))
 ############################################################################
 
   QScs = 0
