@@ -137,7 +137,7 @@ class Class_Variables():
           Q = pT
         else:
           Q = 1.
-        Q2 = Q * Q
+        return Q * Q
     @classmethod
     def S_value(cls, rs):
         return rs**2
@@ -258,7 +258,7 @@ def get_upolden_SFP(x, xF, pT, rs):
   fsb = f[6]
 ############################################################################
 
-  upol = 0
+  upol_SFP = 0
 
   upol_SFP += ((ftu * fub * 2. * C_F * HPall1) + (ftub * fg *HPall3) + (ftg * fu * HPall2)) * e2[1]
 
@@ -321,8 +321,6 @@ def get_polnum_SFP(x, xF, pT, rs):
   Gdb = G[4]
   Gs = G[5]
   Gsb = G[6]
-
-  print(type(Q2))
 ############################################################################
 
     #uds
@@ -387,22 +385,22 @@ def get_polnum_SGP(x, xF, pT, rs):
 
   SGPcs = 0
 
-  SGPcs += (((-1 / (N_C**2)) * ftub * HPall1) + ((1 / (2. * C_F)) * ftg *HPall2)) * (1. / u) * uQS * e2[1]
+  SGPcs += (((-1 / (N_C**2)) * ftub * HPall1) + ((1 / (2. * C_F)) * ftg *HPall2)) * (1. / CV.uu_value(rs, xF, pT, x)) * uQS * e2[1]
 
-  SGPcs += (((-1 / (N_C**2)) * ftu * HPall1) + ((1 / (2.* C_F)) * ftg *HPall2)) * (1. / u) * ubQS * e2[2]
+  SGPcs += (((-1 / (N_C**2)) * ftu * HPall1) + ((1 / (2.* C_F)) * ftg *HPall2)) * (1. / CV.uu_value(rs, xF, pT, x)) * ubQS * e2[2]
 
-  SGPcs += (((-1 / (N_C**2)) * ftdb * HPall1) + ((1 / (2. * C_F)) * ftg *HPall2)) * (1. / u) * dQS * e2[3]
+  SGPcs += (((-1 / (N_C**2)) * ftdb * HPall1) + ((1 / (2. * C_F)) * ftg *HPall2)) * (1. / CV.uu_value(rs, xF, pT, x)) * dQS * e2[3]
 
-  SGPcs += (((-1 / (N_C**2)) * ftd * HPall1) + ((1 / (2.* C_F)) * ftg *HPall2)) * (1. / u) * dbQS * e2[4]
+  SGPcs += (((-1 / (N_C**2)) * ftd * HPall1) + ((1 / (2.* C_F)) * ftg *HPall2)) * (1. / CV.uu_value(rs, xF, pT, x)) * dbQS * e2[4]
 
-  SGPcs += (((-1 / (N_C**2)) * ftsb * HPall1) + ((1 / (2. * C_F)) * ftg *HPall2)) * (1. / u) * sQS * e2[5]
+  SGPcs += (((-1 / (N_C**2)) * ftsb * HPall1) + ((1 / (2. * C_F)) * ftg *HPall2)) * (1. / CV.uu_value(rs, xF, pT, x)) * sQS * e2[5]
 
-  SGPcs += (((-1 / (N_C**2)) * fts * HPall1) + ((1 / (2.* C_F)) * ftg *HPall2)) * (1. / u) * sbQS * e2[6]
+  SGPcs += (((-1 / (N_C**2)) * fts * HPall1) + ((1 / (2.* C_F)) * ftg *HPall2)) * (1. / CV.uu_value(rs, xF, pT, x)) * sbQS * e2[6]
 
   return SGPcs * numfac
 
-#  @profile
-#  Integral of the numerators
+
+#### INTEGRAL OF NUMERATORS ####
 def get_numint_SFP(xF, pT, rs, nx = 10):
     # Lower limits of the x integration
     xmin = -CV.U_value(rs, xF, pT) / (CV.S_value(rs) + CV.T_value(rs, xF, pT))
@@ -419,8 +417,8 @@ def get_numint_SGP(xF, pT, rs, nx = 10):
     numer = fixed_quad(dnumerdx, xmin, 1., n = nx)[0]
     return numer
 
-#  @profile
-#  Integral of the denominators
+
+#### INTEGRAL OF DENOMINATORS ####
 def get_denomint_SFP(xF, pT, rs, nx = 10):
     # Lower limits of the x integration
     xmin = -CV.U_value(rs, xF, pT) / (CV.S_value(rs) + CV.T_value(rs, xF, pT))
@@ -437,6 +435,8 @@ def get_denomint_SGP(xF, pT, rs, nx = 10):
     denom = fixed_quad(ddenomdx, xmin, 1., n = nx)[0]
     return denom
 
+
+#### DIFFERENT ASPECTS ####
 def get_SFP(xF, pT, rs, nx=10):
     return get_numint_SFP(xF, pT, rs, nx) / get_denomint_SFP(xF, pT, rs, nx)
 
@@ -479,6 +479,7 @@ if __name__ == '__main__':
 
   def test():
     AN = get_AN(xF, pT, rs, nx = 10)
+
     print AN
 
   test()
