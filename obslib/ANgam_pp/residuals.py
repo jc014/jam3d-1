@@ -33,7 +33,7 @@ class RESIDUALS(_RESIDUALS):
         col = self.tabs[k]['col'][i].strip().upper()
 
         if obs == 'ANgam':
-            thy = get_SGP(xF, pT, rs, nx=10)
+            thy = AN_theory.get_SGP(xF, pT, rs, nx=10)
             #print hadron,xF,thy
             print(thy, xF, eta, rs)
         return thy
