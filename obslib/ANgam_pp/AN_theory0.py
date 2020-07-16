@@ -29,6 +29,8 @@ HPall = {}
 HQS = {}
 f = {}
 ft = {}
+f1Tp = {}
+G = {}
 
 eu2, ed2 = 4/9., 1/9.
 e2 = []
@@ -62,17 +64,17 @@ e = np.array(e)
 if 'basis' not in conf:
   conf['basis'] = 'default'
 
-def get_f(x, pT): # Collinear unpolarized PDF
-  return conf['pdf'].get_C(x, CV.Q2_value(pT))
+def get_f(x, Q2): # Collinear unpolarized PDF
+  return conf['pdf'].get_C(x, Q2)
 
-def get_ft(x, pT): # Collinear unpolarized PDF
-  return conf['pdf'].get_C(x, CV.Q2_value(pT))
+def get_ft(x, Q2): # Collinear unpolarized PDF
+  return conf['pdf'].get_C(x, Q2)
 
-def get_f1Tp(x, pT): # (f_1T^{\perp(1)}(x) - x*df_1T^{\perp(1)}(x)/dx)
-    return conf['sivers'].get_C(x, CV.Q2_value(pT)) - x * conf['dsivers'].get_C(x, CV.Q2_value(pT))
+def get_f1Tp(x, Q2): # (f_1T^{\perp(1)}(x) - x*df_1T^{\perp(1)}(x)/dx)
+    return conf['sivers'].get_C(x, Q2) - x * conf['dsivers'].get_C(x, Q2)
 
-def get_G(x, pT): # (f_1T^{\perp(1)}(x)
-    return conf['sivers'].get_C(x, CV.Q2_value(pT))
+def get_G(x, Q2): # (f_1T^{\perp(1)}(x) #This is F_FT(0,x) + \tild{F}(0,x), which we assume = F_FT(x,x)
+    return conf['sivers'].get_C(x, Q2)
 
 def get_mandelstam(rs, xF, pT, x):
 # Convenient combinations of the partonic Mandelstam variables
@@ -114,14 +116,14 @@ def get_HPall(m):
    N_C = 3.0
 
    #Found in SFP numerator
-   HPall[1] = (2 * (m['s2'] + m['u2']) / (m['t2']*m['u'])) + (2 *m['s'] * (m['u'] - m['s']) / (N_C * m['t']*m['u2']))
-   HPall[2] = (2 * (m['s2'] + m['u2']) / (m['t2']*m['u'])) + ((2 * N_C * m['s'] / (m['u2'])) + (2 * (m['u2'] + m['s']*m['t']) / (N_C * m['s'] * m['t'] * m['u'])))
-   HPall[3] = 2 * (N_C * N_C * m['t'] * m['u'] - (m['s'] * (m['s'] - m['t']))) / ((N_C * N_C - 1) * m['s'] * m['t'] * m['u'])
+   HPall[1] = (2. * (m['s2'] + m['u2']) / (m['t2']*m['u'])) + (2. *m['s'] * (m['u'] - m['s']) / (N_C * m['t']*m['u2']))
+   HPall[2] = (-2. * (m['s2'] + m['u2']) / (m['t2']*m['u'])) + ((2. * N_C * m['s'] / (m['u2'])) + (2. * (m['u2'] + m['s']*m['t']) / (N_C * m['s'] * m['t'] * m['u'])))
+   HPall[3] = 2. * (N_C * N_C * m['t'] * m['u'] - (m['s'] * (m['s'] - m['t']))) / ((N_C * N_C - 1.) * m['s'] * m['t'] * m['u'])
 
-   #HPall[1] and [2] when the quarks are not the same, eq 27 & 28 in 1410.3448
+   #HPall[4] and [5] when the quarks are not the same, eq 27 & 28 in 1410.3448
    #Found in SFP numerator
-   HPall[4] = (2 * (m['s2'] + m['u2']) / (m['t2']*m['u']))
-   HPall[5] = -(2 * (m['s2'] + m['u2']) / (m['t2']*m['u']))
+   HPall[4] = (2. * (m['s2'] + m['u2']) / (m['t2']*m['u']))
+   HPall[5] = -(2. * (m['s2'] + m['u2']) / (m['t2']*m['u']))
 
    # Found in unpolarized cross section and SGP numerator
    HPall[6] = m['ut'] + m['tu']
@@ -170,7 +172,14 @@ N_C = 3.0
 
 #  @profile
 # Calculation of the unpolarized cross section
-def get_upolden_SGP(x, xF, pT, rs):
+def get_upolden(x, xF, pT, rs):
+
+  if pT > 1.:
+    Q = pT
+  else:
+    Q = 1.
+
+  Q2 = Q * Q
 
   M = conf['aux'].M
   xp = -x * CV.T_value(rs, xF, pT) / (x * CV.S_value(rs) + CV.U_value(rs, xF, pT))
@@ -187,7 +196,7 @@ def get_upolden_SGP(x, xF, pT, rs):
   HPall3 = HPall[8]
 
   # Get arrays of the nonperturbative functions
-  ft = get_ft(xp, pT)
+  ft = get_ft(xp,Q2)
   ftg = ft[0]
   ftu = ft[1]
   ftub = ft[2]
@@ -196,7 +205,7 @@ def get_upolden_SGP(x, xF, pT, rs):
   fts = ft[5]
   ftsb = ft[6]
 
-  f = get_f(x, pT)
+  f = get_f(x,Q2)
   fg = f[0]
   fu = f[1]
   fub = f[2]
@@ -206,77 +215,32 @@ def get_upolden_SGP(x, xF, pT, rs):
   fsb = f[6]
 ############################################################################
 
-  upol_SGP = 0
+  upol = 0
 
-  upol_SGP += ((ftu * fub * 2. * C_F * HPall1) + (ftub * fg *HPall3) + (ftg * fu * HPall2)) * e2[1]
+  upol += ((ftu * fub * 2. * C_F * HPall1) + (ftub * fg *HPall3) + (ftg * fu * HPall2)) * e2[1]
 
-  upol_SGP += ((ftub * fu * 2. * C_F * HPall1) + (ftu * fg *HPall3) + (ftg * fub * HPall2)) * e2[2]
+  upol += ((ftub * fu * 2. * C_F * HPall1) + (ftu * fg *HPall3) + (ftg * fub * HPall2)) * e2[2]
 
-  upol_SGP += ((ftd * fdb * 2. * C_F * HPall1) + (ftdb * fg *HPall3) + (ftg * fd * HPall2)) * e2[3]
+  upol += ((ftd * fdb * 2. * C_F * HPall1) + (ftdb * fg *HPall3) + (ftg * fd * HPall2)) * e2[3]
 
-  upol_SGP += ((ftdb * fd * 2. * C_F * HPall1) + (ftd * fg *HPall3) + (ftg * fdb * HPall2)) * e2[4]
+  upol += ((ftdb * fd * 2. * C_F * HPall1) + (ftd * fg *HPall3) + (ftg * fdb * HPall2)) * e2[4]
 
-  upol_SGP += ((fts * fsb * 2. * C_F * HPall1) + (ftsb * fg *HPall3) + (ftg * fs * HPall2)) * e2[5]
+  upol += ((fts * fsb * 2. * C_F * HPall1) + (ftsb * fg *HPall3) + (ftg * fs * HPall2)) * e2[5]
 
-  upol_SGP += ((ftsb * fs * 2. * C_F * HPall1) + (fts * fg *HPall3) + (ftg * fsb * HPall2)) * e2[6]
+  upol += ((ftsb * fs * 2. * C_F * HPall1) + (fts * fg *HPall3) + (ftg * fsb * HPall2)) * e2[6]
 
-  return denfac * upol_SGP
-
-def get_upolden_SFP(x, xF, pT, rs):
-
-  M = conf['aux'].M
-
-  # Prefactor
-  denfac = (1. / (N_C * (x * CV.S_value(rs) + CV.U_value(rs, xF, pT)))) * (1. / (x * CV.xp_value(rs, xF, pT, x)))
-
-  #calling mandelstam variables
-  m=get_mandelstam(rs, xF, pT, x)
-  xp = -x * CV.T_value(rs, xF, pT) / (x * CV.S_value(rs) + CV.U_value(rs, xF, pT))
-  #Calling Hard Factors
-  HPall=get_HPall(m)
-  HPall1 = HPall[6]
-  HPall2 = HPall[7]
-  HPall3 = HPall[8]
-
-  # Get arrays of the nonperturbative functions
-  ft = get_ft(xp, pT)
-  ftg = ft[0]
-  ftu = ft[1]
-  ftub = ft[2]
-  ftd = ft[3]
-  ftdb = ft[4]
-  fts = ft[5]
-  ftsb = ft[6]
-
-  f = get_f(x, pT)
-  fg = f[0]
-  fu = f[1]
-  fub = f[2]
-  fd = f[3]
-  fdb = f[4]
-  fs = f[5]
-  fsb = f[6]
-############################################################################
-
-  upol_SFP = 0
-
-  upol_SFP += ((ftu * fub * 2. * C_F * HPall1) + (ftub * fg *HPall3) + (ftg * fu * HPall2)) * e2[1]
-
-  upol_SFP += ((ftub * fu * 2. * C_F * HPall1) + (ftu * fg *HPall3) + (ftg * fub * HPall2)) * e2[2]
-
-  upol_SFP += ((ftd * fdb * 2. * C_F * HPall1) + (ftdb * fg *HPall3) + (ftg * fd * HPall2)) * e2[3]
-
-  upol_SFP += ((ftdb * fd * 2. * C_F * HPall1) + (ftd * fg *HPall3) + (ftg * fdb * HPall2)) * e2[4]
-
-  upol_SFP += ((fts * fsb * 2. * C_F * HPall1) + (ftsb * fg *HPall3) + (ftg * fs * HPall2)) * e2[5]
-
-  upol_SFP += ((ftsb * fs * 2. * C_F * HPall1) + (fts * fg *HPall3) + (ftg * fsb * HPall2)) * e2[6]
-
-  return denfac * upol_SFP
+  return denfac * upol
 
 #  @profile
 # Calculation of the fragmentation term in the transversely polarized cross section
 def get_polnum_SFP(x, xF, pT, rs):
+
+  if pT > 1.:
+    Q = pT
+  else:
+    Q = 1.
+
+  Q2 = Q * Q
 
   M = conf['aux'].M
 
@@ -295,7 +259,7 @@ def get_polnum_SFP(x, xF, pT, rs):
   HPall5 = HPall[5]
 
   # Get arrays of the nonperturbative functions
-  ft = get_ft(xp, pT)
+  ft = get_ft(xp,Q2)
   ftg = ft[0]
   ftu = ft[1]
   ftub = ft[2]
@@ -304,7 +268,7 @@ def get_polnum_SFP(x, xF, pT, rs):
   fts = ft[5]
   ftsb = ft[6]
 
-  f = get_f(x, pT)
+  f = get_f(x,Q2)
   fg = f[0]
   fu = f[1]
   fub = f[2]
@@ -313,7 +277,7 @@ def get_polnum_SFP(x, xF, pT, rs):
   fs = f[5]
   fsb = f[6]
 
-  G = get_G(x, pT)
+  G = get_G(x,Q2)
   Gg = G[0]
   Gu = G[1]
   Gub = G[2]
@@ -326,21 +290,28 @@ def get_polnum_SFP(x, xF, pT, rs):
     #uds
   SFPcs = 0
 # a = u
-  SFPcs += ((e[1] * e[2] * HPall4 *fub * Gu) + (e[1] * e [4] * HPall4 *fdb * Gu) + (e[1] * e [6] * HPall4 *fsb * Gu)) + ((e[1] * e [2] * HPall5 *fu * Gu) + (e[1] * e [4] * HPall5 *fd * Gu) + (e[1] * e [6] * HPall5 *fs * Gu)) + (e[1]**2 * HPall3 * Gu * fg)
+  SFPcs += ((e[1]**2 * HPall1 *fu * Gu) + (e[1] * e[3] * HPall4 *fd * Gu) + (e[1] * e[5] * HPall4 *fs * Gu)) + ((e[1]**2 * HPall2 *fub * Gu) + (e[1] * e[3] * HPall5 *fdb * Gu) + (e[1] * e[5] * HPall5 *fsb * Gu)) + (e[1]**2 * HPall3 * Gu * fg)
 # a = ub
-  SFPcs += ((e[2] * e[1] * HPall4 *fu * Gub) + (e[2] * e [3] * HPall4 *fd * Gub) + (e[2] * e [5] * HPall4 *fs * Gub)) + ((e[2] * e [1] * HPall5 *fub * Gub) + (e[2] * e [3] * HPall5 *fdb * Gub) + (e[2] * e [5] * HPall5 *fsb * Gub)) + (e[2]**2 * HPall3 * Gub * fg)
+  SFPcs += ((e[2]**2 * HPall1 *fub * Gub) + (e[2] * e[4] * HPall4 *fdb * Gub) + (e[2] * e[6] * HPall4 *fsb * Gub)) + ((e[2]**2 * HPall2 *fu * Gub) + (e[2] * e[4] * HPall5 *fd * Gub) + (e[2] * e[6] * HPall5 *fs * Gub)) + (e[2]**2 * HPall3 * Gub * fg)
 # a = d
-  SFPcs += ((e[3] * e[2] * HPall4 *fub * Gd) + (e[3] * e [4] * HPall4 *fdb * Gd) + (e[3] * e [6] * HPall4 *fsb * Gd)) + ((e[3] * e [2] * HPall5 *fu * Gd) + (e[3] * e [4] * HPall5 *fd * Gd) + (e[3] * e [6] * HPall5 *fs * Gd)) + (e[3]**2 * HPall3 * Gd * fg)
+  SFPcs += ((e[3] * e[1] * HPall4 *fu * Gd) + (e[3]**2 * HPall1 *fd * Gd) + (e[3] * e[5] * HPall4 *fs * Gd)) + ((e[3] * e[1] * HPall5 *fub * Gd) + (e[3]**2 * HPall2 *fdb * Gd) + (e[3] * e[5] * HPall5 *fsb * Gd)) + (e[3]**2 * HPall3 * Gd * fg)
 # a = db
-  SFPcs += ((e[4] * e[1] * HPall4 *fu * Gdb) + (e[4] * e [3] * HPall4 *fd * Gdb) + (e[4] * e [5] * HPall4 *fs * Gdb)) + ((e[4] * e [1] * HPall5 *fub * Gdb) + (e[4] * e [3] * HPall5 *fdb * Gdb) + (e[4] * e [5] * HPall5 *fsb * Gdb)) + (e[4]**2 * HPall3 * Gdb * fg)
+  SFPcs += ((e[4] * e[2] * HPall4 *fub * Gdb) + (e[4]**2 * HPall1 *fdb * Gdb) + (e[4] * e[6] * HPall4 *fsb * Gdb)) + ((e[4] * e[2] * HPall5 *fu * Gdb) + (e[4]**2 * HPall2 *fd * Gdb) + (e[4] * e[6] * HPall5 *fs * Gdb)) + (e[4]**2 * HPall3 * Gdb * fg)
 # a = s
-  SFPcs += ((e[5] * e[2] * HPall4 *fub * Gs) + (e[5] * e [4] * HPall4 *fdb * Gs) + (e[5] * e [6] * HPall4 *fsb * Gs)) + ((e[5] * e [2] * HPall5 *fu * Gs) + (e[5] * e [4] * HPall5 *fd * Gs) + (e[5] * e [6] * HPall5 *fs * Gs)) + (e[5]**2 * HPall3 * Gs * fg)
+  SFPcs += ((e[5] * e[1] * HPall4 *fu * Gs) + (e[5] * e[3] * HPall4 *fd * Gs) + (e[5]**2 * HPall1 *fs * Gs)) + ((e[5] * e[1] * HPall5 *fub * Gs) + (e[5] * e[3] * HPall5 *fdb * Gs) + (e[5]**2 * HPall2 *fsb * Gs)) + (e[5]**2 * HPall3 * Gs * fg)
 # a = sb
-  SFPcs += ((e[6] * e[1] * HPall4 *fu * Gsb) + (e[6] * e [3] * HPall4 *fd * Gsb) + (e[6] * e [5] * HPall4 *fs * Gsb)) + ((e[6] * e [1] * HPall5 *fub * Gsb) + (e[6] * e [3] * HPall5 *fdb * Gsb) + (e[6] * e [5] * HPall5 *fsb * Gsb)) + (e[6]**2 * HPall3 * Gsb * fg)
+  SFPcs += ((e[6] * e[2] * HPall4 *fub * Gsb) + (e[6] * e[4] * HPall4 *fdb * Gsb) + (e[6]**2 * HPall1 *fsb * Gsb)) + ((e[6] * e[2] * HPall5 *fu * Gsb) + (e[6] * e[4] * HPall5 *fd * Gsb) + (e[6]**2 * HPall2 *fs * Gsb)) + (e[6]**2 * HPall3 * Gsb * fg)
 
-  return SFPcs * numfac
+  return (1./(2.*N_C)) * SFPcs * numfac
 
 def get_polnum_SGP(x, xF, pT, rs):
+
+  if pT > 1.:
+    Q = pT
+  else:
+    Q = 1.
+
+  Q2 = Q * Q
 
   M = conf['aux'].M
 
@@ -357,7 +328,7 @@ def get_polnum_SGP(x, xF, pT, rs):
   HPall3 = HPall[8]
 
   # Get arrays of the nonperturbative functions
-  ft = get_ft(xp, pT)
+  ft = get_ft(xp,Q2)
   ftg = ft[0]
   ftu = ft[1]
   ftub = ft[2]
@@ -366,7 +337,7 @@ def get_polnum_SGP(x, xF, pT, rs):
   fts = ft[5]
   ftsb = ft[6]
 
-  f = get_f(x, pT)
+  f = get_f(x,Q2)
   fg = f[0]
   fu = f[1]
   fub = f[2]
@@ -375,12 +346,12 @@ def get_polnum_SGP(x, xF, pT, rs):
   fs = f[5]
   fsb = f[6]
 
-  uQS = get_f1Tp(x, pT)[1]
-  ubQS = get_f1Tp(x, pT)[2]
-  dQS = get_f1Tp(x, pT)[3]
-  dbQS = get_f1Tp(x, pT)[4]
-  sQS = get_f1Tp(x, pT)[5]
-  sbQS = get_f1Tp(x, pT)[6]
+  uQS = get_f1Tp(x,Q2)[1]
+  ubQS = get_f1Tp(x,Q2)[2]
+  dQS = get_f1Tp(x,Q2)[3]
+  dbQS = get_f1Tp(x,Q2)[4]
+  sQS = get_f1Tp(x,Q2)[5]
+  sbQS = get_f1Tp(x,Q2)[6]
 ############################################################################
 
   SGPcs = 0
@@ -418,30 +389,21 @@ def get_numint_SGP(xF, pT, rs, nx = 10):
     return numer
 
 
-#### INTEGRAL OF DENOMINATORS ####
-def get_denomint_SFP(xF, pT, rs, nx = 10):
+#### INTEGRAL OF DENOMINATOR ####
+def get_denomint(xF, pT, rs, nx = 10):
     # Lower limits of the x integration
     xmin = -CV.U_value(rs, xF, pT) / (CV.S_value(rs) + CV.T_value(rs, xF, pT))
 
-    ddenomdx = np.vectorize(lambda x: get_upolden_SFP(x, xF, pT, rs))
+    ddenomdx = np.vectorize(lambda x: get_upolden(x, xF, pT, rs))
     denom = fixed_quad(ddenomdx, xmin, 1., n = nx)[0]
     return denom
-
-def get_denomint_SGP(xF, pT, rs, nx = 10):
-    # Lower limits of the x integration
-    xmin = -CV.U_value(rs, xF, pT) / (CV.S_value(rs) + CV.T_value(rs, xF, pT))
-
-    ddenomdx = np.vectorize(lambda x: get_upolden_SGP(x, xF, pT, rs))
-    denom = fixed_quad(ddenomdx, xmin, 1., n = nx)[0]
-    return denom
-
 
 #### DIFFERENT ASPECTS ####
 def get_SFP(xF, pT, rs, nx=10):
-    return get_numint_SFP(xF, pT, rs, nx) / get_denomint_SFP(xF, pT, rs, nx)
+    return get_numint_SFP(xF, pT, rs, nx) / get_denomint(xF, pT, rs, nx)
 
 def get_SGP(xF, pT, rs, nx=10):
-    return get_numint_SGP(xF, pT, rs, nx) / get_denomint_SGP(xF, pT, rs, nx)
+    return get_numint_SGP(xF, pT, rs, nx) / get_denomint(xF, pT, rs, nx)
 
 def get_AN(xF, pT, rs, nx=10):
     return get_SFP(xF, pT, rs, nx=10) + get_SGP(xF, pT, rs, nx=10)
@@ -458,13 +420,6 @@ if __name__ == '__main__':
   from qcdlib.pdf1 import PDF as PDF1
   conf['aux']= AUX()
   conf['pdf']=PDF0()
-  conf['collinspi']=FF1('pi')
-  conf['collinsk']=FF1('k')
-  conf['dcollinspi']=FF1('pi','deriv')
-  conf['dcollinsk']=FF1('k','deriv')
-  conf['Htildepi']=FF1('pi')
-  conf['Htildek']=FF1('k')
-  conf['transversity']=PDF1()
   conf['sivers']=PDF1()
   conf['dsivers']=PDF1('deriv')
   conf['ffpi']=FF0('pi')
