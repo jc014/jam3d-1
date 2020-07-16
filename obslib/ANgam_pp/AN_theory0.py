@@ -134,13 +134,6 @@ def get_HPall(m):
 class Class_Variables():
     #Declaring all the class methods that are referenced throughout
     @classmethod
-    def Q2_value(cls, pT):
-        if pT > 1.:
-          Q = pT
-        else:
-          Q = 1.
-        return Q * Q
-    @classmethod
     def S_value(cls, rs):
         return rs**2
     @classmethod
