@@ -238,7 +238,7 @@ def get_polnum_SFP(x, xF, pT, rs):
   M = conf['aux'].M
 
   # Prefactor
-  numfac = (-2.0 * M * pT) * (1. / (x * CV.xp_value(rs, xF, pT, x))) / (x * CV.S_value(rs) + CV.U_value(rs, xF, pT))
+  numfac = (2.0 * M * pT) * (1. / (x * CV.xp_value(rs, xF, pT, x))) / (x * CV.S_value(rs) + CV.U_value(rs, xF, pT))
 
   #calling mandelstam variables
   m=get_mandelstam(rs, xF, pT, x)
