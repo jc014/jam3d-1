@@ -116,7 +116,7 @@ def get_HPall(m):
    N_C = 3.0
 
    #Found in SFP numerator
-   HPall[1] = (2. * (m['s2'] + m['u2']) / (m['t2']*m['u'])) + (2. *m['s'] * (m['u'] - m['s']) / (N_C * m['t']*m['u2']))
+   HPall[1] = (2. * (m['s2'] + m['u2']) / (m['t2']*m['u'])) + (2. * m['s'] * (m['u'] - m['s']) / (N_C * m['t'] * m['u2']))
    HPall[2] = (-2. * (m['s2'] + m['u2']) / (m['t2']*m['u'])) + ((2. * N_C * m['s'] / (m['u2'])) + (2. * (m['u2'] + m['s']*m['t']) / (N_C * m['s'] * m['t'] * m['u'])))
    HPall[3] = 2. * (N_C * N_C * m['t'] * m['u'] - (m['s'] * (m['s'] - m['t']))) / ((N_C * N_C - 1.) * m['s'] * m['t'] * m['u'])
 
@@ -280,7 +280,6 @@ def get_polnum_SFP(x, xF, pT, rs):
   Gsb = G[6]
 ############################################################################
 
-    #uds
   SFPcs = 0
 # a = u
   SFPcs += ((e[1]**2 * HPall1 *fu * Gu) + (e[1] * e[3] * HPall4 *fd * Gu) + (e[1] * e[5] * HPall4 *fs * Gu)) + ((e[1]**2 * HPall2 *fub * Gu) + (e[1] * e[3] * HPall5 *fdb * Gu) + (e[1] * e[5] * HPall5 *fsb * Gu)) + (e[1]**2 * HPall3 * Gu * fg)
