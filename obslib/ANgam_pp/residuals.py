@@ -26,17 +26,16 @@ class RESIDUALS(_RESIDUALS):
         xF = self.tabs[k]['xF'][i]
         pT = self.tabs[k]['pT'][i]
         rs = self.tabs[k]['rs'][i]
+        eta = self.tabs[k]['eta'][i]
         target = self.tabs[k]['target'][i]
         #hadron = self.tabs[k]['hadron'][i]
         obs = self.tabs[k]['obs'][i].strip()
         col = self.tabs[k]['col'][i].strip().upper()
 
         if obs == 'ANgam':
-            numerator = AN_theory.get_numint(xF, pT, rs)
-            denominator = AN_theory.get_denomint(xF, pT, rs)
-            thy = numerator / denominator
+            thy = AN_theory.get_SFP(xF, pT, rs, nx=10)
             #print hadron,xF,thy
-            print(thy)
+            print(thy, xF, eta, rs)
         return thy
 
     def gen_report(self, verb=1, level=1):
