@@ -50,7 +50,7 @@ class RESIDUALS(_RESIDUALS):
             F2 = self.dis_stfuncs.get_F2(x, Q2,tar)
             thy = FUU / F2
             if col=='HERMES' or col=='hermes': thy=2*np.pi*pT*thy
-            if col=='COMPASS': thy=np.pi*thy
+            if col=='COMPASS' or col=='compass': thy=np.pi*thy
 
         elif obs == 'AUTcollins':
 
