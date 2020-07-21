@@ -6,8 +6,6 @@ class MELLIN:
 
     def __init__(self,npts=8,extended=False,c=None):
 
-        self.shape=shape
-
         #--gen z and w values along coutour
         x,w=np.polynomial.legendre.leggauss(npts)
         znodes=[0,0.1,0.3,0.6,1.0,1.6,2.4,3.5,5,7,10,14,19,25,32,40,50,63]
