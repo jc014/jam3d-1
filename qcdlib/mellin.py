@@ -4,14 +4,16 @@ import numpy as np
 
 class MELLIN:
 
-    def __init__(self,npts=8,extended=False,c=None):
-  
+    def __init__(self,npts=8,extended=False,c=None,shape='nderiv'):
+
+        self.shape=shape
+
         #--gen z and w values along coutour
         x,w=np.polynomial.legendre.leggauss(npts)
         znodes=[0,0.1,0.3,0.6,1.0,1.6,2.4,3.5,5,7,10,14,19,25,32,40,50,63]
-        #if extended: znodes.extend([70,80,90,100,110,120,130])
-        if extended: znodes.extend([70,80,90,100])
-  
+        if extended: znodes.extend([70,80,90,100,110,120,130])
+        #if extended: znodes.extend([70,80,90,100])
+
         Z,W,JAC=[],[],[]
         for i in range(len(znodes)-1):
             a,b=znodes[i],znodes[i+1]
@@ -24,14 +26,15 @@ class MELLIN:
         self.Z=Z
         self.JAC=np.array(JAC)
         #--gen mellin contour
-        if c==None: c=1.9 
+        if c==None: c=1.9
         phi=3.0/4.0*np.pi
-  
-        self.N=c+Z*np.exp(complex(0,phi)) 
+
+        self.N=c+Z*np.exp(complex(0,phi))
         self.phase= np.exp(complex(0,phi))
-          
+
     def invert(self,x,F):
-        return np.sum(np.imag(self.phase * x**(-self.N) * F)/np.pi * self.W * self.JAC)
+        if self.shape=='nderiv': return np.sum(np.imag(self.phase * x**(-self.N) * F)/np.pi * self.W * self.JAC)
+        if self.shape='deriv':
 
 if __name__=='__main__':
 
@@ -39,26 +42,9 @@ if __name__=='__main__':
   a=-1.8
   b=6.0
   N=mell.N
-  
+
   mom=gamma(N+a)*gamma(b+1)/gamma(N+a+b+1)
   X=10**np.linspace(-5,-1,10)
   f=lambda x: x**a*(1-x)**b
   for x in X:
       print 'x=%10.4e  f=%10.4e  inv=%10.4e'%(x,f(x),mell.invert(x,mom))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
