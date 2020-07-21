@@ -4,7 +4,7 @@ import numpy as np
 
 class MELLIN:
 
-    def __init__(self,npts=8,extended=False,c=None,shape='nderiv'):
+    def __init__(self,npts=8,extended=False,c=None):
 
         self.shape=shape
 
@@ -33,8 +33,7 @@ class MELLIN:
         self.phase= np.exp(complex(0,phi))
 
     def invert(self,x,F):
-        if self.shape=='nderiv': return np.sum(np.imag(self.phase * x**(-self.N) * F)/np.pi * self.W * self.JAC)
-        if self.shape='deriv':
+        return np.sum(np.imag(self.phase * x**(-self.N) * F)/np.pi * self.W * self.JAC)
 
 if __name__=='__main__':
 
