@@ -10,7 +10,8 @@
 | 1005  | [link][M_HERMES_2012]        | deuteron | pi-    | M_Hermes         | hermes     | -                    |
 | 1006  | [link][M_HERMES_2012]        | deuteron | k+     | M_Hermes         | hermes     | -                    |
 | 1007  | [link][M_HERMES_2012]        | deuteron | k-     | M_Hermes         | hermes     | -                    |
-| 1008  | [link][M_COMPASS_2017]       | deuteron | h+,h-   | M_Compass        | compass    | -                    |
+| 1008  | [link][M_COMPASS_2017]       | deuteron | h+      | M_Compass        | compass    | -                    |
+| 1009  | [link][M_COMPASS_2017]       | deuteron | h-      | M_Compass        | compass    | -                    |
 | 2000  | [link][Sivers_HERMES_2009]   | proton   | pi+    | AUTsivers        | hermes     | PT                   |
 | 2001  | [link][Sivers_HERMES_2009]   | proton   | pi+    | AUTsivers        | hermes     | x                    |
 | 2002  | [link][Sivers_HERMES_2009]   | proton   | pi+    | AUTsivers        | hermes     | z                    |
