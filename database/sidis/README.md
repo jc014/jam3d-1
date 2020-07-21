@@ -10,8 +10,7 @@
 | 1005  | [link][M_HERMES_2012]        | deuteron | pi-    | M_Hermes         | hermes     | -                    |
 | 1006  | [link][M_HERMES_2012]        | deuteron | k+     | M_Hermes         | hermes     | -                    |
 | 1007  | [link][M_HERMES_2012]        | deuteron | k-     | M_Hermes         | hermes     | -                    |
-| 1008  | [link][M_COMPASS_2017]       | deuteron | h+     | M_Compass        | compass    | -                    |
-| 1009  | [link][M_COMPASS_2017]       | deuteron | h-     | M_Compass        | compass    | -                    |
+| 1008  | [link][M_COMPASS_2017]       | deuteron | h+,h-   | M_Compass        | compass    | -                    |
 | 2000  | [link][Sivers_HERMES_2009]   | proton   | pi+    | AUTsivers        | hermes     | PT                   |
 | 2001  | [link][Sivers_HERMES_2009]   | proton   | pi+    | AUTsivers        | hermes     | x                    |
 | 2002  | [link][Sivers_HERMES_2009]   | proton   | pi+    | AUTsivers        | hermes     | z                    |
@@ -152,7 +151,7 @@
 
 [?]: http://inspirehep.net/
 [M_HERMES_2012]: http://inspirehep.net/record/1208547
-[M_COMPASS_2017]: http://inspirehep.net/record/1624692
+[M_COMPASS_2017]: http://inspirehep.net/record/1624692 and https://www.hepdata.net/record/ins1624692
 [Sivers_HERMES_2009]: http://inspirehep.net/record/823754
 [AUT_JLAB_2011]: http://inspirehep.net/record/902486
 [Sivers_COMPASS_2012]: http://inspirehep.net/record/1115721

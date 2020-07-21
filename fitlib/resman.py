@@ -65,7 +65,7 @@ class RESMAN:
     def setup_core(self):
 
         conf['aux'] = qcdlib.aux.AUX()
-        conf['mellin']= qcdlib.mellin.MELLIN(npts=4)
+        conf['mellin']= qcdlib.mellin.MELLIN(npts=16)
         conf['alphaS']= qcdlib.alphaS.ALPHAS()
 
         if 'pdf parametrization' in conf:
