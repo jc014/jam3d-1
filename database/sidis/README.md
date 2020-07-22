@@ -12,7 +12,19 @@
 | 1007  | [link][M_HERMES_2012]        | deuteron | k-     | M_Hermes         | hermes     | -                    |
 | 1008  | [link][M_COMPASS_2017]       | deuteron | h+      | M_Compass        | compass    | -                    |
 | 1009  | [link][M_COMPASS_2017]       | deuteron | h-      | M_Compass        | compass    | -                    |
-| 2000  | [link][Sivers_HERMES_2009]   | proton   | pi+    | AUTsivers        | hermes     | PT                   |
+| 1010  | [link][M_HERMES_2012]        | proton   | pi+    | M_Hermes   VM subtracted      | hermes     | -                    |
+| 1011  | [link][M_HERMES_2012]        | proton   | pi-    | M_Hermes   VM subtracted       | hermes     | -                    |
+| 1012  | [link][M_HERMES_2012]        | proton   | k+     | M_Hermes   VM subtracted       | hermes     | -                    |
+| 1013  | [link][M_HERMES_2012]        | proton   | k-     | M_Hermes    VM subtracted      | hermes     | -                    
+| 1014  | [link][M_HERMES_2012]        | deuteron | pi+    | M_Hermes   VM subtracted      | hermes     | -                    |
+| 1015  | [link][M_HERMES_2012]        | deuteron | pi-    | M_Hermes   VM subtracted     | hermes     | -                    |
+| 1016  | [link][M_HERMES_2012]        | deuteron | k+     | M_Hermes   VM subtracted      | hermes     | -                    |
+| 1017  | [link][M_HERMES_2012]        | deuteron | k-     | M_Hermes   VM subtracted       | hermes     | -                    |
+| 1018  | [link][M_HERMES_2012]        | proton | p+-,k+-     | covmatrix proton       | hermes     | -                    |
+| 1019  | [link][M_HERMES_2012]        | proton | p+-,k+-     | covmatrix proton       | hermes     | -                    |
+| 1030  | [link][?]        | proton |     | M_EIC  pseudodata    | EIC    | -                    |
+| 1031  | [link][?]        | proton |     | M_EIC  pseudodata    | EIC    | -                    |
+| 2000  | [link][Sivers_HERMES_2009]   | proton   | pi+    | AUTsivers          | hermes     | PT                   |
 | 2001  | [link][Sivers_HERMES_2009]   | proton   | pi+    | AUTsivers        | hermes     | x                    |
 | 2002  | [link][Sivers_HERMES_2009]   | proton   | pi+    | AUTsivers        | hermes     | z                    |
 | 2003  | [link][Sivers_HERMES_2009]   | proton   | pi-    | AUTsivers        | hermes     | PT                   |
@@ -151,7 +163,7 @@
 
 
 [?]: http://inspirehep.net/
-[M_HERMES_2012]: http://inspirehep.net/record/1208547
+[M_HERMES_2012]: http://inspirehep.net/record/1208547 and http://hermesmults.appspot.com  Configuration: zxpt-3D (x: 6, z: 6, Php: 7)
 [M_COMPASS_2017]: http://inspirehep.net/record/1624692 and https://www.hepdata.net/record/ins1624692
 [Sivers_HERMES_2009]: http://inspirehep.net/record/823754
 [AUT_JLAB_2011]: http://inspirehep.net/record/902486
