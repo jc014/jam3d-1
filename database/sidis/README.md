@@ -21,7 +21,9 @@
 | 1016  | [link][M_HERMES_2012]        | deuteron | k+     | M_Hermes   VM subtracted      | hermes     | -                    |
 | 1017  | [link][M_HERMES_2012]        | deuteron | k-     | M_Hermes   VM subtracted       | hermes     | -                    |
 | 1018  | [link][M_HERMES_2012]        | proton | p+-,k+-     | covmatrix proton       | hermes     | -                    |
-| 1019  | [link][M_HERMES_2012]        | proton | p+-,k+-     | covmatrix proton       | hermes     | -                    |
+| 1019  | [link][M_HERMES_2012]        | proton | p+-,k+-     | covmatrix deuteron      | hermes     | -                    |
+| 1020  | [link][M_HERMES_2012]        | proton | p+-,k+-     | covmatrix proton   VM subtracted    | hermes     | -                    |
+| 1021  | [link][M_HERMES_2012]        | proton | p+-,k+-     | covmatrix deuteron  VM subtracted     | hermes     | -                    |
 | 1030  | [link][?]        | proton |     | M_EIC  pseudodata    | EIC    | -                    |
 | 1031  | [link][?]        | proton |     | M_EIC  pseudodata    | EIC    | -                    |
 | 2000  | [link][Sivers_HERMES_2009]   | proton   | pi+    | AUTsivers          | hermes     | PT                   |
