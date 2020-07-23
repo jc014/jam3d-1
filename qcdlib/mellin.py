@@ -33,6 +33,9 @@ class MELLIN:
     def invert(self,x,F):
         return np.sum(np.imag(self.phase * x**(-self.N) * F)/np.pi * self.W * self.JAC)
 
+    def invert_deriv(self,x,F):
+        return np.sum(np.imag(self.phase * (-self.N)*x**(-self.N-1) * F)/np.pi * self.W * self.JAC)
+
 if __name__=='__main__':
 
   mell=MELLIN(8)
