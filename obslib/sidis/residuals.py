@@ -159,7 +159,8 @@ class RESIDUALS(_RESIDUALS):
 
                 return theory
 
-            thy = yield_thy(col, should_integrate = True, ny=10)
+            if col=='COMPASS': thy = yield_thy(col, should_integrate = True, ny=10)
+            elif col=='HERMES':  thy = yield_thy(col, should_integrate = False, ny=10)
 
         elif obs == 'AUTsinphiS':  # This is for collinear!
 
