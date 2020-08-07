@@ -39,15 +39,15 @@ class PDF(CORE):
         #--f(x) = norm * x**a1 * (1-x)**b1 * (1+c1*x+d1*x**2) * (1+ N2 * x**a2 * (1-x)**b2 * (1+c2*x+d2*x**2))
         params={}
 
-        params['g1']    =np.array([1.,1.,1.,1.,1.,1.,1.,1.,1.,1.])
-        params['uv1']   =np.array([1.,1.,0.0,1.,1.,1.,1.,1.0,1.,1.])
-        params['dv1']   =np.array([1.,1.,1.,1.,1.,1.,1.,1.,1.,1.])
-        params['sea1']  =np.array([1.,1.,1.,1.,1.,1.,1.,1.,1.,1.])
-        params['sea2']  =np.array([1.,1.,1.,1.,1.,1.,1.,1.,1.,1.])
-        params['db1']   =np.array([1.,1.,1.,1.,1.,1.,1.,1.,1.,1.])
-        params['ub1']   =np.array([1.,1.,1.,1.,1.,1.,1.,1.,1.,1.])
-        params['s1']    =np.array([1.,1.,1.,1.,1.,1.,1.,1.,1.,1.])
-        params['sb1']   =np.array([1.,1.,1.,1.,1.,1.,1.,1.,1.,1.])
+        params['g1']    =np.array([0.,0.,0.,0.,0.,0.,0.,0.,0.,0.])
+        params['uv1']   =np.array([0.25,1.,4.,0.,0.,0.,0.,0.,0.,0.])
+        params['dv1']   =np.array([-0.1,1.,6.,0.,0.,0.,0.,0.,0.,0.])
+        params['sea1']  =np.array([0.,0.,0.,0.,0.,0.,0.,0.,0.,0.])
+        params['sea2']  =np.array([0.,0.,0.,0.,0.,0.,0.,0.,0.,0.])
+        params['db1']   =np.array([0.,0.,0.,0.,0.,0.,0.,0.,0.,0.])
+        params['ub1']   =np.array([0.,0.,0.,0.,0.,0.,0.,0.,0.,0.])
+        params['s1']    =np.array([0.,0.,0.,0.,0.,0.,0.,0.,0.,0.])
+        params['sb1']   =np.array([0.,0.,0.,0.,0.,0.,0.,0.,0.,0.])
         self.params=params
 
         #--widths
@@ -165,18 +165,18 @@ class PDF(CORE):
         #    mom=m1+m2+m3+m4+m5
         #    return M1*mom/norm
         #elif self.shape=='deriv':
-        #    m1 = a1*self.beta(a1+N-1, b1+1) - b1*self.beta(a1+N, b1) - b1*c1*self.beta(a1+N+1, b1) - b1*d1*self.beta(a1+N+2, b1)
-        #    m2 = (c1 + a1*c1)*self.beta(a1+N, b1+1) + (2*d1 + a1*d1)*self.beta(a1+N+1, b1+1)
-        #    m3 = M2 * ((a1 + a2)*self.beta(a1+a2+N-1, b1+b2+1) - (b1 + b2)*self.beta(a1+a2+N, b1+b2))
-        #    m4 = M2 * ((c1 + a1*c1 + a2*c1 + c2 + a1*c2 + a2*c2)*self.beta(a1+a2+N, b1+b2+1))
-        #    m5 = M2 * (-(b1*c1 + b2*c1 + b1*c2 + b2*c2)*self.beta(a1+a2+N+1, b1+b2))
-        #    m6 = M2 * ((2*c1*c2 + a1*c1*c2 + a2*c1*c2 + 2*d1 + a1*d1 + a2*d1 + 2*d2 + a1*d2 + a2*d2)*self.beta(a1+a2+N+1, b1+b2+1))
-        #    m7 = M2 * (-(b1*c1*c2 + b2*c1*c2 + b1*d1 + b2*d1 + b1*d2 + b2*d2)*self.beta(a1+a2+N+2, b1+b2))
-        #    m8 = M2 * ((3*c2*d1 + a1*c2*d1 + a2*c2*d1 + 3*c1*d2 + a1*c1*d2 + a2*c1*d2)*self.beta(a1+a2+N+2, b1+b2+1))
-        #    m9 = M2 * (-(b1*c2*d1 + b2*c2*d1 + b1*c1*d2 + b2*c1*d2)*self.beta(a1+a2+N+3, b1+b2))
-        #    m10 = M2 * ((4*d1*d2 + a1*d1*d2 + a2*d1*d2)*self.beta(a1+a2+N+3, b1+b2+1))
-        #    m11 = M2 * (-(b1*d1*d2 + b2*d1*d2)*self.beta(a1+a2+N+4, b1+b2))
-        #    mom=m1+m2+m3+m4+m5+m6+m7+m8+m9+m10+m11
+        #    m1 = a1*self.beta(a1+N-1, b1+1) - b1*self.beta(a1+N, b1) #- b1*c1*self.beta(a1+N+1, b1) - b1*d1*self.beta(a1+N+2, b1)
+        #    #m2 = (c1 + a1*c1)*self.beta(a1+N, b1+1) + (2*d1 + a1*d1)*self.beta(a1+N+1, b1+1)
+        #    #m3 = M2 * ((a1 + a2)*self.beta(a1+a2+N-1, b1+b2+1) - (b1 + b2)*self.beta(a1+a2+N, b1+b2))
+        #    #m4 = M2 * ((c1 + a1*c1 + a2*c1 + c2 + a1*c2 + a2*c2)*self.beta(a1+a2+N, b1+b2+1))
+        #    #m5 = M2 * (-(b1*c1 + b2*c1 + b1*c2 + b2*c2)*self.beta(a1+a2+N+1, b1+b2))
+        #    #m6 = M2 * ((2*c1*c2 + a1*c1*c2 + a2*c1*c2 + 2*d1 + a1*d1 + a2*d1 + 2*d2 + a1*d2 + a2*d2)*self.beta(a1+a2+N+1, b1+b2+1))
+        #    #m7 = M2 * (-(b1*c1*c2 + b2*c1*c2 + b1*d1 + b2*d1 + b1*d2 + b2*d2)*self.beta(a1+a2+N+2, b1+b2))
+        #    #m8 = M2 * ((3*c2*d1 + a1*c2*d1 + a2*c2*d1 + 3*c1*d2 + a1*c1*d2 + a2*c1*d2)*self.beta(a1+a2+N+2, b1+b2+1))
+        #    #m9 = M2 * (-(b1*c2*d1 + b2*c2*d1 + b1*c1*d2 + b2*c1*d2)*self.beta(a1+a2+N+3, b1+b2))
+        #    #m10 = M2 * ((4*d1*d2 + a1*d1*d2 + a2*d1*d2)*self.beta(a1+a2+N+3, b1+b2+1))
+        #    #m11 = M2 * (-(b1*d1*d2 + b2*d1*d2)*self.beta(a1+a2+N+4, b1+b2))
+        #    mom=m1#+m2+m3+m4+m5+m6+m7+m8+m9+m10+m11
         #    return M1*mom/norm
 
     def _get_BC(self,g,up,um,dp,dm,sp,sm,cp,cm,bp,bm,tp,tm):
@@ -285,6 +285,7 @@ class PDF(CORE):
     def get_xF(self,x,Q2,flav,evolve=True):
         if evolve: self.evolve(Q2)
 
+        #return x*self.mellin.invert(x,self.storage[Q2][flav])
         if self.shape=='nderiv':
             return x*self.mellin.invert(x,self.storage[Q2][flav])
 
@@ -296,12 +297,14 @@ class PDF(CORE):
         elif flav=='dm': mom=self.moms0['dm']
         elif flav=='sm': mom=self.moms0['sm']
 
+        #return x*conf['mellin'].invert(x,mom)
         if self.shape=='nderiv': return x*conf['mellin'].invert(x,mom)
         if self.shape=='deriv': return x*conf['mellin'].invert_deriv(x,mom)
 
     def get_C(self,x, Q2):
         self.evolve(Q2)
 
+        #return np.array([self.mellin.invert(x,self.storage[Q2][_]) for _ in self.ford])
         if self.shape=='nderiv':
             return np.array([self.mellin.invert(x,self.storage[Q2][_]) for _ in self.ford])
 
