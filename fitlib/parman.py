@@ -293,6 +293,10 @@ class PARMAN:
             dist='sivers'
             self.set_constraits(dist,FLAV,PAR,version)
             self.set_params(dist,FLAV,PAR,version)
+            conf['dsivers'].BC3=conf['sivers'].BC3
+            conf['dsivers'].BC4=conf['sivers'].BC4
+            conf['dsivers'].BC5=conf['sivers'].BC5
+            conf['dsivers'].storage={}
 
     def set_boermulders_params(self,version):
         self.set_constraits('boermulders')
@@ -362,6 +366,10 @@ class PARMAN:
             dist='collinspi'
             self.set_constraits(dist,FLAV,PAR,version)
             self.set_params(dist,FLAV,PAR,version)
+            conf['dcollinspi'].BC3=conf['collinspi'].BC3
+            conf['dcollinspi'].BC4=conf['collinspi'].BC4
+            conf['dcollinspi'].BC5=conf['collinspi'].BC5
+            conf['dcollinspi'].storage={}
 
     def set_collinsk_params(self):
         self.set_constraits('collinsk')
