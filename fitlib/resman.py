@@ -68,7 +68,7 @@ class RESMAN:
         conf['mellin']= qcdlib.mellin.MELLIN(npts=16)
         conf['alphaS']= qcdlib.alphaS.ALPHAS()
 
-        if 'pdf parametrization' in conf:
+        if 'pdf parametrization' in conf: 
 
             if conf['pdf parametrization']==0: conf['pdf']= pdf0.PDF()
             if conf['pdf parametrization']==1: conf['pdf']= pdf1.PDF()
