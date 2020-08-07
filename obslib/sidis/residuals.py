@@ -25,7 +25,7 @@ class RESIDUALS(_RESIDUALS):
         k, i = entry
         x = self.tabs[k]['x'][i]
         try: y = self.tabs[k]['y'][i]
-        except ValueError: y=None
+        except (ValueError,KeyError): y=None
         z = self.tabs[k]['z'][i]
         try: Q2 = self.tabs[k]['Q2'][i]
         except ValueError: Q2=None
@@ -35,6 +35,8 @@ class RESIDUALS(_RESIDUALS):
         had = self.tabs[k]['hadron'][i]
         obs = self.tabs[k]['obs'][i].strip()
         col = self.tabs[k]['col'][i].strip().upper()
+        try: F2 = self.tabs[k]['F2'][i]
+        except KeyError: F2=None
 
         if   tar=='proton':    tar='p'
         elif tar=='neutron':   tar='n'
@@ -47,7 +49,7 @@ class RESIDUALS(_RESIDUALS):
         elif obs == 'M':
 
             FUU = upol.get_FUU(x,z,Q2,pT,tar,had)
-            F2 = self.dis_stfuncs.get_F2(x, Q2,tar)
+            if F2==None: F2 = self.dis_stfuncs.get_F2(x, Q2,tar)
             thy = FUU / F2
             if col=='HERMES' or col=='hermes': thy=2*np.pi*pT*thy
             if col=='COMPASS' or col=='compass': thy=np.pi*thy
@@ -157,7 +159,8 @@ class RESIDUALS(_RESIDUALS):
 
                 return theory
 
-            thy = yield_thy(col, should_integrate = True, ny=10)
+            if col=='COMPASS': thy = yield_thy(col, should_integrate = True, ny=10)
+            elif col=='HERMES':  thy = yield_thy(col, should_integrate = False, ny=10)
 
         elif obs == 'AUTsinphiS':  # This is for collinear!
 
