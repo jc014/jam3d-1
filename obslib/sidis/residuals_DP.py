@@ -9,7 +9,7 @@ from obslib.sidis import upol0 as upol
 from obslib.sidis import collins0 as collins
 from obslib.sidis import sivers0 as sivers
 from obslib.sidis import boermulders0 as boermulders
-from obslib.sidis import cahn0 as cahn
+from obslib.sidis import cahn0_AR as cahn
 from obslib.sidis import aUTsPs0 as AUTsinphiS
 from obslib.idis.stfuncs import STFUNCS as DIS_STFUNCS
 
@@ -24,19 +24,15 @@ class RESIDUALS(_RESIDUALS):
     def _get_theory(self, entry):
         k, i = entry
         x = self.tabs[k]['x'][i]
-        try: y = self.tabs[k]['y'][i]
-        except (ValueError,KeyError): y=None
+        y = self.tabs[k]['y'][i]
         z = self.tabs[k]['z'][i]
-        try: Q2 = self.tabs[k]['Q2'][i]
-        except ValueError: Q2=None
+        Q2 = self.tabs[k]['Q2'][i]
         pT = self.tabs[k]['pT'][i]
         exp = self.tabs[k]['value'][i]
         tar = self.tabs[k]['target'][i]
         had = self.tabs[k]['hadron'][i]
         obs = self.tabs[k]['obs'][i].strip()
         col = self.tabs[k]['col'][i].strip().upper()
-        try: F2 = self.tabs[k]['F2'][i]
-        except KeyError: F2=None
 
         if   tar=='proton':    tar='p'
         elif tar=='neutron':   tar='n'
@@ -49,10 +45,9 @@ class RESIDUALS(_RESIDUALS):
         elif obs == 'M':
 
             FUU = upol.get_FUU(x,z,Q2,pT,tar,had)
-            if F2==None: F2 = self.dis_stfuncs.get_F2(x, Q2,tar)
+            F2 = self.dis_stfuncs.get_F2(x, Q2,tar)
             thy = FUU / F2
-            if col=='HERMES' or col=='hermes': thy=2*np.pi*pT*thy
-            if col=='COMPASS' or col=='compass': thy=np.pi*thy
+            if col=='HERMES': thy*=2*np.pi*pT
 
         elif obs == 'AUTcollins':
 
@@ -83,22 +78,11 @@ class RESIDUALS(_RESIDUALS):
                 but require a y-based coefficient. The COMPASS data requires an
                 integration over y, and does not require the coefficient.    '''
 
-            def yield_thy(accelerator, should_integrate, ny=10):
+            def yield_thy(accelerator, should_integrate, n=10):
 
                 # depending on input parameters, either selects the coefficient
                 # method or the integration method of producing a residual value.
                 # root_s and W2_min also fluctuate based on accelerator.
-
-                def clas_coeff(x, y):
-                    ''' Defines the coefficient used in both methods for residual
-                        calculation for CLAS data.                            '''
-
-                    Q       = lambda y : np.sqrt(((ROOT_S ** 2) - M2) * x * y)
-                    gamma   = lambda x, y : (2 * M * x) / Q(y)
-                    kappa   = lambda x, y : 1 / (1 + gamma(x, y) ** 2)
-                    zeta    = lambda x, y : 1 - y - (0.25 * (kappa(x, y) ** 2) * (y ** 2))
-                    epsilon = lambda x, y : 1 / (1 + ((y ** 2) / (2 * kappa(x, y) * zeta(x, y))))
-                    return epsilon(x, y) / (2 * kappa(x, y))
 
                 # set known values based on the source of AUUcos2 data
                 if  accelerator == 'COMPASS':
@@ -122,9 +106,9 @@ class RESIDUALS(_RESIDUALS):
 
                 if should_integrate:
 
-                    def fast_integrate(f, low, hi, ny):
+                    def fast_integrate(f, low, hi, n):
                         f = np.vectorize(f)
-                        return integrate.fixed_quad(f, low, hi, n=ny)
+                        return integrate.fixed_quad(f, low, hi, n = n)
 
                     M2     = conf['aux'].M ** 2
                     Q2_MIN = 1
@@ -142,10 +126,9 @@ class RESIDUALS(_RESIDUALS):
 
                     # any value dependent on y must be a function so that its value
                     # may be recalculated during the integration process
-                    Q  = lambda y : np.sqrt(((ROOT_S ** 2) - M2) * x * y)
+                    Q = lambda y : np.sqrt(((ROOT_S ** 2) - M2) * x * y)
 
-
-                    if accelerator=='HERMES':
+                    if accelerator=='HERMES' or accelerator=='CLAS':
                         FUU     = lambda y : (1.- y + 0.5*y**2) * upol.get_FUU(x, z, Q(y) ** 2, pT, tar, had)
                         FUUcos2 = lambda y : (1.-y) * (boermulders.get_FUU(x, z, Q(y) ** 2, pT, tar, had) + cahn.get_cahn(x, z, Q(y) ** 2, pT, tar, had))
 
@@ -153,35 +136,25 @@ class RESIDUALS(_RESIDUALS):
                         FUU     = lambda y : upol.get_FUU(x, z, Q(y) ** 2, pT, tar, had)
                         FUUcos2 = lambda y : (boermulders.get_FUU(x, z, Q(y) ** 2, pT, tar, had) + cahn.get_cahn(x, z, Q(y) ** 2, pT, tar, had))
 
-                    elif accelerator=='CLAS':
-                        # CLAS accelerators measure H4 / (H2 + H1), which can be related
-                        # to the AUUcos2 asymmetry.
-
-                        FUU     = lambda y : clas_coeff(x, y) * upol.get_FUU(x, z, Q(y) ** 2, pT, tar, had)
-                        FUUcos2 = lambda y : clas_coeff(x, y) * (boermulders.get_FUU(x, z, Q(y) ** 2, pT, tar, had) + cahn.get_cahn(x, z, Q(y) ** 2, pT, tar, had))
-
                     # integrate over y for the numerator and denominator of AUUcos2
-                    FUUcos2_integral = fast_integrate(lambda y : (1. / (Q(y) ** 4)) * FUUcos2(y), yA, yB, ny)[0]
-                    FUU_integral     = fast_integrate(lambda y : (1. / (Q(y) ** 4)) * FUU(y),     yA, yB, ny)[0]
+                    FUUcos2_integral = fast_integrate(lambda y : (1. / (Q(y) ** 4)) * FUUcos2(y), yA, yB, n)[0]
+                    FUU_integral     = fast_integrate(lambda y : (1. / (Q(y) ** 4)) * FUU(y),     yA, yB, n)[0]
 
                     theory = FUUcos2_integral / FUU_integral
 
                 else:   # no integration
 
-                    if accelerator=='HERMES':    coeff  = (1 - y) / (1 - y + 0.5 * y ** 2)
+                    if accelerator=='HERMES' or accelerator=='CLAS': coeff   = (1 - y) / (1 - y + 0.5 * y ** 2)
                     elif accelerator=='COMPASS': coeff  = 1.
-                    elif accelerator=='CLAS':    coeff  = class_coeff(x, y)
 
                     FUUcos2 = (boermulders.get_FUU(x, z, Q2, pT, tar, had) + cahn.get_cahn(x, z, Q2, pT, tar, had))
                     FUU     = upol.get_FUU(x,z,Q2,pT,tar,had)
 
-                    theory = coeff * FUUcos2 / FUU
+                    theory = coeff * FUUcos2 / FUU_integral
 
                 return theory
 
-            if col=='COMPASS':   thy = yield_thy(col, should_integrate = True,  ny=10)
-            elif col=='HERMES':  thy = yield_thy(col, should_integrate = False, ny=10)
-            elif col=='CLAS':    thy = yield_thy(col, should_integrate = False, ny=10)
+            thy = yield_thy(col, should_integrate = True, n=10)
 
         elif obs == 'AUTsinphiS':  # This is for collinear!
 
