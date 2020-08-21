@@ -311,6 +311,14 @@ class PDF(CORE):
         if self.shape=='deriv':
             return np.array([self.mellin.invert_deriv(x,self.storage[Q2][_]) for _ in self.ford])
 
+    def get_mom(self,Q2): #used for calculating the tensor charge for lattice data
+        mom_arr=[]
+        mom_arr.append(0.)
+        for i in range(1,7):
+            mom_arr.append(quad(lambda x: self.get_C(x,Q2)[i], 0., 1.)[0])
+
+        return np.array(mom_arr)
+
 
 if __name__ == '__main__':
 
@@ -322,8 +330,8 @@ if __name__ == '__main__':
     conf['aux']=AUX()
     conf['mellin']=MELLIN(npts=16)
     conf['alphaS']=ALPHAS()
-    conf['pdf']  = PDF('Siv','deriv')
+    conf['pdf']  = PDF('h1')
 
     x=0.3
     Q2=125.0
-    print conf['pdf'].get_C(x, Q2)
+    print conf['pdf'].get_mom(Q2)
