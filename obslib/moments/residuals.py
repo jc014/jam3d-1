@@ -17,57 +17,102 @@ from tools.config import conf
 class RESIDUALS(_RESIDUALS):
 
     def __init__(self):
+        if 'version' in conf: self.version=conf['version']
+        else: self.version=0 #--for back compatibility
         self.reaction = 'moments'
         self.tabs = conf['moments tabs']
         #self.moments = conf['moments']
         self.setup()
 
     def _get_theory(self, entry):
-        k, i = entry
-        obs = self.tabs[k]['obs'][i].strip()
-        Q2=1.0
-        if obs == 'gT':
-            u  =conf['transversity'].get_mom(Q2,1,1)
-            ub =conf['transversity'].get_mom(Q2,2,1)
-            d  =conf['transversity'].get_mom(Q2,3,1)
-            db =conf['transversity'].get_mom(Q2,4,1)
-            thy = (u-ub)-(d-db)
-        elif obs == 'gTu':
-            u  =conf['transversity'].get_mom(Q2,1,1)
-            ub =conf['transversity'].get_mom(Q2,2,1)
-            thy = u-ub
-        elif obs == 'gTd':
-            d  =conf['transversity'].get_mom(Q2,3,1)
-            db =conf['transversity'].get_mom(Q2,4,1)
-            thy = d-db
-        elif obs == 'gTs':
-            s  =conf['transversity'].get_mom(Q2,5,1)
-            sb =conf['transversity'].get_mom(Q2,6,1)
-            thy = s-sb
-        elif obs == 'gTc':
-            c  =conf['transversity'].get_mom(Q2,7,1)
-            cb =conf['transversity'].get_mom(Q2,8,1)
-            thy = c-cb
-        elif obs == 'gT(u-d)':
-            u  =conf['transversity'].get_mom(Q2,1,1)
-            ub =conf['transversity'].get_mom(Q2,2,1)
-            d  =conf['transversity'].get_mom(Q2,3,1)
-            db =conf['transversity'].get_mom(Q2,4,1)
-            thy = (u-ub)-(d-db)
-        elif obs == 'gT(u+d)':
-            u  =conf['transversity'].get_mom(Q2,1,1)
-            ub =conf['transversity'].get_mom(Q2,2,1)
-            d  =conf['transversity'].get_mom(Q2,3,1)
-            db =conf['transversity'].get_mom(Q2,4,1)
-            thy = (u-ub)+(d-db)
-        return k, i, thy
+        if self.version==0
+            k, i = entry
+            obs = self.tabs[k]['obs'][i].strip()
+            Q = self.tabs[k]['Q'][i]
+            Q2=Q**2
+            if obs == 'gT':
+                u  =conf['transversity'].get_mom(Q2,1,1)
+                ub =conf['transversity'].get_mom(Q2,2,1)
+                d  =conf['transversity'].get_mom(Q2,3,1)
+                db =conf['transversity'].get_mom(Q2,4,1)
+                thy = (u-ub)-(d-db)
+            elif obs == 'gTu':
+                u  =conf['transversity'].get_mom(Q2,1,1)
+                ub =conf['transversity'].get_mom(Q2,2,1)
+                thy = u-ub
+            elif obs == 'gTd':
+                d  =conf['transversity'].get_mom(Q2,3,1)
+                db =conf['transversity'].get_mom(Q2,4,1)
+                thy = d-db
+            elif obs == 'gTs':
+                s  =conf['transversity'].get_mom(Q2,5,1)
+                sb =conf['transversity'].get_mom(Q2,6,1)
+                thy = s-sb
+            elif obs == 'gTc':
+                c  =conf['transversity'].get_mom(Q2,7,1)
+                cb =conf['transversity'].get_mom(Q2,8,1)
+                thy = c-cb
+            elif obs == 'gT(u-d)':
+                u  =conf['transversity'].get_mom(Q2,1,1)
+                ub =conf['transversity'].get_mom(Q2,2,1)
+                d  =conf['transversity'].get_mom(Q2,3,1)
+                db =conf['transversity'].get_mom(Q2,4,1)
+                thy = (u-ub)-(d-db)
+            elif obs == 'gT(u+d)':
+                u  =conf['transversity'].get_mom(Q2,1,1)
+                ub =conf['transversity'].get_mom(Q2,2,1)
+                d  =conf['transversity'].get_mom(Q2,3,1)
+                db =conf['transversity'].get_mom(Q2,4,1)
+                thy = (u-ub)+(d-db)
+            return k, i, thy
+
+        elif self.version=='JAM20+':
+            k, i = entry
+            obs = self.tabs[k]['obs'][i].strip()
+            Q = self.tabs[k]['Q'][i]
+            Q2=Q**2
+            if obs == 'gT':
+                u  =conf['transversity'].get_mom(Q2)[1]
+                ub =conf['transversity'].get_mom(Q2)[2]
+                d  =conf['transversity'].get_mom(Q2)[3]
+                db =conf['transversity'].get_mom(Q2)[4]
+                thy = (u-ub)-(d-db)
+            elif obs == 'gTu':
+                u  =conf['transversity'].get_mom(Q2)[1]
+                ub =conf['transversity'].get_mom(Q2)[2]
+                thy = u-ub
+            elif obs == 'gTd':
+                d  =conf['transversity'].get_mom(Q2)[3]
+                db =conf['transversity'].get_mom(Q2)[4]
+                thy = d-db
+            elif obs == 'gTs':
+                s  =conf['transversity'].get_mom(Q2)[5]
+                sb =conf['transversity'].get_mom(Q2)[6]
+                thy = s-sb
+            elif obs == 'gTc':
+                c  =conf['transversity'].get_mom(Q2)[7]
+                cb =conf['transversity'].get_mom(Q2)[8]
+                thy = c-cb
+            elif obs == 'gT(u-d)':
+                u  =conf['transversity'].get_mom(Q2)[1]
+                ub =conf['transversity'].get_mom(Q2)[2]
+                d  =conf['transversity'].get_mom(Q2)[3]
+                db =conf['transversity'].get_mom(Q2)[4]
+                thy = (u-ub)-(d-db)
+            elif obs == 'gT(u+d)':
+                u  =conf['transversity'].get_mom(Q2)[1]
+                ub =conf['transversity'].get_mom(Q2)[2]
+                d  =conf['transversity'].get_mom(Q2)[3]
+                db =conf['transversity'].get_mom(Q2)[4]
+                thy = (u-ub)+(d-db)
+            return k, i, thy
 
     def gen_report(self, verb=1, level=1):
         """
         verb = 0: Do not print on screen. Only return list of strings
         verv = 1: print on screen the report
         level= 0: only the total chi2s
-        level= 1: include point by point 
+        level= 1: include point by point
         """
 
         L = []
@@ -122,5 +167,3 @@ class RESIDUALS(_RESIDUALS):
         elif verb == 1:
             for l in L:
                 print l
-
-
