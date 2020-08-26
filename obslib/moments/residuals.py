@@ -25,7 +25,7 @@ class RESIDUALS(_RESIDUALS):
         self.setup()
 
     def _get_theory(self, entry):
-        if self.version==0
+        if self.version==0:
             k, i = entry
             obs = self.tabs[k]['obs'][i].strip()
             Q = self.tabs[k]['Q'][i]
@@ -64,7 +64,7 @@ class RESIDUALS(_RESIDUALS):
                 d  =conf['transversity'].get_mom(Q2,3,1)
                 db =conf['transversity'].get_mom(Q2,4,1)
                 thy = (u-ub)+(d-db)
-            return k, i, thy
+            return thy
 
         elif self.version=='JAM20+':
             k, i = entry
@@ -105,7 +105,7 @@ class RESIDUALS(_RESIDUALS):
                 d  =conf['transversity'].get_mom(Q2)[3]
                 db =conf['transversity'].get_mom(Q2)[4]
                 thy = (u-ub)+(d-db)
-            return k, i, thy
+            return thy
 
     def gen_report(self, verb=1, level=1):
         """
