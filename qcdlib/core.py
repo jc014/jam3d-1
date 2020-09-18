@@ -114,7 +114,7 @@ class CORE:
 
     # tmd
 
-    def get_tmd(self,x,Q2,kT,hadron,dist,icol=False):
+    def get_tmd(self,x,Q2,kT,hadron,dist,icol=False,deriv=False):
 
         col=self.get_C(x,Q2)
 
