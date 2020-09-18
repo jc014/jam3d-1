@@ -38,6 +38,10 @@ class RESIDUALS(_RESIDUALS):
         try: F2 = self.tabs[k]['F2'][i]
         except KeyError: F2=None
 
+        M = conf['aux'].M
+        M2     = conf['aux'].M ** 2
+        Mpi2     = conf['aux'].Mpi ** 2
+
         if   tar=='proton':    tar='p'
         elif tar=='neutron':   tar='n'
         elif tar=='deuteron':  tar='d'
@@ -89,17 +93,6 @@ class RESIDUALS(_RESIDUALS):
                 # method or the integration method of producing a residual value.
                 # root_s and W2_min also fluctuate based on accelerator.
 
-                def clas_coeff(x, y):
-                    ''' Defines the coefficient used in both methods for residual
-                        calculation for CLAS data.                            '''
-
-                    Q       = lambda y : np.sqrt(((ROOT_S ** 2) - M2) * x * y)
-                    gamma   = lambda x, y : (2 * M * x) / Q(y)
-                    kappa   = lambda x, y : 1 / (1 + gamma(x, y) ** 2)
-                    zeta    = lambda x, y : 1 - y - (0.25 * (kappa(x, y) ** 2) * (y ** 2))
-                    epsilon = lambda x, y : 1 / (1 + ((y ** 2) / (2 * kappa(x, y) * zeta(x, y))))
-                    return epsilon(x, y) / (2 * kappa(x, y))
-
                 # set known values based on the source of AUUcos2 data
                 if  accelerator == 'COMPASS':
                     ROOT_S    = 17.3
@@ -126,7 +119,6 @@ class RESIDUALS(_RESIDUALS):
                         f = np.vectorize(f)
                         return integrate.fixed_quad(f, low, hi, n=ny)
 
-                    M2     = conf['aux'].M ** 2
                     Q2_MIN = 1
                     Q2_MAX = 1000
 
@@ -156,9 +148,14 @@ class RESIDUALS(_RESIDUALS):
                     elif accelerator=='CLAS':
                         # CLAS accelerators measure H4 / (H2 + H1), which can be related
                         # to the AUUcos2 asymmetry.
+                        gamma   = lambda y : (2 * M * x) / Q(y)
+                        kappa   = lambda y : 1 / (1 + gamma(x, y) ** 2)
+                        zeta    = lambda y : 1 - y - (0.25 * (gamma(x, y) ** 2) * (y ** 2))
+                        epsilon = lambda y : 1 / (1 + ((y ** 2) / (2 * kappa(x, y) * zeta(x, y))))
+                        ppa_over_Eh = lambda y: np.sqrt(1-(pT**2 + Mpi**2)*(2.*M*x/(z*Q(y)**2))**2)
 
-                        FUU     = lambda y : clas_coeff(x, y) * upol.get_FUU(x, z, Q(y) ** 2, pT, tar, had)
-                        FUUcos2 = lambda y : clas_coeff(x, y) * (boermulders.get_FUU(x, z, Q(y) ** 2, pT, tar, had) + cahn.get_cahn(x, z, Q(y) ** 2, pT, tar, had))
+                        FUU     = lambda y : ppa_over_Eh*(kappa/epsilon)*(1+gamma**2/(2.*x)) * upol.get_FUU(x, z, Q(y) ** 2, pT, tar, had)
+                        FUUcos2 = lambda y : (ppa_over_Eh/2.)*(1+gamma**2/(2.*x)) * (boermulders.get_FUU(x, z, Q(y) ** 2, pT, tar, had) + cahn.get_cahn(x, z, Q(y) ** 2, pT, tar, had))
 
                     # integrate over y for the numerator and denominator of AUUcos2
                     FUUcos2_integral = fast_integrate(lambda y : (1. / (Q(y) ** 4)) * FUUcos2(y), yA, yB, ny)[0]
@@ -170,7 +167,14 @@ class RESIDUALS(_RESIDUALS):
 
                     if accelerator=='HERMES':    coeff  = (1 - y) / (1 - y + 0.5 * y ** 2)
                     elif accelerator=='COMPASS': coeff  = 1.
-                    elif accelerator=='CLAS':    coeff  = class_coeff(x, y)
+                    elif accelerator=='CLAS':
+                        gamma   = (2.* M * x) / np.sqrt(Q2)
+                        kappa   = 1. / (1. + gamma**2.)
+                        zeta    = 1. - y - (0.25 * (gamma**2.) * (y ** 2.))
+                        epsilon = 1. / (1. + ((y ** 2.) / (2. * kappa * zeta)))
+                        
+                        coeff =  epsilon / (2. * kappa)
+
 
                     FUUcos2 = (boermulders.get_FUU(x, z, Q2, pT, tar, had) + cahn.get_cahn(x, z, Q2, pT, tar, had))
                     FUU     = upol.get_FUU(x,z,Q2,pT,tar,had)
