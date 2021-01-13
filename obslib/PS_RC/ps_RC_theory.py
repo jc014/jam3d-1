@@ -30,22 +30,18 @@ c = {'r3': 1. / 3., 'r4': 0.25, 'r6': 1. / 6., 'r8': 0.125,
 e=[0,2/3,-2/3,-1/3,1/3,-1/3,1/3]
 
 m = {}
+mp={}
 rf = {}
 Hupol = {}
 f = {}
 ft = {}
 d = {}
 h = {}
-H1p = {}
 H = {}
-F1p = {}
-#HTffa = np.zeros(13)
-#HTffb = np.zeros(13)
-#Hxxpz = np.zeros((13, 7))
 
 if 'basis' not in conf:
     conf['basis'] = 'default'
-#need to add options for LDF, LFF
+
 def get_f(x, Q2): # Collinear unpolarized PDF
   return conf['pdf'].get_C(x, Q2)
 
@@ -61,31 +57,13 @@ def get_d(z, Q2, had): # Collinear unpolarized FF
 def get_h(x, Q2): # Collinear transversity
   return conf['transversity'].get_C(x, Q2)
 
-def get_fl(xi, Q2):
+def get_fl(xi, Q2): #LPDF
     #return 1.
     return conf['ldf'].get_C(xi, Q2)
 
-def get_dl(zt, Q2):
+def get_dl(zt, Q2): #LFF
     #return 1.
     return conf['lff'].get_C(zt, Q2)
-
-## (H_1^{\perp(1)}(z) - z*dH_1^{\perp(1)}(z)/dz)
-#def get_H1p(z, Q2, had):
-#  if 'pi' in had:
-#      return conf['collinspi'].get_C(z, Q2) - z * conf['collinspi'].get_dC(z, Q2)
-#  elif 'k' in had:
-#      return conf['collinsk'].get_C(z, Q2) - z * conf['collinsk'].get_dC(z, Q2)
-#
-#def get_H(z, Q2, had): # -2*z*H_1^{\perp(1)}(z)+\tilde{H}(z)
-#  if 'pi' in had:
-#      return -2. * z * conf['collinspi'].get_C(z,Q2) + conf['Htildepi'].get_C(z, Q2)
-#  elif 'k' in had:
-#      return -2. * z * conf['collinsk'].get_C(z,Q2) + conf['Htildek'].get_C(z, Q2)
-#
-#
-## (f_1T^{\perp(1)}(x) - x*df_1T^{\perp(1)}(x)/dx) Check this for correct Sivers implementation
-#def get_f1Tp( x, Q2):
-#    return conf['sivers'].get_C(x, Q2) - x * conf['sivers'].get_dC(x, Q2)
 
 def get_mandelstam(s, t, u, sp, tp, up):
 # Convenient combinations of the partonic Mandelstam variables
@@ -156,26 +134,43 @@ def get_rapidityf(rs,ppT,lpT,yL,yP,thLP):
     rf['ssp']=ppT*lpT*(math.exp(yL-yP)+math.exp(yP-yL)-2*math.cos(thLP))
     return rf
 
-def get_Hupol(m,pT,zt,xi,x,z,s,t,u,sp,tp,up):
+def get_mparton(x,xi,z,zt,rs,ppT,lpT,yL,yP,thLP):
+    oz = 1. / z
+    ozt= 1. / zt
+
+    rf=get_rapidityf(rs,ppT,lpT,yL,yP,thLP)
+
+    mp['s'] = x * xi * rf['ss']
+    mp['t'] = xi*ozt*rf['tt']
+    mp['u'] = x * rf['uu'] * ozt
+    mp['sp']  = oz*ozt*rf['ssp']
+    mp['tp']  = x*oz*rf['ttp']
+    mp['up']  = xi*oz*rf['uup']
+
+    mp['Q2']=-rf['tt']
+
+    return mp
+
+def get_Hupol(ppT,lpT,yL,yP,thLP,x, z, xi, zt, rs):
   # Hard parts for the unpolarized cross section
-   if pT > 1.:
-     Q = pT
-   else:
-     Q = 1.
 
-   Q2 = Q * Q
+  #rf=get_rapidityf(rs,ppT,lpT,yL,yP,thLP)
+
+  mp=get_mparton(x,xi,z,zt,rs,ppT,lpT,yL,yP,thLP)
+
+  m=get_mandelstam(mp['s'], mp['t'], mp['u'], mp['sp'], mp['tp'], mp['up'])
 
 
-   Hupol[1] = 2*Q2*Q2*z*z
-   Hupol[2] = 2*zt*Q2*up*z
+   Hupol[1] = 2*mp['Q2']*mp['Q2']*z*z
+   Hupol[2] = 2*zt*mp['Q2']*mp['up']*z
    Hupol[3] = zt*zt*(m['s2']*x*x*z*z+2*m['up2'])
-   Hupol[4] = 2*xi*u*x*z*(Q2*z-zt*up)
+   Hupol[4] = 2*xi*mp['u']*x*z*(mp['Q2']*z-zt*mp['up'])
    Hupol[5] = m['u2']*x*x*z*z
    return Hupol
 
 
 # Calculation of the unpolarized cross section
-def get_dsig(ppT,lpT,yL,yP,thLP,x, z, xi, zt, pT, rs, tar, had):
+def get_dsig(ppT,lpT,yL,yP,thLP,x, z, xi, zt, rs, tar, had):
 
   Mh = {}
   Mh['pi+'] = conf['aux'].Mpi
@@ -185,30 +180,17 @@ def get_dsig(ppT,lpT,yL,yP,thLP,x, z, xi, zt, pT, rs, tar, had):
   Mh['k-'] = conf['aux'].Mk
 
 
-  if pT > 1.:
-    Q = pT
-  else:
-    Q = 1.
-
-  Q2 = Q * Q
-
   # Mandelstam variables at the hadron level
   ss = rs * rs
-  tt = -Q2
-  #uu =
 
   oz = 1. / z
   ozt= 1. / zt
 
-  get_rapidityf(rs,ppT,lpT,yL,yP,thLP)
+  rf=get_rapidityf(rs,ppT,lpT,yL,yP,thLP)
 
-  # Mandelstam variables at the parton level
-  s = x * xi * rf['ss']
-  t = xi*ozt*rf['tt']
-  u = x * rf['uu'] * ozt
-  sp = oz*ozt*rf['ssp']
-  tp = x*oz*rf['ttp']
-  up = xi*oz*rf['uup']
+  mp=get_mparton(x,xi,z,zt,rs,ppT,lpT,yL,yP,thLP)
+
+  m=get_mandelstam(mp['s'], mp['t'], mp['u'], mp['sp'], mp['tp'], mp['up'])
 
   # Prefactor
   denfacint = 1. / (zt*zt*xi*z*z*x)
@@ -217,8 +199,7 @@ def get_dsig(ppT,lpT,yL,yP,thLP,x, z, xi, zt, pT, rs, tar, had):
   #numfac=-2*el*el*g*g    -fill in constants?
   prefac=denfacint*pifac*denfac
 
-  m=get_mandelstam(s, t, u,sp,tp,up)
-  get_Hupol(m,pT,zt,xi,x,z,s,t,u,sp,tp,up)
+  get_Hupol(ppT,lpT,yL,yP,thLP,x, z, xi, zt, rs)
 
   Hupol1 = Hupol[1]
   Hupol2 = Hupol[2]
@@ -227,13 +208,13 @@ def get_dsig(ppT,lpT,yL,yP,thLP,x, z, xi, zt, pT, rs, tar, had):
   Hupol5 = Hupol[5]
 
   # Get arrays of the nonperturbative functions
-  f = get_f(x, Q2)
+  f = get_f(x, mp['Q2'])
   #ft = get_ft(xp, Q2)
-  d = get_d(z, Q2, 'pi+')
+  d = get_d(z, mp['Q2'], 'pi+')
 
-  fl = get_fl(xi,Q2)
+  fl = get_fl(xi,mp['Q2'])
 
-  dl = get_dl(zt,Q2)
+  dl = get_dl(zt,mp['Q2'])
 
   if had.endswith('-'):
       d = conf['aux'].charge_conj(d)
@@ -268,15 +249,13 @@ def get_dsig(ppT,lpT,yL,yP,thLP,x, z, xi, zt, pT, rs, tar, had):
 
   Hupol = xi*xi*(Hupol1-Hupol2+Hupol3)+Hupol4+Hupol5
 
-#add ff and pdf terms, and ldf, lff terms (all possible multiplications from sums, with charges)
-
   upol=fl*dl*Hupol*Hadprod
 
   return prefac * upol
 
 
-#adjust this to  4 integrations
-def get_sig(lpT,ppT,yL,yP,thLP, pT, rs, tar, had, mode='gauss', nx=10, nz=10,nxi=10,nzt=10):
+
+def get_sig(lpT,ppT,yL,yP,thLP, rs, tar, had, mode='gauss', nx=10, nz=10,nxi=10,nzt=10):
     #xT = 2. * pT / rs
     #xF2 = xF * xF
     #xT2 = xT * xT
@@ -286,7 +265,7 @@ def get_sig(lpT,ppT,yL,yP,thLP, pT, rs, tar, had, mode='gauss', nx=10, nz=10,nxi
     #tt = -0.5 * ss * (np.sqrt(xF2 + xT2) - xF)
     #uu = -0.5 * ss * (np.sqrt(xF2 + xT2) + xF)
 
-    get_rapidityf(rs,ppT,lpT,yL,yP,thLP)
+    rf=get_rapidityf(rs,ppT,lpT,yL,yP,thLP)
 
     # Lower limits of the  integrations
     ztmin = (-rf['tt']-rf['ssp']-rf['uup'])/(rf['ttp']+rf['ss']+rf['uu'])
@@ -299,7 +278,7 @@ def get_sig(lpT,ppT,yL,yP,thLP, pT, rs, tar, had, mode='gauss', nx=10, nz=10,nxi
 
     if mode == 'gauss':
         dsigdztdxidzdx = np.vectorize(
-            lambda x, z, xi, zt: get_dsig(ppT,lpT,yL,yP,thLP,x, z, xi,zt, pT, rs, tar, had))
+            lambda x, z, xi, zt: get_dsig(ppT,lpT,yL,yP,thLP,x, z, xi,zt, rs, tar, had))
         dsigdztdxidz = np.vectorize(lambda z, xi, zt: fixed_quad(
             lambda x: dsigdztdxidzdx(x, z, xi, zt), xmin(z,xi,zt), 1, n=nx)[0])
         dsigdztdxi = np.vectorize(lambda xi, zt: fixed_quad(
@@ -385,7 +364,7 @@ if __name__ == '__main__':
     rs = 200.
     tar = 'p'
     had = 'pi-'
-    pT = 1.10
+    #pT = 1.10
     lpT = 1.10
     ppT = 1.10
     yL = .9
@@ -408,7 +387,7 @@ if __name__ == '__main__':
     #def xmin(z): return -uu / (z * ss + tt)
 
     def test():
-        den = get_sig(lpT,ppT,yL,yP,thLP, pT, rs, tar, had, mode='gauss', nx=100, nz=100)
+        den = get_sig(lpT,ppT,yL,yP,thLP,rs, tar, had, mode='gauss', nx=100, nz=100,nxi=100, nzt=100)
         # num = get_sigST(xF, pT, rs, tar, had,
         #                      mode='gauss', nx=100, nz=100)
         # num2 = get_sigP(xF, pT, rs, tar, had,
