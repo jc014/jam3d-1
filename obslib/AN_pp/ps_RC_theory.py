@@ -129,7 +129,7 @@ def get_rapidityf(rs,ppT,lpT,yL,yP,thLP):
     rf['ttp']=-rs*ppT*math.exp(yP)
     rf['uup']=-rs*lpT*math.exp(yL)
     rf['tt']=rs*lpT*math.exp(-yL)
-    rf['uup']=rs*ppT*math.exp(-yP)
+    rf['uu']=-rs*ppT*math.exp(-yP)
     rf['ss']=rs*rs
     rf['ssp']=ppT*lpT*(math.exp(yL-yP)+math.exp(yP-yL)-2*math.cos(thLP))
     return rf
@@ -161,12 +161,12 @@ def get_Hupol(ppT,lpT,yL,yP,thLP,x, z, xi, zt, rs):
   m=get_mandelstam(mp['s'], mp['t'], mp['u'], mp['sp'], mp['tp'], mp['up'])
 
 
-   Hupol[1] = 2*mp['Q2']*mp['Q2']*z*z
-   Hupol[2] = 2*zt*mp['Q2']*mp['up']*z
-   Hupol[3] = zt*zt*(m['s2']*x*x*z*z+2*m['up2'])
-   Hupol[4] = 2*xi*mp['u']*x*z*(mp['Q2']*z-zt*mp['up'])
-   Hupol[5] = m['u2']*x*x*z*z
-   return Hupol
+  Hupol[1] = 2*mp['Q2']*mp['Q2']*z*z
+  Hupol[2] = 2*zt*mp['Q2']*mp['up']*z
+  Hupol[3] = zt*zt*(m['s2']*x*x*z*z+2*m['up2'])
+  Hupol[4] = 2*xi*mp['u']*x*z*(mp['Q2']*z-zt*mp['up'])
+  Hupol[5] = m['u2']*x*x*z*z
+  return Hupol
 
 
 # Calculation of the unpolarized cross section
@@ -243,9 +243,9 @@ def get_dsig(ppT,lpT,yL,yP,thLP,x, z, xi, zt, rs, tar, had):
   dsb = d[6]
 #e[i] is charge of pdf function
   Hadprod = 0
-    for i in range (6):
-        for j in range ( i+1,6):
-            Hadprod = Hadprod +e[i]*el*e[i]*el*f[i]*d[j]
+  for i in range (6):
+      for j in range ( i+1,6):
+          Hadprod = Hadprod +e[i]*el*e[i]*el*f[i]*d[j]
 
   Hupol = xi*xi*(Hupol1-Hupol2+Hupol3)+Hupol4+Hupol5
 
@@ -270,11 +270,11 @@ def get_sig(lpT,ppT,yL,yP,thLP, rs, tar, had, mode='gauss', nx=10, nz=10,nxi=10,
     # Lower limits of the  integrations
     ztmin = (-rf['tt']-rf['ssp']-rf['uup'])/(rf['ttp']+rf['ss']+rf['uu'])
 
-    def ximin(zt): return (rf['ttp']+(1./zt)*rf['ssp']+(1./zt)*rf['uup'])/((1./zt)*rf['t']-rf'[ss']-rf['uu'])
+    def ximin(zt): return (rf['ttp']+(1./zt)*rf['ssp']+(1./zt)*rf['uup'])/((1./zt)*rf['tt']-rf['ss']-rf['uu'])
 
-    def zmin(xi,zt): return (rf['ttp']+(1/zt)*rf['ssp']+xi*rf['uu'])/((xi/zt)*rf['t']-(1/zt)*rf['uup']-xi*rf['ss'])
+    def zmin(xi,zt): return (rf['ttp']+(1/zt)*rf['ssp']+xi*rf['uu'])/((xi/zt)*rf['tt']-(1/zt)*rf['uup']-xi*rf['ss'])
 #x fixed from delta function??
-    def xmin(z,xi,zt): return ((xi/zt)*rf['t']-(1/(z*zt))*rf['ssp']+(xi/z)*rf['uu'])/((1/zt)*rf['uup']+xi*rf['ss']+(1/z)*rf['ttp'])
+    def xmin(z,xi,zt): return ((xi/zt)*rf['tt']-(1/(z*zt))*rf['ssp']+(xi/z)*rf['uu'])/((1/zt)*rf['uup']+xi*rf['ss']+(1/z)*rf['ttp'])
 
     if mode == 'gauss':
         dsigdztdxidzdx = np.vectorize(
@@ -282,66 +282,14 @@ def get_sig(lpT,ppT,yL,yP,thLP, rs, tar, had, mode='gauss', nx=10, nz=10,nxi=10,
         dsigdztdxidz = np.vectorize(lambda z, xi, zt: fixed_quad(
             lambda x: dsigdztdxidzdx(x, z, xi, zt), xmin(z,xi,zt), 1, n=nx)[0])
         dsigdztdxi = np.vectorize(lambda xi, zt: fixed_quad(
-            lambda z: dsigdztdxidzdx(z, xi, zt), zmin(xi,zt), 1, n=nx)[0])
-        dsigdzt = np.vectorize(lambda xi: fixed_quad(
+            lambda z: dsigdztdxidzdx(z, xi, zt), zmin(xi,zt), 1, n=nz)[0])
+        dsigdzt = np.vectorize(lambda zt: fixed_quad(
             lambda xi: dsigdztdxidz(xi, zt), ximin(zt), 1, n=nxi)[0])
-        sig = fixed_quad(dsigdzt, ztmin, 1, n=nzt)[0]
+        sig = fixed_quad(lambda zt: dsigdzt(zt), ztmin, 1, n=nzt)[0]
     #elif mode == 'quad':
     #    sig = dblquad(lambda x, z: get_dsig(
     #        x, z, xF, pT, rs, tar, had), zmin, 1., xmin, lambda x: 1.)[0]
     return sig
-
-#def get_sigP(xF, pT, rs, tar, had, mode='gauss', nx=100, nz=100):
-#    xT = 2. * pT / rs
-#    xF2 = xF * xF
-#    xT2 = xT * xT
-#
-#    # Mandelstam variables at the hadron level
-#    ss = rs * rs
-#    tt = -0.5 * ss * (np.sqrt(xF2 + xT2) - xF)
-#    uu = -0.5 * ss * (np.sqrt(xF2 + xT2) + xF)
-#
-#    # Lower limits of the z and x integrations
-#    zmin = np.sqrt(xF2 + xT2)
-#
-#    def xmin(z): return -uu / (z * ss + tt)
-#
-#    if mode == 'gauss':
-#        dsigdzdx = np.vectorize(
-#            lambda x, z: get_dsigP( x, z, xF, pT, rs, tar, had))
-#        dsigdz = np.vectorize(lambda z: fixed_quad(
-#            lambda x: dsigdzdx(x, z), xmin(z), 1, n=nx)[0])
-#        sig = fixed_quad(dsigdz, zmin, 1, n=nz)[0]
-#    elif mode == 'quad':
-#        sig = dblquad(lambda x, z: get_dsigP(
-#            x, z, xF, pT, rs, tar, had), zmin, 1., xmin, lambda x: 1.)[0]
-#    return sig
-
-#def get_sigST(xF, pT, rs, tar, had, mode='gauss', nx=10, nz=10):
-#    xT = 2. * pT / rs
-#    xF2 = xF * xF
-#    xT2 = xT * xT
-#
-#    # Mandelstam variables at the hadron level
-#    ss = rs * rs
-#    tt = -0.5 * ss * (np.sqrt(xF2 + xT2) - xF)
-#    uu = -0.5 * ss * (np.sqrt(xF2 + xT2) + xF)
-#
-#    # Lower limits of the z and x integrations
-#    zmin = np.sqrt(xF2 + xT2)
-#
-#    def xmin(z): return -uu / (z * ss + tt)
-#
-#    if mode == 'gauss':
-#      dsigdzdx = np.vectorize(
-#        lambda x, z: get_dsigST(x, z, xF, pT, rs, tar, had))
-#      dsigdz = np.vectorize(lambda z: fixed_quad(
-#        lambda x: dsigdzdx(x, z), xmin(z), 1, n=nx)[0])
-#      sig = fixed_quad(dsigdz, zmin, 1, n=nz)[0]
-#    elif mode == 'quad':
-#      sig = dblquad(lambda x, z: get_dsigST(
-#        x, z, xF, pT, rs, tar, had), zmin, 1., xmin, lambda x: 1.)[0]
-#    return sig
 
 
 if __name__ == '__main__':
